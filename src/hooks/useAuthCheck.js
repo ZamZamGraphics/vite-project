@@ -18,7 +18,7 @@ export default function useAuthCheck() {
       if (auth?.accessToken && auth?.loggedIn) {
         dispatch(
           userLoggedIn({
-            accessToken: auth.accessToken,
+            accessToken: `Bearer ${auth.accessToken}`,
           })
         );
       }

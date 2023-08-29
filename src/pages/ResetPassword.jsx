@@ -10,11 +10,9 @@ import {
   Input,
   InputAdornment,
   InputLabel,
-  Snackbar,
-  TextField,
   Typography,
 } from "@mui/material";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logoDark from "../assets/images/logo-dark.svg";
 import logoLight from "../assets/images/logo-light.svg";
 import { useFormik } from "formik";
@@ -22,25 +20,24 @@ import * as Yup from "yup";
 import { useEffect, useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useSelector } from "react-redux";
-import { useLoginMutation } from "../redux/features/auth/authApi";
+import { useForgotPasswordMutation } from "../redux/features/forgotPassword/forgotPasswordApi";
 
-const LoginSchema = Yup.object().shape({
-  username: Yup.string().required("Username is required"),
+const PasswordSchema = Yup.object().shape({
   password: Yup.string().required("Password is required"),
+  confirmPassword: Yup.string().required("Confirm Password is required"),
 });
 
-function Login() {
+function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const [error, setError] = useState("");
-  const [open, setOpen] = useState(true);
   const darkMode = useSelector((state) => state.theme.darkMode);
   const logo = darkMode ? logoLight : logoDark;
 
-  const [login, { data, isLoading, error: responseError }] = useLoginMutation();
+  const [forgotPassword, { data, isLoading, error: responseError }] =
+    useForgotPasswordMutation();
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
     if (responseError?.data) {
@@ -55,19 +52,19 @@ function Login() {
       });
     }
     if (data?.success) {
-      navigate("/dashboard");
+      navigate("/login");
     }
   }, [responseError, data, navigate]);
 
   const formik = useFormik({
     initialValues: {
-      username: "",
       password: "",
+      confirmPassword: "",
     },
-    validationSchema: LoginSchema,
+    validationSchema: PasswordSchema,
     onSubmit: (values) => {
       setError("");
-      login(values);
+      forgotPassword(values);
     },
   });
 
@@ -97,7 +94,7 @@ function Login() {
             sx={{ textAlign: "center" }}
             variant="h5"
           >
-            Sign in
+            Recover your password
           </Typography>
           {error && (
             <Alert sx={{ mt: 2, width: "100%" }} severity="error">
@@ -105,33 +102,7 @@ function Login() {
               {error?.message && error?.message}
             </Alert>
           )}
-
-          {location.state && (
-            <Snackbar
-              anchorOrigin={{ vertical: "top", horizontal: "center" }}
-              open={open}
-              onClose={() => setOpen(false)}
-              autoHideDuration={5000}
-            >
-              <Alert variant="filled" severity="success" sx={{ width: "100%" }}>
-                {location.state}
-              </Alert>
-            </Snackbar>
-          )}
-
           <Box component="form" onSubmit={formik.handleSubmit} sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              fullWidth
-              variant="standard"
-              label="Username or Email Address"
-              name="username"
-              value={formik.values.username}
-              onChange={formik.handleChange}
-              id={formik.errors.username && "standard-error"}
-              error={formik.touched.username && Boolean(formik.errors.username)}
-              helperText={formik.touched.username && formik.errors.username}
-            />
             <FormControl fullWidth sx={{ mt: 1 }} variant="standard">
               <InputLabel
                 htmlFor="standard-adornment-password"
@@ -170,6 +141,48 @@ function Login() {
                 {formik.touched.password && formik.errors.password}
               </FormHelperText>
             </FormControl>
+            <FormControl fullWidth sx={{ mt: 1 }} variant="standard">
+              <InputLabel
+                htmlFor="standard-adornment-confirm-password"
+                error={
+                  formik.touched.confirmPassword &&
+                  Boolean(formik.errors.confirmPassword)
+                }
+              >
+                Confirm Password
+              </InputLabel>
+              <Input
+                type={showPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={formik.values.confirmPassword}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.confirmPassword &&
+                  Boolean(formik.errors.confirmPassword)
+                }
+                id={formik.errors.confirmPassword && "standard-error"}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+              <FormHelperText
+                id="passowrd-helper-text"
+                error={
+                  formik.touched.confirmPassword &&
+                  Boolean(formik.errors.confirmPassword)
+                }
+              >
+                {formik.touched.confirmPassword &&
+                  formik.errors.confirmPassword}
+              </FormHelperText>
+            </FormControl>
             <Button
               type="submit"
               fullWidth
@@ -177,14 +190,11 @@ function Login() {
               sx={{ borderRadius: "9999px", mt: 3, mb: 2 }}
               disabled={isLoading}
             >
-              Sign In
+              Send link
             </Button>
           </Box>
-          <Link
-            to="/lost-password"
-            className="text-center no-underline text-blue-500"
-          >
-            <Typography variant="body1">Forgot password?</Typography>
+          <Link to="/login" className="text-center no-underline text-blue-500">
+            <Typography variant="body1">Login</Typography>
           </Link>
         </Box>
       </Container>
@@ -192,4 +202,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default ResetPassword;

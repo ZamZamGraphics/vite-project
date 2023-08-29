@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
+import LostPassword from "./pages/LostPassword";
 import Layout from "./component/Layout";
 import PrivateRoute from "./component/PrivateRoute";
 import PublicRoute from "./component/PublicRoute";
@@ -41,6 +42,14 @@ function App() {
           element={
             <PublicRoute>
               <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="lost-password"
+          element={
+            <PublicRoute>
+              <LostPassword />
             </PublicRoute>
           }
         />

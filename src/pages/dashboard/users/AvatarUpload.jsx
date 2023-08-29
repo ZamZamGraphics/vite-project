@@ -1,22 +1,15 @@
 import { Avatar, Button as Button, Typography } from "@mui/material";
-import { grey } from "@mui/material/colors";
-
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { createRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 
 const BigAvatar = styled(Avatar)`
-  width: 120px;
-  height: 120px;
-  margin: 0 auto ${(props) => props.theme.spacing(2)}px;
-  ${({ $withBorder }) =>
-    $withBorder &&
-    `border: 1px solid ${grey[500]};
-     box-shadow: 0 0 1px 0 ${grey[500]} inset, 0 0 1px 0 ${grey[500]};`}
+  width: 100px;
+  height: 100px;
 `;
 
-const AvatarUpload = () => {
+const AvatarUpload = ({ avaterImage }) => {
   const [image, _setImage] = useState(null);
   const inputFileRef = createRef(null);
 
@@ -32,18 +25,13 @@ const AvatarUpload = () => {
     _setImage(newImage);
   };
 
-  const handleOnChange = (event) => {
-    const newImage = event.target?.files?.[0];
+  // const avaterImage = (event) => {
+  //   const newImage = event.target?.files?.[0];
+  //   if (newImage) {
+  //     setImage(URL.createObjectURL(newImage));
+  //   }
+  // };
 
-    if (newImage) {
-      setImage(URL.createObjectURL(newImage));
-    }
-  };
-
-  /**
-   *
-   * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} event
-   */
   const handleClick = (event) => {
     if (image) {
       event.preventDefault();
@@ -54,7 +42,6 @@ const AvatarUpload = () => {
   return (
     <>
       <BigAvatar
-        $withBorder
         alt="Avatar"
         src={image || "/static/img/avatars/default-profile.svg"}
         imgProps={{
@@ -67,22 +54,23 @@ const AvatarUpload = () => {
       />
       <input
         ref={inputFileRef}
-        accept="image/*"
+        accept="image/jpg, image/png, image/jpeg"
         hidden
-        id="avatar-image-upload"
+        id="avatar-upload"
         type="file"
-        onChange={handleOnChange}
+        name="avatar"
+        onChange={(e) => avaterImage(e)}
       />
-      <label htmlFor="avatar-image-upload">
+      <label htmlFor="avatar-upload">
         <Button
           variant="contained"
           color="primary"
           component="span"
-          mb={2}
+          sx={{ marginY: 1 }}
           onClick={handleClick}
         >
           {image ? <DeleteIcon mr={2} /> : <CloudUploadIcon mr={2} />}
-          {image ? "Limpar" : "Upload"}
+          {image ? "Remove" : "Upload"}
         </Button>
       </label>
       <Typography variant="caption" display="block" gutterBottom>
