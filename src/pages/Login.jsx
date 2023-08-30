@@ -43,17 +43,14 @@ function Login() {
   const location = useLocation();
 
   useEffect(() => {
-    if (responseError?.data) {
-      setError(responseError.data);
+    if (responseError?.data?.errors) {
+      setError(responseError.data.errors);
     }
 
     if (responseError?.error) {
-      setError({
-        errors: {
-          msg: "Network Error",
-        },
-      });
+      setError({ message: "Network Error" });
     }
+
     if (data?.success) {
       navigate("/dashboard");
     }
@@ -99,9 +96,8 @@ function Login() {
           >
             Sign in
           </Typography>
-          {error && (
+          {error?.message && (
             <Alert sx={{ mt: 2, width: "100%" }} severity="error">
-              {error.errors?.msg && error.errors.msg}
               {error?.message && error?.message}
             </Alert>
           )}

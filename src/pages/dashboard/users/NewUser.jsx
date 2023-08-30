@@ -15,11 +15,14 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { useState, useEffect } from "react";
 import { useAddUserMutation } from "../../../redux/features/users/usersApi";
+import { Avatar } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export default function NewUser() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [avatar, setAvatar] = useState(null);
+  const [avatarImage, setAvatarImage] = useState("");
 
   const [user, setUser] = useState({
     username: "",
@@ -36,20 +39,21 @@ export default function NewUser() {
   const [addUser, { data, isLoading, error: responseError }] =
     useAddUserMutation();
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (responseError?.data?.errors) {
       setError(responseError.data?.errors);
     }
 
     if (responseError?.error) {
-      setError({
-        message: "Network Error",
-      });
+      setError({ message: "Network Error" });
     }
-    if (data) {
-      console.log(data);
+
+    if (data?.success) {
+      navigate("/dashboard/users", { state: data?.message });
     }
-  }, [responseError, data]);
+  }, [responseError, data, navigate]);
 
   const handleChange = (name, value) => {
     setUser({
@@ -57,6 +61,15 @@ export default function NewUser() {
       fullname: `${firstName} ${lastName}`,
       [name]: value,
     });
+  };
+
+  const changeAvarar = (file) => {
+    setAvatar(file);
+    const reader = new FileReader();
+    reader.onload = () => {
+      setAvatarImage(reader.result);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e) => {
@@ -106,7 +119,6 @@ export default function NewUser() {
             </Grid>
             <Grid item xs={12} sm={12} md={6}>
               <TextField
-                required
                 fullWidth
                 label="Username"
                 name="username"
@@ -119,7 +131,6 @@ export default function NewUser() {
             </Grid>
             <Grid item xs={12} sm={12} md={6}>
               <TextField
-                required
                 type="email"
                 fullWidth
                 label="Email"
@@ -139,7 +150,6 @@ export default function NewUser() {
               >
                 <InputLabel htmlFor="password">Password</InputLabel>
                 <OutlinedInput
-                  required
                   type={showPassword ? "text" : "password"}
                   label="Password"
                   name="password"
@@ -187,10 +197,21 @@ export default function NewUser() {
             <Grid item xs={12}>
               <input
                 type="file"
+                hidden
                 accept="image/*"
                 name="avatar"
-                onChange={(e) => setAvatar(e.target.files[0])}
+                id="avatarUpload"
+                onChange={(e) => changeAvarar(e.target.files[0])}
               />
+              <label htmlFor="avatarUpload">
+                <IconButton component="span">
+                  <Avatar
+                    alt={user.fullname}
+                    src={avatarImage}
+                    sx={{ width: 80, height: 80 }}
+                  />
+                </IconButton>
+              </label>
             </Grid>
             <Grid item xs={12}>
               <Button

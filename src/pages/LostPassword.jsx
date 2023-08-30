@@ -33,19 +33,15 @@ function LostPassword() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (responseError?.data) {
-      setError(responseError.data);
+    if (responseError?.data?.errors) {
+      setError(responseError.data.errors);
     }
 
     if (responseError?.error) {
-      setError({
-        errors: {
-          msg: "Network Error",
-        },
-      });
+      setError({ message: "Network Error" });
     }
     if (data?.success) {
-      navigate("/login", { state: data?.msg });
+      navigate("/login", { state: data?.message });
     }
   }, [responseError, data, navigate]);
 
@@ -88,9 +84,8 @@ function LostPassword() {
           >
             Recover your password
           </Typography>
-          {error && (
+          {error?.message && (
             <Alert sx={{ mt: 2, width: "100%" }} severity="error">
-              {error.errors?.msg && error.errors.msg}
               {error?.message && error?.message}
             </Alert>
           )}
