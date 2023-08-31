@@ -2,21 +2,18 @@ import { Alert } from "@mui/material";
 import { useGetUserQuery } from "../../../redux/features/users/usersApi";
 import EditForm from "./EditForm";
 import { useParams } from "react-router-dom";
+import LoadingForm from "./LoadingForm";
 
 function EditUser() {
   const { userId } = useParams();
-  const { data: user, isLoading, isError, error } = useGetUserQuery(userId);
+  const { data: user, isLoading, isError } = useGetUserQuery(userId);
 
   let editUser;
 
   if (isLoading) {
-    // loading
+    editUser = <LoadingForm />;
   } else if (!isLoading && isError) {
-    editUser = (
-      <Alert variant="filled" severity="error">
-        {error?.data?.message}
-      </Alert>
-    );
+    editUser = <Alert severity="error">Internal Server Error</Alert>;
   } else if (!isLoading && !isError && user) {
     editUser = <EditForm title="Edit User" id={user?._id} userEdit={user} />;
   }

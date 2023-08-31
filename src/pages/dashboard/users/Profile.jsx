@@ -1,5 +1,7 @@
+import { Alert } from "@mui/material";
 import { useGetUserProfileQuery } from "../../../redux/features/users/usersApi";
 import EditForm from "./EditForm";
+import LoadingForm from "./LoadingForm";
 
 export default function Profile() {
   const { data: userProfile, isLoading, isError } = useGetUserProfileQuery();
@@ -7,9 +9,9 @@ export default function Profile() {
   let profile;
 
   if (isLoading) {
-    // loading
+    profile = <LoadingForm />;
   } else if (!isLoading && isError) {
-    // error
+    profile = <Alert severity="error">Internal Server Error</Alert>;
   } else if (!isLoading && !isError && userProfile) {
     profile = (
       <EditForm

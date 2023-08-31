@@ -4,7 +4,7 @@ import LostPassword from "./pages/LostPassword";
 import Layout from "./component/Layout";
 import PrivateRoute from "./component/PrivateRoute";
 import PublicRoute from "./component/PublicRoute";
-import ErrorPage from "./component/ErrorPage";
+import NotFoundPage from "./component/NotFoundPage";
 import DashboardHome from "./pages/dashboard/DashboardHome";
 import Users from "./pages/dashboard/users/Users";
 import NewUser from "./pages/dashboard/users/NewUser";
@@ -68,7 +68,7 @@ function App() {
           <Route path="users/profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
         </Route>
-        <Route path="*" element={<ErrorPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </ThemeProvider>
   );
