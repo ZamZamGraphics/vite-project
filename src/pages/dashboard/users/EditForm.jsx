@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import TextField from "@mui/material/TextField";
+import { Avatar } from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
@@ -14,31 +15,37 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { useState, useEffect } from "react";
-import { useAddUserMutation } from "../../../redux/features/users/usersApi";
-import { Avatar } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useEditUserMutation } from "../../../redux/features/users/usersApi";
 
-export default function NewUser() {
-  const [avatar, setAvatar] = useState(null);
-  const [avatarImage, setAvatarImage] = useState("");
+const EditForm = ({ title, id, userEdit }) => {
+  const {
+    fullname: initialFullname,
+    username: initialUsername,
+    email: initialEmail,
+    status: initialStatus,
+    role: initialRole,
+    avatar: initialAvatar,
+  } = userEdit;
 
   const [user, setUser] = useState({
-    fullname: "",
-    username: "",
-    email: "",
+    fullname: initialFullname,
+    email: initialEmail,
     password: "",
-    status: "Unverified",
-    role: "User",
+    status: initialStatus,
+    role: initialRole,
   });
 
+  const [avatar, setAvatar] = useState(null);
+  const [avatarImage, setAvatarImage] = useState(
+    `${import.meta.env.VITE_API_URL}/upload/${initialAvatar}`
+  );
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const [addUser, { data, isLoading, error: responseError }] =
-    useAddUserMutation();
-
-  const navigate = useNavigate();
+  const [editUser, { data, isLoading, error: responseError }] =
+    useEditUserMutation();
 
   useEffect(() => {
     if (responseError?.data?.errors) {
@@ -50,9 +57,9 @@ export default function NewUser() {
     }
 
     if (data?.success) {
-      navigate("/dashboard/users", { state: data?.message });
+      setSuccess(data.message);
     }
-  }, [responseError, data, navigate]);
+  }, [responseError, data]);
 
   const handleChange = (name, value) => {
     setUser({
@@ -73,20 +80,21 @@ export default function NewUser() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
     const form = new FormData();
     form.append("fullname", user.fullname);
-    form.append("username", user.username);
     form.append("email", user.email);
-    form.append("password", user.password);
+    if (user.password) {
+      form.append("password", user.password);
+    }
     form.append("status", user.status);
     form.append("role", user.role);
     form.append("avatar", avatar);
-    addUser(form);
+    editUser({ id, data: form });
   };
 
   return (
     <Grid container alignItems="center" direction="column">
-      {/* <Box sx={{ flexGrow: 1, maxWidth: 1024 }}> */}
       <Box
         sx={{
           padding: 4,
@@ -97,11 +105,16 @@ export default function NewUser() {
         }}
       >
         <Typography variant="h5" align="center" mb={2}>
-          Add New User
+          {title}
         </Typography>
+        {success && (
+          <Alert mb={3} severity="success">
+            {success}
+          </Alert>
+        )}
         {error?.message && (
           <Alert mb={3} variant="filled" severity="error">
-            {error?.message && error?.message}
+            {error.message}
           </Alert>
         )}
         <Box component="form" onSubmit={handleSubmit}>
@@ -138,11 +151,10 @@ export default function NewUser() {
             <Grid item xs={12}>
               <TextField
                 fullWidth
+                disabled
                 size="small"
                 label="Username"
-                name="username"
-                value={user.username}
-                onChange={(e) => handleChange("username", e.target.value)}
+                value={initialUsername}
                 id={error?.username && "username-error"}
                 error={error?.username && true}
                 helperText={error?.username && error?.username?.msg}
@@ -223,7 +235,7 @@ export default function NewUser() {
                 variant="contained"
                 disabled={isLoading}
               >
-                Add New User
+                User Update
               </Button>
             </Grid>
           </Grid>
@@ -231,8 +243,7 @@ export default function NewUser() {
       </Box>
     </Grid>
   );
-}
-
+};
 const userRole = [
   {
     value: "Admin",
@@ -243,3 +254,4 @@ const userRole = [
     label: "User",
   },
 ];
+export default EditForm;

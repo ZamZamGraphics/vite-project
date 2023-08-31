@@ -9,6 +9,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Skeleton,
 } from "@mui/material";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import GppBadIcon from "@mui/icons-material/GppBad";
@@ -34,6 +35,39 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
+const TableRowsLoader = ({ rowsNum }) => {
+  return [...Array(rowsNum)].map((row, index) => (
+    <TableRow
+      key={index}
+      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+    >
+      <TableCell component="th" scope="row">
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <Skeleton variant="circular">
+            <Avatar />
+          </Skeleton>
+          <Skeleton animation="wave" variant="text" width="100%" />
+        </Stack>
+      </TableCell>
+      <TableCell>
+        <Skeleton animation="wave" variant="text" />
+      </TableCell>
+      <TableCell>
+        <Skeleton animation="wave" variant="text" />
+      </TableCell>
+      <TableCell>
+        <Skeleton animation="wave" variant="text" />
+      </TableCell>
+      <TableCell>
+        <Skeleton animation="wave" variant="text" />
+      </TableCell>
+      <TableCell>
+        <Skeleton animation="wave" variant="text" />
+      </TableCell>
+    </TableRow>
+  ));
+};
+
 function Users() {
   const [anchorEl, setAnchorEl] = useState(null);
   const openIcon = Boolean(anchorEl);
@@ -52,8 +86,7 @@ function Users() {
     data: users,
     isLoading,
     isError,
-    error,
-  } = useGetUsersQuery({ page: 1, limit: 5 });
+  } = useGetUsersQuery({ page: 0, limit: 20 });
 
   const userStatus = (status) => {
     let icon, color;
@@ -72,18 +105,12 @@ function Users() {
   // decide what to render
   let content = null;
   if (isLoading) {
-    content = (
-      <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-        <TableCell component="th" scope="row">
-          Loading ...
-        </TableCell>
-      </TableRow>
-    );
+    content = <TableRowsLoader rowsNum={20} />;
   } else if (!isLoading && isError) {
     content = (
       <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
         <TableCell component="th" scope="row" colSpan={6}>
-          <Alert severity="warning">{error?.error}</Alert>
+          <Alert severity="warning">Internal Server Error</Alert>
         </TableCell>
       </TableRow>
     );
@@ -102,14 +129,16 @@ function Users() {
         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
       >
         <TableCell component="th" scope="row">
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar
-              alt={user.fullname}
-              src={`${import.meta.env.VITE_API_URL}/upload/${user.avatar}`}
-              sx={{ width: 40, height: 40 }}
-            />
-            <Typography>{user.fullname}</Typography>
-          </Stack>
+          <Link to={`/dashboard/users/${user._id}`}>
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Avatar
+                alt={user.fullname}
+                src={`${import.meta.env.VITE_API_URL}/upload/${user.avatar}`}
+                sx={{ width: 40, height: 40 }}
+              />
+              <Typography>{user.fullname}</Typography>
+            </Stack>
+          </Link>
         </TableCell>
         <TableCell>{user.username}</TableCell>
         <TableCell>{user.email}</TableCell>
@@ -126,7 +155,7 @@ function Users() {
           >
             <MoreVertIcon />
           </IconButton>
-          {user._id}
+          <Link to={`/dashboard/users/${user._id}`}>{user._id}</Link>
           <Menu
             id="long-menu"
             MenuListProps={{
