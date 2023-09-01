@@ -6,14 +6,12 @@ import {
   Avatar,
   Stack,
   Chip,
-  IconButton,
-  Menu,
-  MenuItem,
   Skeleton,
+  TableFooter,
+  TablePagination,
 } from "@mui/material";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import GppBadIcon from "@mui/icons-material/GppBad";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
@@ -25,6 +23,7 @@ import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { useGetUsersQuery } from "../../../redux/features/users/usersApi";
+import UserAction from "./UserAction";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -69,24 +68,29 @@ const TableRowsLoader = ({ rowsNum }) => {
 };
 
 function Users() {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const openIcon = Boolean(anchorEl);
   const [open, setOpen] = useState(true);
+
+  // for pagination
+  const [page, setPage] = useState(0);
+  const [perPage, setPerPage] = useState(10);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangePerPage = (event) => {
+    setPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   const location = useLocation();
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const { data, isLoading, isError } = useGetUsersQuery({
+    page: page,
+    limit: perPage,
+  });
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const {
-    data: users,
-    isLoading,
-    isError,
-  } = useGetUsersQuery({ page: 0, limit: 20 });
+  const total = data?.total || 0;
 
   const userStatus = (status) => {
     let icon, color;
@@ -100,12 +104,10 @@ function Users() {
     return <Chip size="small" label={status} icon={icon} color={color} />;
   };
 
-  const ITEM_HEIGHT = 48;
-
   // decide what to render
   let content = null;
   if (isLoading) {
-    content = <TableRowsLoader rowsNum={20} />;
+    content = <TableRowsLoader rowsNum={10} />;
   } else if (!isLoading && isError) {
     content = (
       <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
@@ -114,7 +116,7 @@ function Users() {
         </TableCell>
       </TableRow>
     );
-  } else if (!isLoading && !isError && users?.length === 0) {
+  } else if (!isLoading && !isError && data?.users?.length === 0) {
     content = (
       <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
         <TableCell component="th" scope="row" colSpan={6}>
@@ -122,12 +124,9 @@ function Users() {
         </TableCell>
       </TableRow>
     );
-  } else if (!isLoading && !isError && users?.length > 0) {
-    content = users.map((user) => (
-      <TableRow
-        key={user._id}
-        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-      >
+  } else if (!isLoading && !isError && data?.users?.length > 0) {
+    content = data.users.map((user) => (
+      <TableRow key={user._id}>
         <TableCell component="th" scope="row">
           <Link to={`/dashboard/users/${user._id}`}>
             <Stack direction="row" alignItems="center" spacing={2}>
@@ -144,41 +143,8 @@ function Users() {
         <TableCell>{user.email}</TableCell>
         <TableCell>{user.role}</TableCell>
         <TableCell>{userStatus(user.status)}</TableCell>
-        <TableCell>
-          <IconButton
-            aria-label="more"
-            id="long-button"
-            aria-controls={openIcon ? "long-menu" : undefined}
-            aria-expanded={openIcon ? "true" : undefined}
-            aria-haspopup="true"
-            onClick={handleClick}
-          >
-            <MoreVertIcon />
-          </IconButton>
-          <Link to={`/dashboard/users/${user._id}`}>{user._id}</Link>
-          <Menu
-            id="long-menu"
-            MenuListProps={{
-              "aria-labelledby": "long-button",
-            }}
-            anchorEl={anchorEl}
-            open={openIcon}
-            onClose={handleClose}
-            PaperProps={{
-              style: {
-                maxHeight: ITEM_HEIGHT * 4.5,
-                width: "100ch",
-              },
-            }}
-          >
-            <MenuItem
-              component={Link}
-              to={`/dashboard/users/${user._id}`}
-              onClick={handleClose}
-            >
-              View
-            </MenuItem>
-          </Menu>
+        <TableCell width={50}>
+          <UserAction userId={user._id} />
         </TableCell>
       </TableRow>
     ));
@@ -214,6 +180,35 @@ function Users() {
             </TableRow>
           </TableHead>
           <TableBody>{content}</TableBody>
+          <TableFooter>
+            <TableRow
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+            >
+              <TablePagination
+                rowsPerPageOptions={[
+                  10,
+                  20,
+                  30,
+                  { label: "All", value: total },
+                ]}
+                colSpan={6}
+                count={total}
+                rowsPerPage={perPage}
+                page={page}
+                labelRowsPerPage="Show per page"
+                SelectProps={{
+                  inputProps: {
+                    "aria-label": "rows per page",
+                  },
+                  native: true,
+                }}
+                showFirstButton
+                showLastButton
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangePerPage}
+              />
+            </TableRow>
+          </TableFooter>
         </Table>
       </TableContainer>
     </Box>
