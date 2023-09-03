@@ -1,4 +1,10 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Navigate,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
 import Login from "./pages/Login";
 import LostPassword from "./pages/LostPassword";
 import Layout from "./component/Layout";
@@ -22,6 +28,46 @@ import { useMemo } from "react";
 import { themeSettings } from "./theme";
 import { useSelector } from "react-redux";
 
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <>
+      <Route path="/" element={<Navigate to="/dashboard" />} />
+      <Route
+        path="login"
+        element={
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="lost-password"
+        element={
+          <PublicRoute>
+            <LostPassword />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="dashboard"
+        element={
+          <PrivateRoute>
+            <Layout />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<DashboardHome />} />
+        <Route path="users" element={<Users />} />
+        <Route path="users/new" element={<NewUser />} />
+        <Route path="users/:userId" element={<EditUser />} />
+        <Route path="users/profile" element={<Profile />} />
+        <Route path="settings" element={<Settings />} />
+      </Route>
+      <Route path="*" element={<NotFoundPage />} />
+    </>
+  )
+);
+
 function App() {
   const authChecked = useAuthCheck();
 
@@ -35,41 +81,7 @@ function App() {
   ) : (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" />} />
-        <Route
-          path="login"
-          element={
-            <PublicRoute>
-              <Login />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="lost-password"
-          element={
-            <PublicRoute>
-              <LostPassword />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="dashboard"
-          element={
-            <PrivateRoute>
-              <Layout />
-            </PrivateRoute>
-          }
-        >
-          <Route index element={<DashboardHome />} />
-          <Route path="users" element={<Users />} />
-          <Route path="users/new" element={<NewUser />} />
-          <Route path="users/:userId" element={<EditUser />} />
-          <Route path="users/profile" element={<Profile />} />
-          <Route path="settings" element={<Settings />} />
-        </Route>
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+      <RouterProvider router={router} />
     </ThemeProvider>
   );
 }

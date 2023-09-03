@@ -5,12 +5,16 @@ const SidebarItem = ({ item, handleDrawerToggle }) => {
   const location = useLocation();
   const pathname = location.pathname;
   const style = {
-    "&: hover": {
+    "&.Mui-selected, &.Mui-selected: hover": {
+      fontWeight: "bold",
       color: "active.text",
       backgroundColor: "active.background",
     },
-    color: pathname === item.path ? "active.text" : "unset",
-    backgroundColor: pathname === item.path ? "active.background" : "unset",
+    "&: hover": {
+      fontWeight: "bold",
+      color: "active.text",
+      backgroundColor: "active.background",
+    },
     paddingY: "10px",
     paddingX: "15px",
   };
@@ -21,6 +25,7 @@ const SidebarItem = ({ item, handleDrawerToggle }) => {
       to={item.path}
       sx={style}
       onClick={handleDrawerToggle}
+      selected={pathname === item.path && true}
     >
       <ListItemIcon
         sx={{

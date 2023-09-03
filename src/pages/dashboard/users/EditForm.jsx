@@ -130,11 +130,7 @@ const EditForm = ({ title, id, userEdit }) => {
               />
               <label htmlFor="avatarUpload">
                 <IconButton component="span">
-                  <Avatar
-                    alt={user.fullname}
-                    src={avatarImage}
-                    sx={{ width: 100, height: 100 }}
-                  />
+                  <Avatar src={avatarImage} sx={{ width: 100, height: 100 }} />
                 </IconButton>
               </label>
             </Grid>

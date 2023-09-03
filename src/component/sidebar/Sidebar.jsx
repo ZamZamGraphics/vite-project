@@ -40,6 +40,7 @@ function Sidebar(props) {
       )}
     </List>
   );
+
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
@@ -52,6 +53,7 @@ function Sidebar(props) {
         onClose={handleDrawerToggle}
         ModalProps={{
           keepMounted: true, // Better open performance on mobile.
+          disableScrollLock: true,
         }}
         color="text"
         bgcolor="background"
@@ -67,6 +69,9 @@ function Sidebar(props) {
       </Drawer>
       <Drawer
         variant="permanent"
+        ModalProps={{
+          disableScrollLock: true,
+        }}
         color="text"
         bgcolor="background"
         sx={{
