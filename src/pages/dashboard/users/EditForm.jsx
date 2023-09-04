@@ -16,6 +16,7 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { useState, useEffect } from "react";
 import { useEditUserMutation } from "../../../redux/features/users/usersApi";
+import Status from "../../../component/Status";
 
 const EditForm = ({ title, id, userEdit }) => {
   const {
@@ -133,6 +134,9 @@ const EditForm = ({ title, id, userEdit }) => {
                   <Avatar src={avatarImage} sx={{ width: 100, height: 100 }} />
                 </IconButton>
               </label>
+            </Grid>
+            <Grid item align="center" xs={12}>
+              <Status status={user.status} />
             </Grid>
             <Grid item xs={12}>
               <TextField

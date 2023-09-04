@@ -12,9 +12,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import ViewUser from "./ViewUser";
 
-function UserAction({ userId }) {
+function UserAction({ user }) {
+  const { _id: userId } = user;
   const [open, setOpen] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
   };
@@ -23,9 +26,13 @@ function UserAction({ userId }) {
     setOpen(null);
   };
 
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
   const handleView = () => {
     handleCloseMenu();
-    console.log("Click View Menu", userId);
+    setOpenModal(true);
   };
 
   const handleEdit = () => {
@@ -88,6 +95,7 @@ function UserAction({ userId }) {
           Delete
         </MenuItem>
       </Popover>
+      <ViewUser open={openModal} handleClose={handleCloseModal} user={user} />
     </>
   );
 }

@@ -5,13 +5,10 @@ import {
   Alert,
   Avatar,
   Stack,
-  Chip,
   Skeleton,
   TableFooter,
   TablePagination,
 } from "@mui/material";
-import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
-import GppBadIcon from "@mui/icons-material/GppBad";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
@@ -24,6 +21,7 @@ import { useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { useGetUsersQuery } from "../../../redux/features/users/usersApi";
 import UserAction from "./UserAction";
+import Status from "../../../component/Status";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -92,18 +90,6 @@ function Users() {
 
   const total = data?.total || 0;
 
-  const userStatus = (status) => {
-    let icon, color;
-    if (status === "Verified") {
-      icon = <VerifiedUserIcon />;
-      color = "success";
-    } else {
-      icon = <GppBadIcon />;
-      color = "warning";
-    }
-    return <Chip size="small" label={status} icon={icon} color={color} />;
-  };
-
   // decide what to render
   let content = null;
   if (isLoading) {
@@ -142,9 +128,11 @@ function Users() {
         <TableCell>{user.username}</TableCell>
         <TableCell>{user.email}</TableCell>
         <TableCell>{user.role}</TableCell>
-        <TableCell>{userStatus(user.status)}</TableCell>
+        <TableCell>
+          <Status status={user.status} />
+        </TableCell>
         <TableCell width={50}>
-          <UserAction userId={user._id} />
+          <UserAction user={user} />
         </TableCell>
       </TableRow>
     ));
@@ -168,7 +156,7 @@ function Users() {
         </Snackbar>
       )}
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="simple table">
+        <Table sx={{ minWidth: 650 }} size="small" aria-label="users table">
           <TableHead>
             <TableRow>
               <StyledTableCell>Fullname</StyledTableCell>
