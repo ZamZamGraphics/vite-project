@@ -17,10 +17,12 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { userLoggedOut } from "../../redux/features/auth/authSlice";
 import { setCookie, deleteCookie } from "../../utils/cookie";
+import { useGetUserProfileQuery } from "../../redux/features/users/usersApi";
 
 function Navbar({ sidebarWidth, handleDrawerToggle }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const { data: user } = useGetUserProfileQuery();
 
   const dispatch = useDispatch();
 
@@ -66,7 +68,10 @@ function Navbar({ sidebarWidth, handleDrawerToggle }) {
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <IconButton onClick={handleClick} sx={{ p: 0 }}>
-              <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              <Avatar
+                alt={user?.fullname}
+                src={`${import.meta.env.VITE_API_URL}/upload/${user?.avatar}`}
+              />
             </IconButton>
             <Menu
               anchorEl={anchorEl}
@@ -108,7 +113,11 @@ function Navbar({ sidebarWidth, handleDrawerToggle }) {
                 to="/dashboard/users/profile"
                 onClick={handleClose}
               >
-                <Avatar /> My account
+                <Avatar
+                  alt={user?.fullname}
+                  src={`${import.meta.env.VITE_API_URL}/upload/${user?.avatar}`}
+                />{" "}
+                My account
               </MenuItem>
               <Divider />
               <MenuItem

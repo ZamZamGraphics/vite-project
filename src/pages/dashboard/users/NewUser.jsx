@@ -86,7 +86,6 @@ export default function NewUser() {
 
   return (
     <Grid container alignItems="center" direction="column">
-      {/* <Box sx={{ flexGrow: 1, maxWidth: 1024 }}> */}
       <Box
         sx={{
           padding: 4,
