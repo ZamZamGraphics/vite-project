@@ -60,6 +60,10 @@ const EditForm = ({ title, id, userEdit }) => {
     if (data?.success) {
       setSuccess(data.message);
     }
+
+    if (data?.success && data?.newEmail) {
+      setSuccess(`${data.message} - ${data.newEmail}`);
+    }
   }, [responseError, data]);
 
   const handleChange = (name, value) => {

@@ -32,6 +32,16 @@ export const usersApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Users", "User", "Profile"],
     }),
+    emailVerification: builder.query({
+      query: (token) => `/users/verify?token=${token}`,
+    }),
+    resendVerification: builder.mutation({
+      query: (email) => ({
+        url: "/users/resend",
+        method: "POST",
+        body: { email },
+      }),
+    }),
     deleteUser: builder.mutation({
       query: (id) => ({
         url: `/users/${id}`,
@@ -48,5 +58,7 @@ export const {
   useGetUserProfileQuery,
   useAddUserMutation,
   useEditUserMutation,
+  useEmailVerificationQuery,
+  useResendVerificationMutation,
   useDeleteUserMutation,
 } = usersApi;

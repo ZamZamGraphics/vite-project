@@ -8,6 +8,7 @@ import {
   Skeleton,
   TableFooter,
   TablePagination,
+  Chip,
 } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -17,9 +18,12 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
-import { useGetUsersQuery } from "../../../redux/features/users/usersApi";
+import {
+  useGetUsersQuery,
+  useResendVerificationMutation,
+} from "../../../redux/features/users/usersApi";
 import UserAction from "./UserAction";
 import Status from "../../../component/Status";
 
@@ -67,6 +71,8 @@ const TableRowsLoader = ({ rowsNum }) => {
 
 function Users() {
   const [open, setOpen] = useState(true);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   // for pagination
   const [page, setPage] = useState(0);
@@ -79,6 +85,22 @@ function Users() {
   const handleChangePerPage = (event) => {
     setPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const [resendVerification, { data: resendSuccess, error: resendError }] =
+    useResendVerificationMutation();
+
+  useEffect(() => {
+    if (resendError?.data?.errors) {
+      setError(resendError.data.errors?.message);
+    }
+    if (resendSuccess?.success) {
+      setSuccess(resendSuccess?.message);
+    }
+  }, [resendError, resendSuccess]);
+
+  const handleResend = (email) => {
+    resendVerification(email);
   };
 
   const location = useLocation();
@@ -129,7 +151,16 @@ function Users() {
         <TableCell>{user.email}</TableCell>
         <TableCell>{user.role}</TableCell>
         <TableCell>
-          <Status status={user.status} />
+          <Stack direction="row" spacing={1}>
+            <Status status={user.status} />
+            {user.status === "Unverified" && (
+              <Chip
+                label="Resend"
+                size="small"
+                onClick={() => handleResend(user.email)}
+              />
+            )}
+          </Stack>
         </TableCell>
         <TableCell width={50}>
           <UserAction user={user} />
@@ -142,7 +173,16 @@ function Users() {
       <Typography variant="h5" sx={{ mb: 2 }}>
         All Users
       </Typography>
-
+      {error && (
+        <Alert severity="error" sx={{ marginBottom: 2 }}>
+          {error}
+        </Alert>
+      )}
+      {success && (
+        <Alert severity="success" sx={{ marginBottom: 2 }}>
+          {success}
+        </Alert>
+      )}
       {location.state && (
         <Snackbar
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
