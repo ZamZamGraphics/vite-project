@@ -14,12 +14,16 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import ViewUser from "./ViewUser";
 import UserDelete from "./UserDelete";
+import { useGetUserProfileQuery } from "../../../redux/features/users/usersApi";
 
 function UserAction({ user }) {
   const { _id: userId } = user;
   const [open, setOpen] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+  const { data: loggedUser } = useGetUserProfileQuery();
+
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
   };
@@ -92,20 +96,30 @@ function UserAction({ user }) {
           </ListItemIcon>
           View
         </MenuItem>
-        <Divider />
-        <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
-          <ListItemIcon sx={{ color: "error.main" }}>
-            <DeleteIcon />
-          </ListItemIcon>
-          Delete
-        </MenuItem>
+        {(loggedUser._id !== userId) & (loggedUser.role === "Admin") ? (
+          <>
+            <Divider />
+            <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
+              <ListItemIcon sx={{ color: "error.main" }}>
+                <DeleteIcon />
+              </ListItemIcon>
+              Delete
+            </MenuItem>
+          </>
+        ) : (
+          ""
+        )}
       </Popover>
       <ViewUser open={openModal} handleClose={handleCloseModal} user={user} />
-      <UserDelete
-        open={openDeleteModal}
-        handleClose={handleCloseDeleteModal}
-        userId={user._id}
-      />
+      {(loggedUser._id !== userId) & (loggedUser.role === "Admin") ? (
+        <UserDelete
+          open={openDeleteModal}
+          handleClose={handleCloseDeleteModal}
+          userId={user._id}
+        />
+      ) : (
+        ""
+      )}
     </>
   );
 }
