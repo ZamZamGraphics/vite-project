@@ -4,15 +4,12 @@ export const usersApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getUsers: builder.query({
       query: ({ page, limit }) => `/users?page=${page}&limit=${limit}`,
-      providesTags: ["Users"],
     }),
     getUser: builder.query({
       query: (id) => `/users/${id}`,
-      providesTags: ["User"],
     }),
     getUserProfile: builder.query({
       query: () => `/users/profile`,
-      providesTags: ["Profile"],
     }),
     addUser: builder.mutation({
       query: (data) => ({
@@ -21,7 +18,23 @@ export const usersApi = apiSlice.injectEndpoints({
         body: data,
         formData: true,
       }),
-      invalidatesTags: ["Users"],
+      async onQueryStarted(args, { queryFulfilled, dispatch }) {
+        try {
+          const { data } = await queryFulfilled;
+          // update all users
+          const params = {
+            page: 0,
+            limit: 10,
+          };
+          dispatch(
+            apiSlice.util.updateQueryData("getUsers", params, (draft) => {
+              draft?.users.unshift(data?.user);
+            })
+          );
+        } catch (err) {
+          // console.log(err);
+        }
+      },
     }),
     editUser: builder.mutation({
       query: ({ id, data }) => ({
@@ -30,7 +43,44 @@ export const usersApi = apiSlice.injectEndpoints({
         body: data,
         formData: true,
       }),
-      invalidatesTags: ["Users", "User", "Profile"],
+      async onQueryStarted(args, { queryFulfilled, dispatch }) {
+        try {
+          const { data } = await queryFulfilled;
+          // update all users
+          const params = {
+            page: 0,
+            limit: 10,
+          };
+          dispatch(
+            apiSlice.util.updateQueryData("getUsers", params, (draft) => {
+              const user = draft?.users.find((user) => user?._id === args?.id);
+              Object.assign(user, data?.user);
+            })
+          );
+          // update single user
+          dispatch(
+            apiSlice.util.updateQueryData("getUser", args.id, (draft) => {
+              Object.assign(draft, data?.user);
+            })
+          );
+          // update profile
+          /**
+          // check logged user matched if matched update profile
+           dispatch(
+            apiSlice.util.updateQueryData(
+              "getUserProfile",
+              undefined,
+              (draft) => {
+                Object.assign(draft, data?.user);
+                // console.log(JSON.stringify(draft));
+              }
+            )
+          );
+          */
+        } catch (err) {
+          // console.log(err);
+        }
+      },
     }),
     emailVerification: builder.query({
       query: (token) => `/users/verify?token=${token}`,
@@ -47,7 +97,28 @@ export const usersApi = apiSlice.injectEndpoints({
         url: `/users/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Users", "User", "Profile"],
+      async onQueryStarted(args, { queryFulfilled, dispatch }) {
+        try {
+          await queryFulfilled;
+          // update all users
+          const params = {
+            page: 0,
+            limit: 10,
+          };
+          dispatch(
+            apiSlice.util.updateQueryData("getUsers", params, (draft) => {
+              const users = draft?.users.filter(
+                (user) => user?._id === args?.id
+              );
+              console.log(users);
+
+              // return draft?.users.filter((user) => user?._id !== args.id);
+            })
+          );
+        } catch (err) {
+          console.log(err);
+        }
+      },
     }),
   }),
 });
