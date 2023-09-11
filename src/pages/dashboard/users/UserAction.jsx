@@ -14,15 +14,22 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import ViewUser from "./ViewUser";
 import UserDelete from "./UserDelete";
-import { useGetUserProfileQuery } from "../../../redux/features/users/usersApi";
+import jwt_decode from "jwt-decode";
+import { getCookie } from "../../../utils/cookie";
+import { useGetUserQuery } from "../../../redux/features/users/usersApi";
 
 function UserAction({ user }) {
   const { _id: userId } = user;
+
+  const token = getCookie("accessToken");
+  const decode = token ? jwt_decode(token) : false;
+  const { userid } = decode || null;
+
   const [open, setOpen] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
-  const { data: loggedUser } = useGetUserProfileQuery();
+  const { data: loggedUser } = useGetUserQuery(userid);
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);

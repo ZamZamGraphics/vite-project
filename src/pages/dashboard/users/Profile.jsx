@@ -1,10 +1,16 @@
 import { Alert } from "@mui/material";
-import { useGetUserProfileQuery } from "../../../redux/features/users/usersApi";
+import { useGetUserQuery } from "../../../redux/features/users/usersApi";
 import EditForm from "./EditForm";
 import LoadingForm from "./LoadingForm";
+import jwt_decode from "jwt-decode";
+import { getCookie } from "../../../utils/cookie";
+
+const token = getCookie("accessToken");
+const loggedUser = token ? jwt_decode(token) : false;
+const { userid } = loggedUser || null;
 
 export default function Profile() {
-  const { data: userProfile, isLoading, isError } = useGetUserProfileQuery();
+  const { data: userProfile, isLoading, isError } = useGetUserQuery(userid);
 
   let profile;
 

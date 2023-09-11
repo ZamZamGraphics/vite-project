@@ -17,12 +17,19 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { userLoggedOut } from "../../redux/features/auth/authSlice";
 import { setCookie, deleteCookie } from "../../utils/cookie";
-import { useGetUserProfileQuery } from "../../redux/features/users/usersApi";
+import { useGetUserQuery } from "../../redux/features/users/usersApi";
+import jwt_decode from "jwt-decode";
+import { getCookie } from "../../utils/cookie";
 
 function Navbar({ sidebarWidth, handleDrawerToggle }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const { data: user } = useGetUserProfileQuery();
+
+  const token = getCookie("accessToken");
+  const loggedUser = token ? jwt_decode(token) : false;
+  const { userid } = loggedUser || null;
+
+  const { data: user } = useGetUserQuery(userid);
 
   const dispatch = useDispatch();
 
