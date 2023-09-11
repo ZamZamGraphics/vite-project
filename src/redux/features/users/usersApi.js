@@ -1,4 +1,10 @@
 import { apiSlice } from "../api/apiSlice";
+import jwt_decode from "jwt-decode";
+import { getCookie } from "../../../utils/cookie";
+
+const token = getCookie("accessToken");
+const loggedUser = jwt_decode(token);
+const { userid } = loggedUser;
 
 export const usersApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -29,6 +35,7 @@ export const usersApi = apiSlice.injectEndpoints({
           dispatch(
             apiSlice.util.updateQueryData("getUsers", params, (draft) => {
               draft?.users.unshift(data?.user);
+              draft.total += 1;
             })
           );
         } catch (err) {
@@ -63,20 +70,18 @@ export const usersApi = apiSlice.injectEndpoints({
               Object.assign(draft, data?.user);
             })
           );
-          // update profile
-          /**
           // check logged user matched if matched update profile
-           dispatch(
-            apiSlice.util.updateQueryData(
-              "getUserProfile",
-              undefined,
-              (draft) => {
-                Object.assign(draft, data?.user);
-                // console.log(JSON.stringify(draft));
-              }
-            )
-          );
-          */
+          if (JSON.stringify(args.id) == JSON.stringify(userid)) {
+            dispatch(
+              apiSlice.util.updateQueryData(
+                "getUserProfile",
+                undefined,
+                (draft) => {
+                  Object.assign(draft, data?.user);
+                }
+              )
+            );
+          }
         } catch (err) {
           // console.log(err);
         }
@@ -97,7 +102,7 @@ export const usersApi = apiSlice.injectEndpoints({
         url: `/users/${id}`,
         method: "DELETE",
       }),
-      async onQueryStarted(args, { queryFulfilled, dispatch }) {
+      async onQueryStarted(id, { queryFulfilled, dispatch }) {
         try {
           await queryFulfilled;
           // update all users
@@ -107,16 +112,13 @@ export const usersApi = apiSlice.injectEndpoints({
           };
           dispatch(
             apiSlice.util.updateQueryData("getUsers", params, (draft) => {
-              const users = draft?.users.filter(
-                (user) => user?._id === args?.id
-              );
-              console.log(users);
-
-              // return draft?.users.filter((user) => user?._id !== args.id);
+              console.log(draft.total);
+              const users = draft?.users.filter((user) => user._id !== id);
+              return { users, total: draft.total - 1 };
             })
           );
         } catch (err) {
-          console.log(err);
+          // console.log(err);
         }
       },
     }),
