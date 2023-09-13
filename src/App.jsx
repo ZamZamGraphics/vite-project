@@ -8,6 +8,7 @@ import {
 import Login from "./pages/Login";
 import LostPassword from "./pages/LostPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Verify from "./pages/Verify";
 import Layout from "./component/Layout";
 import PrivateRoute from "./component/PrivateRoute";
 import PublicRoute from "./component/PublicRoute";
@@ -33,7 +34,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<Navigate to="/dashboard" />} />
-      <Route path="/verify" element={<Navigate to="/dashboard" />} />
+      <Route path="/verify" element={<Verify />} />
       <Route
         path="login"
         element={

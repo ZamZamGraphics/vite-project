@@ -54,7 +54,7 @@ export const usersApi = apiSlice.injectEndpoints({
       },
     }),
     emailVerification: builder.query({
-      query: (token) => `/users/verify?token=${token}`,
+      query: (token) => `/users/verify${token}`,
     }),
     resendVerification: builder.mutation({
       query: (email) => ({
