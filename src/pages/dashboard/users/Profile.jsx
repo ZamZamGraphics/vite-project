@@ -7,7 +7,7 @@ import { getCookie } from "../../../utils/cookie";
 
 const token = getCookie("accessToken");
 const loggedUser = token ? jwt_decode(token) : false;
-const { userid } = loggedUser || null;
+const { userid } = loggedUser || {};
 
 export default function Profile() {
   const { data: userProfile, isLoading, isError } = useGetUserQuery(userid);

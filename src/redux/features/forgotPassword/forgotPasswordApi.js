@@ -10,21 +10,11 @@ export const forgotPasswordApi = apiSlice.injectEndpoints({
       }),
     }),
     resetPassword: builder.mutation({
-      query: ({ password, queryURL }) => ({
-        url: `/users/reset?${queryURL}`,
+      query: ({ password, confirmPassword, queryURL }) => ({
+        url: `/users/reset${queryURL}`,
         method: "POST",
-        body: password,
+        body: { password, confirmPassword },
       }),
-
-      async onQueryStarted(arg, { queryFulfilled }) {
-        try {
-          const result = await queryFulfilled;
-
-          console.log(result);
-        } catch (err) {
-          // do nothing
-        }
-      },
     }),
   }),
 });

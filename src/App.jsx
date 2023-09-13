@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Login from "./pages/Login";
 import LostPassword from "./pages/LostPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Layout from "./component/Layout";
 import PrivateRoute from "./component/PrivateRoute";
 import PublicRoute from "./component/PublicRoute";
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<Navigate to="/dashboard" />} />
+      <Route path="/verify" element={<Navigate to="/dashboard" />} />
       <Route
         path="login"
         element={
@@ -45,6 +47,14 @@ const router = createBrowserRouter(
         element={
           <PublicRoute>
             <LostPassword />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="reset"
+        element={
+          <PublicRoute>
+            <ResetPassword />
           </PublicRoute>
         }
       />
