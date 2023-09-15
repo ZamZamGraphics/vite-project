@@ -3,7 +3,7 @@ import { apiSlice } from "../api/apiSlice";
 export const usersApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getUsers: builder.query({
-      query: ({ page, limit }) => `/users?page=${page}&limit=${limit}`,
+      query: (queryString) => `/users${queryString}`,
       providesTags: ["Users"],
     }),
     getUser: builder.query({
@@ -32,12 +32,10 @@ export const usersApi = apiSlice.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           // update all users
-          const params = {
-            page: 0,
-            limit: 10,
-          };
+          const queryString = "?limit=10";
+
           dispatch(
-            apiSlice.util.updateQueryData("getUsers", params, (draft) => {
+            apiSlice.util.updateQueryData("getUsers", queryString, (draft) => {
               const user = draft?.users.find((user) => user?._id === args?.id);
               Object.assign(user, data?.user);
             })

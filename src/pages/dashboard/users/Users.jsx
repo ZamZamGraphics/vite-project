@@ -9,7 +9,10 @@ import {
   TableFooter,
   TablePagination,
   Chip,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
@@ -19,7 +22,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import {
   useGetUsersQuery,
   useResendVerificationMutation,
@@ -73,22 +76,49 @@ function Users() {
   const [open, setOpen] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [search, setSearch] = useState("");
 
   // for pagination
   const [page, setPage] = useState(0);
   const [perPage, setPerPage] = useState(10);
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { data, isLoading, isError } = useGetUsersQuery(
+    location.search || `?limit=${perPage}`
+  );
+  const total = data?.total || 0;
+
+  const queryString = (pageNo, limit, search = null) => {
+    let query = "?";
+    query += pageNo > 0 ? `page=${pageNo}` : `page=0`;
+    query += limit ? `&limit=${limit}` : `&limit=${perPage}`;
+    query += search ? `&search=${search}` : "";
+    return query;
+  };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    navigate(location.pathname + queryString(newPage, perPage));
+  };
+
+  const handleSearch = (value) => {
+    setSearch(value);
+    console.log(search);
+    // navigate(location.pathname + queryString(newPage, perPage));
   };
 
   const handleChangePerPage = (event) => {
     setPerPage(parseInt(event.target.value, 10));
     setPage(0);
+    navigate(location.pathname + queryString(page, event.target.value));
   };
 
-  const [resendVerification, { data: resendSuccess, error: resendError }] =
-    useResendVerificationMutation();
+  const [
+    resendVerification,
+    { data: resendSuccess, isLoading: resendLoading, error: resendError },
+  ] = useResendVerificationMutation();
 
   useEffect(() => {
     if (resendError?.data?.errors) {
@@ -102,15 +132,6 @@ function Users() {
   const handleResend = (email) => {
     resendVerification(email);
   };
-
-  const location = useLocation();
-
-  const { data, isLoading, isError } = useGetUsersQuery({
-    page: page,
-    limit: perPage,
-  });
-
-  const total = data?.total || 0;
 
   // decide what to render
   let content = null;
@@ -158,6 +179,7 @@ function Users() {
                 label="Resend"
                 size="small"
                 onClick={() => handleResend(user.email)}
+                disabled={resendLoading}
               />
             )}
           </Stack>
@@ -195,6 +217,19 @@ function Users() {
           </Alert>
         </Snackbar>
       )}
+      <TextField
+        label="Search"
+        type="search"
+        value={search}
+        onChange={(e) => handleSearch(e.target.value)}
+        id="search"
+        size="small"
+        endAdornment={
+          <InputAdornment position="end">
+            <SearchIcon />
+          </InputAdornment>
+        }
+      />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} size="small" aria-label="users table">
           <TableHead>
