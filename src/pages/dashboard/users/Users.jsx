@@ -9,8 +9,10 @@ import {
   TableFooter,
   TablePagination,
   Chip,
-  TextField,
   InputAdornment,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Table from "@mui/material/Table";
@@ -100,19 +102,18 @@ function Users() {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-    navigate(location.pathname + queryString(newPage, perPage));
+    navigate(location.pathname + queryString(newPage, perPage, search));
   };
 
   const handleSearch = (value) => {
     setSearch(value);
-    console.log(search);
-    // navigate(location.pathname + queryString(newPage, perPage));
+    navigate(location.pathname + queryString(page, perPage, value));
   };
 
   const handleChangePerPage = (event) => {
     setPerPage(parseInt(event.target.value, 10));
     setPage(0);
-    navigate(location.pathname + queryString(page, event.target.value));
+    navigate(location.pathname + queryString(page, event.target.value, search));
   };
 
   const [
@@ -217,19 +218,25 @@ function Users() {
           </Alert>
         </Snackbar>
       )}
-      <TextField
-        label="Search"
-        type="search"
-        value={search}
-        onChange={(e) => handleSearch(e.target.value)}
-        id="search"
-        size="small"
-        endAdornment={
-          <InputAdornment position="end">
-            <SearchIcon />
-          </InputAdornment>
-        }
-      />
+      <FormControl sx={{ mb: 2, width: "25ch" }}>
+        <InputLabel htmlFor="search" size="small">
+          Search
+        </InputLabel>
+        <OutlinedInput
+          size="small"
+          id="search"
+          type="search"
+          label="Search"
+          name="search"
+          value={search}
+          onChange={(e) => handleSearch(e.target.value)}
+          endAdornment={
+            <InputAdornment position="end">
+              <SearchIcon />
+            </InputAdornment>
+          }
+        />
+      </FormControl>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} size="small" aria-label="users table">
           <TableHead>
