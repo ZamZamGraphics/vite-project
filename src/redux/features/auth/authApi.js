@@ -1,5 +1,6 @@
 import { apiSlice } from "../api/apiSlice";
 import { userLoggedIn } from "./authSlice";
+import jwt_decode from "jwt-decode";
 
 export const authApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -15,10 +16,12 @@ export const authApi = apiSlice.injectEndpoints({
           const result = await queryFulfilled;
 
           localStorage.setItem("loggedIn", "true");
+          const user = jwt_decode(result.data.token);
 
           dispatch(
             userLoggedIn({
               accessToken: result.data.token,
+              user,
             })
           );
         } catch (err) {

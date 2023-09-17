@@ -2,14 +2,11 @@ import { Alert } from "@mui/material";
 import { useGetUserQuery } from "../../../redux/features/users/usersApi";
 import EditForm from "./EditForm";
 import LoadingForm from "./LoadingForm";
-import jwt_decode from "jwt-decode";
-import { getCookie } from "../../../utils/cookie";
-
-const token = getCookie("accessToken");
-const loggedUser = token ? jwt_decode(token) : false;
-const { userid } = loggedUser || {};
+import { useSelector } from "react-redux";
 
 export default function Profile() {
+  const auth = useSelector((state) => state.auth);
+  const { userid } = auth.user;
   const { data: userProfile, isLoading, isError } = useGetUserQuery(userid);
 
   let profile;

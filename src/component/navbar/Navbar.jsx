@@ -14,20 +14,17 @@ import Avatar from "@mui/material/Avatar";
 import MenuItem from "@mui/material/MenuItem";
 import ThemeSwitch from "../../component/ThemeSwitch";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userLoggedOut } from "../../redux/features/auth/authSlice";
 import { setCookie, deleteCookie } from "../../utils/cookie";
 import { useGetUserQuery } from "../../redux/features/users/usersApi";
-import jwt_decode from "jwt-decode";
-import { getCookie } from "../../utils/cookie";
 
 function Navbar({ sidebarWidth, handleDrawerToggle }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
-  const token = getCookie("accessToken");
-  const loggedUser = token ? jwt_decode(token) : false;
-  const { userid } = loggedUser || null;
+  const auth = useSelector((state) => state.auth);
+  const { userid } = auth.user;
 
   const { data: user } = useGetUserQuery(userid);
 

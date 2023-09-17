@@ -13,6 +13,7 @@ import {
   FormControl,
   InputLabel,
   OutlinedInput,
+  Grid,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Table from "@mui/material/Table";
@@ -82,7 +83,7 @@ function Users() {
 
   // for pagination
   const [page, setPage] = useState(0);
-  const [perPage, setPerPage] = useState(10);
+  const [perPage, setPerPage] = useState(20);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -218,25 +219,29 @@ function Users() {
           </Alert>
         </Snackbar>
       )}
-      <FormControl sx={{ mb: 2, width: "25ch" }}>
-        <InputLabel htmlFor="search" size="small">
-          Search
-        </InputLabel>
-        <OutlinedInput
-          size="small"
-          id="search"
-          type="search"
-          label="Search"
-          name="search"
-          value={search}
-          onChange={(e) => handleSearch(e.target.value)}
-          endAdornment={
-            <InputAdornment position="end">
-              <SearchIcon />
-            </InputAdornment>
-          }
-        />
-      </FormControl>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={3}>
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel htmlFor="search" size="small">
+              Search
+            </InputLabel>
+            <OutlinedInput
+              size="small"
+              id="search"
+              type="search"
+              label="Search"
+              name="search"
+              value={search}
+              onChange={(e) => handleSearch(e.target.value)}
+              endAdornment={
+                <InputAdornment position="end">
+                  <SearchIcon />
+                </InputAdornment>
+              }
+            />
+          </FormControl>
+        </Grid>
+      </Grid>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} size="small" aria-label="users table">
           <TableHead>
@@ -256,9 +261,10 @@ function Users() {
             >
               <TablePagination
                 rowsPerPageOptions={[
-                  10,
                   20,
+                  25,
                   30,
+                  40,
                   { label: "All", value: total },
                 ]}
                 colSpan={6}
