@@ -10,15 +10,36 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import {
+  useGetSettingsQuery,
+  useEditSettingsMutation,
+} from "../../redux/features/settings/settingsApi";
 
-function Settings() {
-  const [error, setError] = useState({ message: "Sonthing Wrong!" });
-  const [siteTitle, setSiteTitle] = useState("AL MADINA IT");
-  const [tagline, setTagline] = useState("");
-  const [email, setEmail] = useState("");
-  const [perPage, setPerPage] = useState("");
-  const [emailChecked, setEmailChecked] = useState(true);
-  const [smsChecked, setSmsChecked] = useState(false);
+export default function Settings() {
+  const { data, isLoading, isError } = useGetSettingsQuery();
+
+  let content;
+
+  if (isLoading) {
+    content = "Loading....";
+  } else if (!isLoading && isError) {
+    content = <Alert severity="error">Internal Server Error</Alert>;
+  } else if (!isLoading && !isError && data) {
+    content = <UpdateSettings data={data} />;
+  }
+  return content;
+}
+
+function UpdateSettings({ data }) {
+  const [initial] = data;
+
+  const [siteTitle, setSiteTitle] = useState(initial.siteTitle);
+  const [tagline, setTagline] = useState(initial.tagline);
+  const [email, setEmail] = useState(initial.email);
+  const [perPage, setPerPage] = useState(initial.perPage);
+  const [emailChecked, setEmailChecked] = useState(initial.emailChecked);
+  const [smsChecked, setSmsChecked] = useState(initial.smsChecked);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -149,5 +170,3 @@ function Settings() {
     </Box>
   );
 }
-
-export default Settings;

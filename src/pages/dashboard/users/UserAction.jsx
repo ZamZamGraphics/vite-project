@@ -14,16 +14,14 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import ViewUser from "./ViewUser";
 import UserDelete from "./UserDelete";
-import jwt_decode from "jwt-decode";
-import { getCookie } from "../../../utils/cookie";
 import { useGetUserQuery } from "../../../redux/features/users/usersApi";
+import { useSelector } from "react-redux";
 
 function UserAction({ user }) {
   const { _id: userId } = user;
 
-  const token = getCookie("accessToken");
-  const decode = token ? jwt_decode(token) : false;
-  const { userid } = decode || null;
+  const auth = useSelector((state) => state.auth);
+  const { userid } = auth.user;
 
   const [open, setOpen] = useState(null);
   const [openModal, setOpenModal] = useState(false);
