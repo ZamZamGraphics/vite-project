@@ -11,8 +11,22 @@ export const settingsApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
+      async onQueryStarted(args, { queryFulfilled, dispatch }) {
+        try {
+          const { data } = await queryFulfilled;
+
+          // update settings
+          dispatch(
+            apiSlice.util.updateQueryData("getSettings", undefined, (draft) => {
+              Object.assign(draft[0], data?.updatedData);
+            })
+          );
+        } catch (err) {
+          // console.log(err);
+        }
+      },
     }),
-    emailVerification: builder.query({
+    verifyAdminEmail: builder.query({
       query: (token) => `/settings/emailverify${token}`,
     }),
   }),
@@ -21,5 +35,5 @@ export const settingsApi = apiSlice.injectEndpoints({
 export const {
   useGetSettingsQuery,
   useEditSettingsMutation,
-  useEmailVerificationQuery,
+  useVerifyAdminEmailQuery,
 } = settingsApi;

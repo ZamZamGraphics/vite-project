@@ -9,11 +9,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   useGetSettingsQuery,
   useEditSettingsMutation,
 } from "../../redux/features/settings/settingsApi";
+import { useLocation } from "react-router-dom";
 
 export default function Settings() {
   const { data, isLoading, isError } = useGetSettingsQuery();
@@ -39,11 +40,47 @@ function UpdateSettings({ data }) {
   const [perPage, setPerPage] = useState(initial.perPage);
   const [emailChecked, setEmailChecked] = useState(initial.emailChecked);
   const [smsChecked, setSmsChecked] = useState(initial.smsChecked);
+  const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+
+  const [
+    editSettings,
+    { data: responseData, isLoading, error: responseError },
+  ] = useEditSettingsMutation();
+
+  const location = useLocation();
+
+  useEffect(() => {
+    if (responseError?.data?.errors) {
+      setError(responseError.data?.errors);
+    }
+
+    if (responseError?.error) {
+      setError({ message: "Network Error" });
+    }
+
+    if (responseData) {
+      setSuccess(responseData.message);
+    }
+
+    if (responseData && responseData?.newEmail) {
+      setSuccess(`${responseData.message} - ${responseData.newEmail}`);
+    }
+
+    if (location.state) {
+      {
+        location.state.success
+          ? setSuccess(location.state.message)
+          : setError({ message: location.state.message });
+      }
+    }
+    location.state = null;
+  }, [responseError, responseData, location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
     const data = {
       siteTitle,
       tagline,
@@ -52,8 +89,9 @@ function UpdateSettings({ data }) {
       emailChecked,
       smsChecked,
     };
-    console.log(data);
+    editSettings({ id: initial._id, data });
   };
+
   return (
     <Box
       sx={{
@@ -67,9 +105,16 @@ function UpdateSettings({ data }) {
       <Typography variant="h5" align="center" mb={2}>
         Settings
       </Typography>
+
+      {success && (
+        <Alert sx={{ mb: 3 }} variant="filled" severity="success">
+          {success}
+        </Alert>
+      )}
+
       {error?.message && (
         <Alert sx={{ mb: 3 }} variant="filled" severity="error">
-          {error?.message && error?.message}
+          {error.message}
         </Alert>
       )}
       <Box component="form" onSubmit={handleSubmit}>
@@ -160,7 +205,7 @@ function UpdateSettings({ data }) {
               sx={{ borderRadius: "9999px", mt: 3, mb: 2 }}
               disableElevation
               variant="contained"
-              // disabled={isLoading}
+              disabled={isLoading}
             >
               Setting Update
             </Button>

@@ -26,20 +26,19 @@ export const usersApi = apiSlice.injectEndpoints({
         body: data,
         formData: true,
       }),
-      // invalidatesTags: ["Users", "User"],
-
       async onQueryStarted(args, { queryFulfilled, dispatch }) {
         try {
           const { data } = await queryFulfilled;
+
           // update all users
           const queryString = "?limit=10";
-
           dispatch(
             apiSlice.util.updateQueryData("getUsers", queryString, (draft) => {
               const user = draft?.users.find((user) => user?._id === args?.id);
               Object.assign(user, data?.user);
             })
           );
+
           // update single user
           dispatch(
             apiSlice.util.updateQueryData("getUser", args.id, (draft) => {
