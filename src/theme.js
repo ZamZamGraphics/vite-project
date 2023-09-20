@@ -11,5 +11,8 @@ export const themeSettings = (mode) => ({
     background: {
       default: mode ? blueGrey[900] : grey[100],
     },
+    input: {
+      background: mode ? grey[900] : "#fff",
+    },
   },
 });
