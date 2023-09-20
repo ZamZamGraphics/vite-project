@@ -14,6 +14,13 @@ import PrivateRoute from "../component/PrivateRoute";
 import PublicRoute from "../component/PublicRoute";
 import NotFoundPage from "../component/NotFoundPage";
 import DashboardHome from "../pages/dashboard/DashboardHome";
+import Students from "../pages/dashboard/students/Students";
+import NewStudent from "../pages/dashboard/students/NewStudent";
+import Admission from "../pages/dashboard/admission/Admission";
+import NewAdmission from "../pages/dashboard/admission/NewAdmission";
+import Payment from "../pages/dashboard/admission/Payment";
+import Courses from "../pages/dashboard/courses/Courses";
+import Batches from "../pages/dashboard/batches/Batches";
 import Users from "../pages/dashboard/users/Users";
 import NewUser from "../pages/dashboard/users/NewUser";
 import EditUser from "../pages/dashboard/users/EditUser";
@@ -66,6 +73,13 @@ const router = createBrowserRouter(
         }
       >
         <Route index element={<DashboardHome />} />
+        <Route path="students" element={<Students />} />
+        <Route path="students/new" element={<NewStudent />} />
+        <Route path="admission" element={<Admission />} />
+        <Route path="admission/new" element={<NewAdmission />} />
+        <Route path="admission/payment" element={<Payment />} />
+        <Route path="admission/courses" element={<Courses />} />
+        <Route path="admission/batches" element={<Batches />} />
         <Route path="users" element={<Users />} />
         <Route path="users/new" element={<NewUser />} />
         <Route path="users/:userId" element={<EditUser />} />
@@ -76,4 +90,5 @@ const router = createBrowserRouter(
     </>
   )
 );
+
 export default router;
