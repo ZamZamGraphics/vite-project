@@ -41,9 +41,19 @@ function NewCourses() {
     }
 
     if (data) {
-      console.log(data);
+      setSuccess(data.message);
+      reset();
     }
   }, [responseError, data]);
+
+  const reset = () => {
+    setName("");
+    setSlug("");
+    setDescription("");
+    setCourseType("");
+    setDuration("");
+    setCourseFee("");
+  };
 
   const handleChange = (name, value) => {
     if (name == "name") {
@@ -67,7 +77,7 @@ function NewCourses() {
     addCourse(data);
   };
   return (
-    <Grid item xs={4}>
+    <>
       {success && (
         <Alert sx={{ mb: 3 }} variant="filled" severity="success">
           {success}
@@ -188,7 +198,7 @@ function NewCourses() {
           </Grid>
         </Grid>
       </Box>
-    </Grid>
+    </>
   );
 }
 

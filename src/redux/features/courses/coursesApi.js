@@ -3,7 +3,7 @@ import { apiSlice } from "../api/apiSlice";
 export const coursesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getCourses: builder.query({
-      query: () => "/courses",
+      query: (search) => `/courses?search=${search}`,
     }),
     getCourse: builder.query({
       query: (id) => `/courses/${id}`,
@@ -14,6 +14,21 @@ export const coursesApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      async onQueryStarted(args, { queryFulfilled, dispatch }) {
+        try {
+          const { data } = await queryFulfilled;
+          // update all courses
+          const search = "";
+          dispatch(
+            apiSlice.util.updateQueryData("getCourses", search, (draft) => {
+              draft.courses.unshift(data.course);
+              draft.total++;
+            })
+          );
+        } catch (err) {
+          // console.log(err);
+        }
+      },
     }),
     editCourse: builder.mutation({
       query: ({ id, data }) => ({
@@ -27,6 +42,24 @@ export const coursesApi = apiSlice.injectEndpoints({
         url: `/courses/${id}`,
         method: "DELETE",
       }),
+      async onQueryStarted(args, { queryFulfilled, dispatch }) {
+        try {
+          await queryFulfilled;
+          // update all courses
+          const search = "";
+          dispatch(
+            apiSlice.util.updateQueryData("getCourses", search, (draft) => {
+              const data = draft?.courses.filter(
+                (course) => course?._id !== args
+              );
+              const total = draft.total - 1;
+              return { courses: data, total };
+            })
+          );
+        } catch (err) {
+          // console.log(err);
+        }
+      },
     }),
   }),
 });

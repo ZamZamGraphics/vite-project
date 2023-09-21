@@ -9,7 +9,7 @@ import { useDeleteUserMutation } from "../../../redux/features/users/usersApi";
 import { useEffect } from "react";
 
 export default function UserDelete({ open, handleClose, userId }) {
-  const [deleteUser, { data, isLoading }] = useDeleteUserMutation(userId);
+  const [deleteUser, { data, isLoading }] = useDeleteUserMutation();
 
   useEffect(() => {
     if (data?.message) {
