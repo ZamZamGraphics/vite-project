@@ -36,6 +36,30 @@ export const coursesApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
+      async onQueryStarted(args, { queryFulfilled, dispatch }) {
+        try {
+          const { data } = await queryFulfilled;
+          // update all courses
+          const search = "";
+          dispatch(
+            apiSlice.util.updateQueryData("getCourses", search, (draft) => {
+              const course = draft.courses.find(
+                (course) => course._id === args.id
+              );
+              Object.assign(course, data?.course);
+            })
+          );
+
+          // update single course
+          dispatch(
+            apiSlice.util.updateQueryData("getCourse", search, (draft) => {
+              Object.assign(draft, data?.course);
+            })
+          );
+        } catch (err) {
+          // console.log(err);
+        }
+      },
     }),
     deleteCourse: builder.mutation({
       query: (id) => ({

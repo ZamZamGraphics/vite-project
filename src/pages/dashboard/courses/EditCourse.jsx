@@ -10,7 +10,7 @@ import {
 import { grey } from "@mui/material/colors";
 import { styled } from "@mui/system";
 import { useEffect, useState } from "react";
-import { useAddCourseMutation } from "../../../redux/features/courses/coursesApi";
+import { useEditCourseMutation } from "../../../redux/features/courses/coursesApi";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   "& .MuiInputBase-input": {
@@ -18,18 +18,27 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-function NewCourses() {
+function EditCourse({ course }) {
+  const {
+    name: initialName,
+    slug: initialSlug,
+    description: initialDescription,
+    courseType: initialCourseType,
+    duration: initialDuration,
+    courseFee: initialCourseFee,
+  } = course;
+
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [name, setName] = useState("");
-  const [slug, setSlug] = useState("");
-  const [description, setDescription] = useState("");
-  const [courseType, setCourseType] = useState("");
-  const [duration, setDuration] = useState("");
-  const [courseFee, setCourseFee] = useState("");
+  const [name, setName] = useState(initialName);
+  const [slug, setSlug] = useState(initialSlug);
+  const [description, setDescription] = useState(initialDescription);
+  const [courseType, setCourseType] = useState(initialCourseType);
+  const [duration, setDuration] = useState(initialDuration);
+  const [courseFee, setCourseFee] = useState(initialCourseFee);
 
-  const [addCourse, { data, isLoading, error: responseError }] =
-    useAddCourseMutation();
+  const [editCourse, { data, isLoading, error: responseError }] =
+    useEditCourseMutation();
 
   useEffect(() => {
     if (responseError?.data?.errors) {
@@ -42,18 +51,8 @@ function NewCourses() {
 
     if (data) {
       setSuccess(data.message);
-      reset();
     }
-  }, [responseError, data]);
-
-  const reset = () => {
-    setName("");
-    setSlug("");
-    setDescription("");
-    setCourseType("");
-    setDuration("");
-    setCourseFee("");
-  };
+  }, [responseError, data, course]);
 
   const handleChange = (name, value) => {
     if (name == "name") {
@@ -74,7 +73,7 @@ function NewCourses() {
       duration,
       courseFee,
     };
-    addCourse(data);
+    editCourse({ id: course._id, data });
   };
   return (
     <>
@@ -193,7 +192,7 @@ function NewCourses() {
               variant="contained"
               disabled={isLoading}
             >
-              Add New Course
+              Update Course
             </Button>
           </Grid>
         </Grid>
@@ -202,7 +201,7 @@ function NewCourses() {
   );
 }
 
-export default NewCourses;
+export default EditCourse;
 
 const type = [
   {

@@ -20,11 +20,16 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled } from "@mui/material/styles";
-import NewCourses from "./NewCourses";
-import { useGetCoursesQuery } from "../../../redux/features/courses/coursesApi";
+import NewCourse from "./NewCourse";
+import EditCourse from "./EditCourse";
+import {
+  useGetCoursesQuery,
+  useGetCourseQuery,
+} from "../../../redux/features/courses/coursesApi";
 import { useState } from "react";
 import CoursesLoader from "./CoursesLoader";
 import Action from "./Action";
+import { useLocation } from "react-router-dom";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -37,6 +42,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 function Courses() {
   const [search, setSearch] = useState("");
+
+  const useQuery = () => new URLSearchParams(useLocation().search);
+  const query = useQuery();
+  const { data: course } = useGetCourseQuery(query.get("id"));
 
   // for pagination
   const [page, setPage] = useState(0);
@@ -99,6 +108,11 @@ function Courses() {
     ));
   }
 
+  let editCourse = null;
+  if (course) {
+    editCourse = <EditCourse course={course} />;
+  }
+
   return (
     <Box>
       <Grid container spacing={2}>
@@ -106,7 +120,7 @@ function Courses() {
           <Typography variant="h5" sx={{ mb: 2 }}>
             Courses
           </Typography>
-          <NewCourses />
+          {editCourse ? editCourse : <NewCourse />}
         </Grid>
         <Grid item xs={12} md={8} textAlign="end">
           <FormControl sx={{ mb: 2 }}>
