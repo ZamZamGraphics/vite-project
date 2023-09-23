@@ -110,7 +110,7 @@ function Courses() {
 
   let editCourse = null;
   if (course) {
-    editCourse = <EditCourse course={course} />;
+    editCourse = <EditCourse />;
   }
 
   return (

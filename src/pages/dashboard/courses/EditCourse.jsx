@@ -10,7 +10,11 @@ import {
 import { grey } from "@mui/material/colors";
 import { styled } from "@mui/system";
 import { useEffect, useState } from "react";
-import { useEditCourseMutation } from "../../../redux/features/courses/coursesApi";
+import {
+  useGetCourseQuery,
+  useEditCourseMutation,
+} from "../../../redux/features/courses/coursesApi";
+import { useLocation } from "react-router-dom";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   "& .MuiInputBase-input": {
@@ -18,24 +22,35 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-function EditCourse({ course }) {
-  const {
-    name: initialName,
-    slug: initialSlug,
-    description: initialDescription,
-    courseType: initialCourseType,
-    duration: initialDuration,
-    courseFee: initialCourseFee,
-  } = course;
+function EditCourse() {
+  const useQuery = () => new URLSearchParams(useLocation().search);
+  const query = useQuery();
+  const id = query.get("id");
+  const { data: initialCourse } = useGetCourseQuery(id);
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [name, setName] = useState(initialName);
-  const [slug, setSlug] = useState(initialSlug);
-  const [description, setDescription] = useState(initialDescription);
-  const [courseType, setCourseType] = useState(initialCourseType);
-  const [duration, setDuration] = useState(initialDuration);
-  const [courseFee, setCourseFee] = useState(initialCourseFee);
+  const [course, setCourse] = useState({
+    name: initialCourse.name,
+    slug: initialCourse.slug,
+    description: initialCourse.description,
+    courseType: initialCourse.courseType,
+    duration: initialCourse.duration,
+    courseFee: initialCourse.courseFee,
+  });
+
+  useEffect(() => {
+    if (initialCourse) {
+      setCourse({
+        name: initialCourse.name,
+        slug: initialCourse.slug,
+        description: initialCourse.description,
+        courseType: initialCourse.courseType,
+        duration: initialCourse.duration,
+        courseFee: initialCourse.courseFee,
+      });
+    }
+  }, [initialCourse]);
 
   const [editCourse, { data, isLoading, error: responseError }] =
     useEditCourseMutation();
@@ -55,26 +70,34 @@ function EditCourse({ course }) {
   }, [responseError, data, course]);
 
   const handleChange = (name, value) => {
-    if (name == "name") {
-      setName(value);
-    }
-    setSlug(value.split(" ").join("-").toLowerCase());
+    setCourse({
+      ...course,
+      [name]: value,
+    });
+  };
+
+  const handleChangeName = (value) => {
+    setCourse({
+      ...course,
+      name: value,
+      slug: value.split(" ").join("-").toLowerCase(),
+    });
+  };
+
+  const handleChangeSlug = (value) => {
+    setCourse({
+      ...course,
+      slug: value.split(" ").join("-").toLowerCase(),
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
-    const data = {
-      name,
-      slug,
-      description,
-      courseType,
-      duration,
-      courseFee,
-    };
-    editCourse({ id: course._id, data });
+    editCourse({ id, data: course });
   };
+
   return (
     <>
       {success && (
@@ -96,8 +119,8 @@ function EditCourse({ course }) {
               fullWidth
               label="Course name"
               name="name"
-              value={name}
-              onChange={(e) => handleChange("name", e.target.value)}
+              value={course.name}
+              onChange={(e) => handleChangeName(e.target.value)}
               error={error.name && true}
               helperText={error.name && error.name.msg}
             />
@@ -111,8 +134,8 @@ function EditCourse({ course }) {
               fullWidth
               label="Course slug"
               name="slug"
-              value={slug}
-              onChange={(e) => handleChange("slug", e.target.value)}
+              value={course.slug}
+              onChange={(e) => handleChangeSlug(e.target.value)}
               error={error.slug && true}
               helperText={error.slug && error.slug.msg}
             />
@@ -132,8 +155,8 @@ function EditCourse({ course }) {
               rows={5}
               label="Description"
               name="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={course.description}
+              onChange={(e) => handleChange("description", e.target.value)}
               error={error.description && true}
               helperText={error.description && error.description.msg}
             />
@@ -148,8 +171,8 @@ function EditCourse({ course }) {
               size="small"
               label="Course Type"
               name="type"
-              value={courseType}
-              onChange={(e) => setCourseType(e.target.value)}
+              value={course.courseType}
+              onChange={(e) => handleChange("courseType", e.target.value)}
               error={error.courseType && true}
               helperText={error.courseType && error.courseType.msg}
             >
@@ -166,8 +189,8 @@ function EditCourse({ course }) {
               fullWidth
               label="Course Duration"
               name="duration"
-              value={duration}
-              onChange={(e) => setDuration(e.target.value)}
+              value={course.duration}
+              onChange={(e) => handleChange("duration", e.target.value)}
               error={error.duration && true}
               helperText={error.duration && error.duration.msg}
             />
@@ -178,8 +201,8 @@ function EditCourse({ course }) {
               fullWidth
               label="Course Fee"
               name="courseFee"
-              value={courseFee}
-              onChange={(e) => setCourseFee(e.target.value)}
+              value={course.courseFee}
+              onChange={(e) => handleChange("courseFee", e.target.value)}
               error={error.courseFee && true}
               helperText={error.courseFee && error.courseFee.msg}
             />
