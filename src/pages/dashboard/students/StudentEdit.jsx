@@ -15,39 +15,84 @@ import {
   Radio,
   RadioGroup,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { useAddStudentMutation } from "../../../redux/features/students/studentsApi";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  useEditStudentMutation,
+  useGetStudentQuery,
+} from "../../../redux/features/students/studentsApi";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 
-function NewStudent() {
-  const [avatar, setAvatar] = useState(null);
-  const [avatarImage, setAvatarImage] = useState("");
+function StudentEdit() {
+  const { studentId } = useParams();
+  const { data: student, isLoading, isError } = useGetStudentQuery(studentId);
+
+  let editStudent;
+
+  if (isLoading) {
+    editStudent = "Loading...";
+  } else if (!isLoading && isError) {
+    editStudent = <Alert severity="error">Internal Server Error</Alert>;
+  } else if (!isLoading && !isError && student) {
+    editStudent = <EditForm std={student} />;
+  }
+  return editStudent;
+}
+export default StudentEdit;
+
+function EditForm({ std }) {
+  const {
+    _id: id,
+    avatar: initialAvatar,
+    fullName: initialFullName,
+    fathersName: initialFathersName,
+    mothersName: initialMothersName,
+    birthDay: initialBirthDay,
+    gender: initialGender,
+    email: initialEmail,
+    occupation: initialOccupation,
+    nid: initialNID,
+    birthCertificate: initialBirthCertificate,
+    bloodGroup: initialBloodGroup,
+    education: initialEducation,
+    reference: initialReference,
+    address,
+    phone,
+  } = std;
+
+  const initialPresent = address.present;
+  const initialPermanent = address.permanent;
+  const initialStdPhone = phone[0];
+  const initialGuardianPhone = phone[0];
+
+  const [avatar, setAvatar] = useState(initialAvatar);
+  const [avatarImage, setAvatarImage] = useState(avatar);
 
   const [student, setStudent] = useState({
-    fullName: "",
-    fathersName: "",
-    mothersName: "",
-    presentAddress: "",
-    permanentAddress: "",
-    birthDay: "",
-    gender: "",
-    stdPhone: "",
-    guardianPhone: "",
-    email: "",
-    occupation: "",
-    nid: "",
-    birthCertificate: "",
-    bloodGroup: "",
-    education: "",
-    reference: "",
+    fullName: initialFullName,
+    fathersName: initialFathersName,
+    mothersName: initialMothersName,
+    presentAddress: initialPresent,
+    permanentAddress: initialPermanent,
+    birthDay: dayjs(initialBirthDay),
+    gender: initialGender,
+    stdPhone: initialStdPhone,
+    guardianPhone: initialGuardianPhone,
+    email: initialEmail,
+    occupation: initialOccupation,
+    nid: initialNID,
+    birthCertificate: initialBirthCertificate,
+    bloodGroup: initialBloodGroup,
+    education: initialEducation,
+    reference: initialReference,
   });
 
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const [addStudent, { data, isLoading, error: responseError }] =
-    useAddStudentMutation();
+  const [editStudent, { data, isLoading, error: responseError }] =
+    useEditStudentMutation();
 
   const navigate = useNavigate();
 
@@ -61,9 +106,12 @@ function NewStudent() {
     }
 
     if (data?.student) {
-      navigate("/dashboard/admission/new", { state: data?.student });
+      setSuccess(data.message);
     }
   }, [responseError, data, navigate]);
+
+  console.log("initial :", initialBirthDay);
+  console.log("state", student.birthDay);
 
   const handleChange = (name, value) => {
     setStudent({
@@ -125,7 +173,7 @@ function NewStudent() {
     form.append("education", student.education);
     form.append("reference", student.reference);
     form.append("status", "Pending");
-    addStudent(form);
+    editStudent({ id, data: form });
   };
 
   return (
@@ -140,8 +188,13 @@ function NewStudent() {
         }}
       >
         <Typography variant="h5" align="center" mb={2}>
-          Add New Student
+          Edit Student
         </Typography>
+        {success && (
+          <Alert mb={3} variant="filled" severity="success">
+            {success}
+          </Alert>
+        )}
         {error?.message && (
           <Alert mb={3} variant="filled" severity="error">
             {error.message}
@@ -440,8 +493,6 @@ function NewStudent() {
     </Grid>
   );
 }
-
-export default NewStudent;
 
 const bloodGroup = [
   { value: "A positive (A+)", label: "A positive (A+)" },

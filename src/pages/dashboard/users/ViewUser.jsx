@@ -11,6 +11,7 @@ import {
   TableCell,
 } from "@mui/material";
 import Status from "../../../component/Status";
+import dayjs from "dayjs";
 
 const style = {
   position: "absolute",
@@ -46,9 +47,7 @@ export default function ViewUser({ open, handleClose, user }) {
               src={`${import.meta.env.VITE_API_URL}/upload/${avatar}`}
               sx={{ width: 100, height: 100 }}
             />
-            <Typography variant="h4" component="h4">
-              {fullname}
-            </Typography>
+            <Typography variant="h5">{fullname}</Typography>
             <Typography variant="body2" component="span">
               <Status status={status} />
             </Typography>
@@ -70,7 +69,9 @@ export default function ViewUser({ open, handleClose, user }) {
                 </TableRow>
                 <TableRow>
                   <TableCell>Registered</TableCell>
-                  <TableCell>{createdAt}</TableCell>
+                  <TableCell>
+                    {dayjs(createdAt).format("DD MMMM YYYY h:mm A")}
+                  </TableCell>
                 </TableRow>
               </TableHead>
             </Table>

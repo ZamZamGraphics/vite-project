@@ -5,11 +5,11 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useDeleteUserMutation } from "../../../redux/features/users/usersApi";
+import { useDeleteStudentMutation } from "../../../redux/features/students/studentsApi";
 import { useEffect } from "react";
 
-export default function UserDelete({ open, handleClose, userId }) {
-  const [deleteUser, { data, isLoading }] = useDeleteUserMutation();
+export default function StudentDelete({ open, handleClose, studentId }) {
+  const [deleteStudent, { data, isLoading }] = useDeleteStudentMutation();
 
   useEffect(() => {
     if (data?.message) {
@@ -18,7 +18,8 @@ export default function UserDelete({ open, handleClose, userId }) {
   }, [data, handleClose]);
 
   const handleDelete = () => {
-    deleteUser(userId);
+    deleteStudent(studentId);
+    console.log(studentId);
   };
 
   return (
@@ -29,11 +30,11 @@ export default function UserDelete({ open, handleClose, userId }) {
       aria-describedby="delete-description"
     >
       <DialogTitle id="delete-title" color="error">
-        Are you sure want to delete this user?
+        Are you sure want to delete this student?
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="delete-description">
-          All associated data will also be deleted! There is no undo!
+          All admission data will also be deleted! There is no undo!
         </DialogContentText>
       </DialogContent>
       <DialogActions sx={{ padding: 2 }}>

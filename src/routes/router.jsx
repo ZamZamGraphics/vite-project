@@ -26,6 +26,7 @@ import NewUser from "../pages/dashboard/users/NewUser";
 import EditUser from "../pages/dashboard/users/EditUser";
 import Profile from "../pages/dashboard/users/Profile";
 import Settings from "../pages/dashboard/Settings";
+import StudentEdit from "../pages/dashboard/students/StudentEdit";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -75,6 +76,7 @@ const router = createBrowserRouter(
         <Route index element={<DashboardHome />} />
         <Route path="students" element={<Students />} />
         <Route path="students/new" element={<NewStudent />} />
+        <Route path="students/:studentId" element={<StudentEdit />} />
         <Route path="admission" element={<Admission />} />
         <Route path="admission/new" element={<NewAdmission />} />
         <Route path="admission/payment" element={<Payment />} />
