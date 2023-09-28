@@ -66,8 +66,10 @@ function EditForm({ std }) {
   const initialStdPhone = phone[0];
   const initialGuardianPhone = phone[0];
 
-  const [avatar, setAvatar] = useState(initialAvatar);
-  const [avatarImage, setAvatarImage] = useState(avatar);
+  const [avatar, setAvatar] = useState(null);
+  const [avatarImage, setAvatarImage] = useState(
+    `${import.meta.env.VITE_API_URL}/upload/${initialAvatar}`
+  );
 
   const [student, setStudent] = useState({
     fullName: initialFullName,
@@ -75,7 +77,7 @@ function EditForm({ std }) {
     mothersName: initialMothersName,
     presentAddress: initialPresent,
     permanentAddress: initialPermanent,
-    birthDay: dayjs(initialBirthDay),
+    birthDay: initialBirthDay,
     gender: initialGender,
     stdPhone: initialStdPhone,
     guardianPhone: initialGuardianPhone,
@@ -94,8 +96,6 @@ function EditForm({ std }) {
   const [editStudent, { data, isLoading, error: responseError }] =
     useEditStudentMutation();
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     if (responseError?.data?.errors) {
       setError(responseError.data?.errors);
@@ -108,10 +108,7 @@ function EditForm({ std }) {
     if (data?.student) {
       setSuccess(data.message);
     }
-  }, [responseError, data, navigate]);
-
-  console.log("initial :", initialBirthDay);
-  console.log("state", student.birthDay);
+  }, [responseError, data]);
 
   const handleChange = (name, value) => {
     setStudent({
@@ -297,7 +294,7 @@ function EditForm({ std }) {
                   views={["year", "month", "day"]}
                   format="YYYY-MM-DD"
                   name="birthDay"
-                  value={student.birthDay}
+                  value={dayjs(student.birthDay)}
                   onChange={(value) =>
                     handleChange("birthDay", dayjs(value.$d).format())
                   }

@@ -19,7 +19,6 @@ export default function StudentDelete({ open, handleClose, studentId }) {
 
   const handleDelete = () => {
     deleteStudent(studentId);
-    console.log(studentId);
   };
 
   return (

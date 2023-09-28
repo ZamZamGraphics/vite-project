@@ -29,9 +29,9 @@ export const studentsApi = apiSlice.injectEndpoints({
       async onQueryStarted(args, { queryFulfilled, dispatch }) {
         try {
           const { data } = await queryFulfilled;
-
+          
           // update all students
-          const queryString = "";
+          const queryString = "?limit=20";
           dispatch(
             apiSlice.util.updateQueryData(
               "getStudents",
@@ -40,7 +40,7 @@ export const studentsApi = apiSlice.injectEndpoints({
                 const student = draft?.students.find(
                   (student) => student?._id === args?.id
                 );
-                Object.assign(student, data?.student);
+                Object.assign(student, data.student);
               }
             )
           );
@@ -52,7 +52,7 @@ export const studentsApi = apiSlice.injectEndpoints({
             })
           );
         } catch (err) {
-          //   console.log(err);
+          // console.log(err);
         }
       },
     }),
