@@ -25,7 +25,7 @@ import Users from "../pages/dashboard/users/Users";
 import NewUser from "../pages/dashboard/users/NewUser";
 import EditUser from "../pages/dashboard/users/EditUser";
 import Profile from "../pages/dashboard/users/Profile";
-import Settings from "../pages/dashboard/Settings";
+import Settings from "../pages/dashboard/settings/Settings";
 import StudentEdit from "../pages/dashboard/students/StudentEdit";
 
 const router = createBrowserRouter(

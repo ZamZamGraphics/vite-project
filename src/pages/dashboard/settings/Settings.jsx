@@ -13,8 +13,9 @@ import { useState, useEffect } from "react";
 import {
   useGetSettingsQuery,
   useEditSettingsMutation,
-} from "../../redux/features/settings/settingsApi";
+} from "../../../redux/features/settings/settingsApi";
 import { useLocation } from "react-router-dom";
+import Loading from "./Loading";
 
 export default function Settings() {
   const { data, isLoading, isError } = useGetSettingsQuery();
@@ -22,7 +23,7 @@ export default function Settings() {
   let content;
 
   if (isLoading) {
-    content = "Loading....";
+    content = <Loading />;
   } else if (!isLoading && isError) {
     content = <Alert severity="error">Internal Server Error</Alert>;
   } else if (!isLoading && !isError && data) {

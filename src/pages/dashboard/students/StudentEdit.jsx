@@ -23,6 +23,7 @@ import {
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import Loading from "./Loading";
 
 function StudentEdit() {
   const { studentId } = useParams();
@@ -31,7 +32,7 @@ function StudentEdit() {
   let editStudent;
 
   if (isLoading) {
-    editStudent = "Loading...";
+    editStudent = <Loading />;
   } else if (!isLoading && isError) {
     editStudent = <Alert severity="error">Internal Server Error</Alert>;
   } else if (!isLoading && !isError && student) {
