@@ -74,15 +74,15 @@ function Courses() {
   } else if (!isLoading && isError) {
     content = (
       <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-        <TableCell component="th" scope="row" colSpan={6}>
+        <TableCell component="th" scope="row" colSpan={5}>
           <Alert severity="warning">Internal Server Error</Alert>
         </TableCell>
       </TableRow>
     );
-  } else if (!isLoading && !isError && data?.users?.length === 0) {
+  } else if (!isLoading && !isError && data?.courses?.length === 0) {
     content = (
       <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-        <TableCell component="th" scope="row" colSpan={6}>
+        <TableCell component="th" scope="row" colSpan={5}>
           <Alert severity="warning">Course Not Found</Alert>
         </TableCell>
       </TableRow>

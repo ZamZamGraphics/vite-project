@@ -46,14 +46,14 @@ export const coursesApi = apiSlice.injectEndpoints({
               const course = draft.courses.find(
                 (course) => course._id === args.id
               );
-              Object.assign(course, data?.updateData);
+              Object.assign(course, data?.course);
             })
           );
 
           // update single course
           dispatch(
             apiSlice.util.updateQueryData("getCourse", search, (draft) => {
-              Object.assign(draft, data?.updateData);
+              Object.assign(draft, data?.course);
             })
           );
         } catch (err) {
