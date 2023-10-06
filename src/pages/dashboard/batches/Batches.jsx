@@ -18,6 +18,7 @@ import {
   OutlinedInput,
   InputAdornment,
 } from "@mui/material";
+import dayjs from "dayjs";
 import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import { useLocation } from "react-router-dom";
@@ -53,7 +54,7 @@ function Batches() {
 
   const { data, isLoading, isError } = useGetBatchesQuery(search);
   const total = data?.total || 0;
-
+  console.log(data);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -96,19 +97,26 @@ function Batches() {
     ).map((batch) => (
       <TableRow key={batch._id}>
         <TableCell component="th" scope="row">
-          {batch.batchNo}
+          <Typography variant="h6">{batch.batchNo}</Typography>
         </TableCell>
-        <TableCell>{batch.course}</TableCell>
         <TableCell>
-          Status <br />
+          <Typography>
+            <strong>{batch.course?.name}</strong>
+          </Typography>
+          {batch.course?.courseType}
+        </TableCell>
+        <TableCell>
+          <Typography>
+            <strong>Status</strong>
+          </Typography>
           {batch.classTime}
         </TableCell>
         <TableCell>
-          {batch.startDate} <br />
-          {batch.endDate}
+          {dayjs(batch.startDate).format("DD-MM-YYYY")} <br />
+          {dayjs(batch.endDate).format("DD-MM-YYYY")}
         </TableCell>
         <TableCell>{batch.classDays}</TableCell>
-        <TableCell>Count</TableCell>
+        <TableCell>{batch.student.length}</TableCell>
         <TableCell width={50}>
           <Action batch={batch} />
         </TableCell>
