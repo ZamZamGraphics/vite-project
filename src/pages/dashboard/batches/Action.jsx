@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { useDeleteBatchMutation } from "../../../redux/features/batches/batchesApi";
 
 function Action({ batch }) {
+  const { _id: id } = batch;
   const [open, setOpen] = useState(null);
 
   const [deleteBatch] = useDeleteBatchMutation();
@@ -31,7 +32,7 @@ function Action({ batch }) {
 
   const handleDelete = () => {
     handleCloseMenu();
-    deleteBatch(batch._id);
+    deleteBatch(id);
   };
 
   return (
@@ -62,7 +63,7 @@ function Action({ batch }) {
       >
         <MenuItem
           component={Link}
-          to={`/dashboard/admission/batches?id=${batch._id}`}
+          to={`/dashboard/admission/batches?id=${id}`}
           onClick={handleEdit}
         >
           <ListItemIcon>

@@ -1,4 +1,6 @@
 import { apiSlice } from "../api/apiSlice";
+import { coursesApi } from "../courses/coursesApi";
+import { admissionApi } from "../admission/admissionApi";
 
 export const batchesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -17,16 +19,63 @@ export const batchesApi = apiSlice.injectEndpoints({
       async onQueryStarted(args, { queryFulfilled, dispatch }) {
         try {
           const { data } = await queryFulfilled;
-          // update all batches
-          const search = "";
-          dispatch(
-            apiSlice.util.updateQueryData("getBatches", search, (draft) => {
-              draft.batches.unshift(data.batch);
-              draft.total++;
-            })
-          );
+
+          const course = await dispatch(
+            coursesApi.endpoints.getCourse.initiate(args.course)
+          ).unwrap();
+
+          // silent entry to admission
+          if (data.batch) {
+            const {
+              student,
+              _id,
+              batchNo,
+              startDate,
+              endDate,
+              classDays,
+              classTime,
+            } = data.batch;
+
+            const studentIds = args.student.split(",");
+
+            studentIds.forEach((stdId) => {
+              console.log(stdId);
+              dispatch(
+                admissionApi.endpoints.addAdmission.initiate({
+                  student: stdId,
+                  course: args.course,
+                  batch: _id,
+                  discount: 0,
+                  payment: 0,
+                  timeSchedule: classTime,
+                  paymentType: "New",
+                })
+              );
+            });
+
+            // update all batches
+            const search = "";
+            dispatch(
+              apiSlice.util.updateQueryData("getBatches", search, (draft) => {
+                draft.batches.unshift({
+                  _id,
+                  batchNo,
+                  course: {
+                    name: course.name,
+                    courseFee: course.courseFee,
+                  },
+                  student,
+                  startDate,
+                  endDate,
+                  classDays,
+                  classTime,
+                });
+                draft.total++;
+              })
+            );
+          }
         } catch (err) {
-          // console.log(err);
+          console.log(err);
         }
       },
     }),

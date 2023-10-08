@@ -54,7 +54,7 @@ function Batches() {
 
   const { data, isLoading, isError } = useGetBatchesQuery(search);
   const total = data?.total || 0;
-  console.log(data);
+  // console.log(data);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
