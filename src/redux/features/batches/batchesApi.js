@@ -39,12 +39,11 @@ export const batchesApi = apiSlice.injectEndpoints({
             const studentIds = args.student.split(",");
 
             studentIds.forEach((stdId) => {
-              console.log(stdId);
               dispatch(
                 admissionApi.endpoints.addAdmission.initiate({
                   student: stdId,
                   course: args.course,
-                  batch: _id,
+                  batch: batchNo,
                   discount: 0,
                   payment: 0,
                   timeSchedule: classTime,
@@ -62,7 +61,7 @@ export const batchesApi = apiSlice.injectEndpoints({
                   batchNo,
                   course: {
                     name: course.name,
-                    courseFee: course.courseFee,
+                    courseType: course.courseType,
                   },
                   student,
                   startDate,
@@ -75,7 +74,7 @@ export const batchesApi = apiSlice.injectEndpoints({
             );
           }
         } catch (err) {
-          console.log(err);
+          // console.log(err);
         }
       },
     }),
