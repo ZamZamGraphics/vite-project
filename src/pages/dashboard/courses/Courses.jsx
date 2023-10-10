@@ -26,7 +26,7 @@ import {
   useGetCoursesQuery,
   useGetCourseQuery,
 } from "../../../redux/features/courses/coursesApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CoursesLoader from "./CoursesLoader";
 import Action from "./Action";
 import { useLocation } from "react-router-dom";
@@ -41,11 +41,19 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 function Courses() {
+  const [request, setRequest] = useState(false);
   const [search, setSearch] = useState("");
 
   const useQuery = () => new URLSearchParams(useLocation().search);
   const query = useQuery();
-  const { data: course } = useGetCourseQuery(query.get("id"));
+  const id = query.get("id");
+  const { data: course } = useGetCourseQuery(id, { skip: !request });
+
+  useEffect(() => {
+    if (id) {
+      setRequest(true);
+    }
+  }, [id]);
 
   // for pagination
   const [page, setPage] = useState(0);
@@ -120,7 +128,7 @@ function Courses() {
           <Typography variant="h5" sx={{ mb: 2 }}>
             Courses
           </Typography>
-          {editCourse ? editCourse : <NewCourse />}
+          {id ? editCourse : <NewCourse />}
         </Grid>
         <Grid item xs={12} md={8} textAlign="end">
           <FormControl sx={{ mb: 2 }}>

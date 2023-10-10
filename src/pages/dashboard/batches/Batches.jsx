@@ -22,7 +22,7 @@ import dayjs from "dayjs";
 import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useGetBatchesQuery,
   useGetBatchQuery,
@@ -42,11 +42,19 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 function Batches() {
+  const [request, setRequest] = useState(false);
   const [search, setSearch] = useState("");
 
   const useQuery = () => new URLSearchParams(useLocation().search);
   const query = useQuery();
-  const { data: batch } = useGetBatchQuery(query.get("id"));
+  const id = query.get("id");
+  const { data: batch } = useGetBatchQuery(id, { skip: !request });
+
+  useEffect(() => {
+    if (id) {
+      setRequest(true);
+    }
+  }, [id]);
 
   // for pagination
   const [page, setPage] = useState(0);
@@ -136,7 +144,7 @@ function Batches() {
           <Typography variant="h5" sx={{ mb: 2 }}>
             Batches
           </Typography>
-          {editBatch ? editBatch : <NewBatch />}
+          {id ? editBatch : <NewBatch />}
         </Grid>
         <Grid item xs={12} md={8} textAlign="end">
           <FormControl sx={{ mb: 2 }}>
