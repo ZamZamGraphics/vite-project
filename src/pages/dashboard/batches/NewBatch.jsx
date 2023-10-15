@@ -6,14 +6,12 @@ import {
   TextField,
   Button,
   Alert,
+  FormControl,
+  InputLabel,
+  Select,
 } from "@mui/material";
-import {
-  DatePicker,
-  LocalizationProvider,
-  TimePicker,
-} from "@mui/x-date-pickers";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
 import dayjs from "dayjs";
 import { grey } from "@mui/material/colors";
 import { styled } from "@mui/system";
@@ -27,6 +25,11 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
+const ITEM_HEIGHT = 36;
+const MOBILE_ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MENU_ITEMS = 6; // change this number to see the effect
+
 function NewBatch() {
   const [request, setRequest] = useState(false);
   const [error, setError] = useState("");
@@ -37,7 +40,7 @@ function NewBatch() {
   const [studentId, setStudentId] = useState("");
   const [startDate, setStartDate] = useState("");
   const [classDays, setClassDays] = useState("-1");
-  const [classTime, setClassTime] = useState("");
+  const [classTime, setClassTime] = useState("-1");
 
   const { data } = useGetCoursesQuery(courseType, { skip: !request });
 
@@ -95,13 +98,23 @@ function NewBatch() {
     if (courseName !== "-1") {
       course = courseName;
     }
+
+    let days = null;
+    if (classDays !== "-1") {
+      days = classDays;
+    }
+
+    let time = null;
+    if (classTime !== "-1") {
+      time = classTime;
+    }
     const data = {
       batchNo,
       course,
       student: studentId,
       startDate,
-      classDays,
-      classTime,
+      classDays: days,
+      classTime: time,
     };
     addBatch(data);
   };
@@ -198,59 +211,64 @@ function NewBatch() {
                     size: "small",
                     fullWidth: true,
                     error: error.startDate ? true : false,
-                    helperText: error.startDate && error.startDate.msg,
                   },
                 }}
                 sx={{ mt: 1, backgroundColor: "input.background" }}
               />
             </LocalizationProvider>
+            {error.startDate && (
+              <FormHelperText error>{error.startDate.msg}</FormHelperText>
+            )}
           </Grid>
           <Grid item xs={12}>
-            <Grid item xs={12}>
-              <StyledTextField
-                select
-                fullWidth
-                size="small"
-                label="Class Days"
-                name="classDays"
-                value={classDays}
-                onChange={(e) => setClassDays(e.target.value)}
-                error={error.classDays && true}
-                helperText={error.classDays && error.classDays.msg}
+            <StyledTextField
+              select
+              fullWidth
+              size="small"
+              label="Class Days"
+              name="classDays"
+              value={classDays}
+              onChange={(e) => setClassDays(e.target.value)}
+              error={error.classDays && true}
+              helperText={error.classDays && error.classDays.msg}
+            >
+              {days.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </StyledTextField>
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth size="small" error={error.classTime && true}>
+              <InputLabel>Class Time</InputLabel>
+              <Select
+                sx={{ mt: 1, backgroundColor: "input.background" }}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      maxHeight: {
+                        xs: MOBILE_ITEM_HEIGHT * MENU_ITEMS + ITEM_PADDING_TOP,
+                        sm: ITEM_HEIGHT * MENU_ITEMS + ITEM_PADDING_TOP,
+                      },
+                    },
+                  },
+                }}
+                label="Class Time"
+                name="classTime"
+                value={classTime}
+                onChange={(e) => setClassTime(e.target.value)}
               >
-                {days.map((option) => (
+                {times.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
                 ))}
-              </StyledTextField>
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <TimePicker
-                label="Class Time"
-                // views={["hours", "minutes"]}
-                viewRenderers={{
-                  hours: renderTimeViewClock,
-                  minutes: renderTimeViewClock,
-                }}
-                name="classTime"
-                value={classTime}
-                onChange={(value) =>
-                  setClassTime(dayjs(value.$d).format("h:mm A"))
-                }
-                slotProps={{
-                  textField: {
-                    size: "small",
-                    fullWidth: true,
-                    error: error.classTime ? true : false,
-                    helperText: error.classTime && error.classTime.msg,
-                  },
-                }}
-                sx={{ mt: 1, backgroundColor: "input.background" }}
-              />
-            </LocalizationProvider>
+              </Select>
+              <FormHelperText>
+                {error.classTime && error.classTime.msg}
+              </FormHelperText>
+            </FormControl>
           </Grid>
           <Grid item xs={12}>
             <Button
@@ -301,4 +319,33 @@ const days = [
     value: "Every day",
     label: "Every day",
   },
+];
+
+const times = [
+  { value: "-1", label: "Select Time" },
+  { value: "10:00 AM", label: "10:00 AM" },
+  { value: "10:30 AM", label: "10:30 AM" },
+  { value: "11:00 AM", label: "11:00 AM" },
+  { value: "11:30 AM", label: "11:30 AM" },
+  { value: "12:00 PM", label: "12:00 PM" },
+  { value: "12:30 PM", label: "12:30 PM" },
+  { value: "1:00 PM", label: "1:00 PM" },
+  { value: "1:30 PM", label: "1:30 PM" },
+  { value: "2:00 PM", label: "2:00 PM" },
+  { value: "2:30 PM", label: "2:30 PM" },
+  { value: "3:00 PM", label: "3:00 PM" },
+  { value: "3:30 PM", label: "3:30 PM" },
+  { value: "4:00 PM", label: "4:00 PM" },
+  { value: "4:30 PM", label: "4:30 PM" },
+  { value: "5:00 PM", label: "5:00 PM" },
+  { value: "5:30 PM", label: "5:30 PM" },
+  { value: "6:00 PM", label: "6:00 PM" },
+  { value: "6:30 PM", label: "6:30 PM" },
+  { value: "7:00 PM", label: "7:00 PM" },
+  { value: "7:30 PM", label: "7:30 PM" },
+  { value: "8:00 PM", label: "8:00 PM" },
+  { value: "8:30 PM", label: "8:30 PM" },
+  { value: "9:00 PM", label: "9:00 PM" },
+  { value: "9:30 PM", label: "9:30 PM" },
+  { value: "10:00 PM", label: "10:00 PM" },
 ];

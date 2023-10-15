@@ -87,6 +87,22 @@ export const batchesApi = apiSlice.injectEndpoints({
       async onQueryStarted(args, { queryFulfilled, dispatch }) {
         try {
           const { data } = await queryFulfilled;
+
+          const {
+            student,
+            _id,
+            batchNo,
+            course: courseId,
+            startDate,
+            endDate,
+            classDays,
+            classTime,
+          } = data.batch;
+
+          const course = await dispatch(
+            coursesApi.endpoints.getCourse.initiate(courseId)
+          ).unwrap();
+
           // update all batches
           const search = "";
           dispatch(
@@ -94,18 +110,42 @@ export const batchesApi = apiSlice.injectEndpoints({
               const batch = draft.batches.find(
                 (batch) => batch._id === args.id
               );
-              Object.assign(batch, data?.batch);
+              Object.assign(batch, {
+                _id,
+                batchNo,
+                course: {
+                  name: course.name,
+                  courseType: course.courseType,
+                },
+                student,
+                startDate,
+                endDate,
+                classDays,
+                classTime,
+              });
             })
           );
 
           // update single batch
           dispatch(
-            apiSlice.util.updateQueryData("getBatch", search, (draft) => {
-              Object.assign(draft, data?.batch);
+            apiSlice.util.updateQueryData("getBatch", args.id, (draft) => {
+              Object.assign(draft, {
+                _id,
+                batchNo,
+                course: {
+                  name: course.name,
+                  courseType: course.courseType,
+                },
+                // student,
+                startDate,
+                endDate,
+                classDays,
+                classTime,
+              });
             })
           );
         } catch (err) {
-          // console.log(err);
+          console.log(err);
         }
       },
     }),
