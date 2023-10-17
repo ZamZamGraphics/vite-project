@@ -174,7 +174,7 @@ function UpdateSettings({ data }) {
               helperText={error?.perPage && error?.perPage?.msg}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6}>
             <FormGroup>
               <FormControlLabel
                 control={
@@ -187,7 +187,7 @@ function UpdateSettings({ data }) {
               />
             </FormGroup>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6}>
             <FormGroup>
               <FormControlLabel
                 control={

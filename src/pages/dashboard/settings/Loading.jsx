@@ -25,10 +25,10 @@ function Loading() {
             <Skeleton height={50} />
             <Skeleton height={50} />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6}>
             <Skeleton height={50} />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6}>
             <Skeleton height={50} />
           </Grid>
         </Grid>

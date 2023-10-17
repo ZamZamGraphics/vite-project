@@ -4,7 +4,6 @@ export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: `${import.meta.env.VITE_API_URL}/v1`,
-    credentials: "include",
     prepareHeaders: async (headers, { getState, endpoint }) => {
       const token = getState()?.auth?.accessToken;
       if (token) {
@@ -13,6 +12,6 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Users", "User", "Students", "Student"],
+  tagTypes: ["Students", "Student", "Admissions", "Admission", "Users", "User"],
   endpoints: (builder) => ({}),
 });

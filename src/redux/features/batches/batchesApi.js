@@ -1,5 +1,6 @@
 import { apiSlice } from "../api/apiSlice";
 import { coursesApi } from "../courses/coursesApi";
+import { studentsApi } from "../students/studentsApi";
 import { admissionApi } from "../admission/admissionApi";
 
 export const batchesApi = apiSlice.injectEndpoints({
@@ -89,7 +90,7 @@ export const batchesApi = apiSlice.injectEndpoints({
           const { data } = await queryFulfilled;
 
           const {
-            student,
+            student: stdIds,
             _id,
             batchNo,
             course: courseId,
@@ -103,10 +104,48 @@ export const batchesApi = apiSlice.injectEndpoints({
             coursesApi.endpoints.getCourse.initiate(courseId)
           ).unwrap();
 
+          /*    
+          stdIds.forEach((id) => {
+            dispatch(
+              admissionApi.endpoints.addAdmission.initiate({
+                student: stdId,
+                course: args.course,
+                batch: batchNo,
+                discount: 0,
+                payment: 0,
+                timeSchedule: classTime,
+                paymentType: "New",
+              })
+            );
+          });
+          await dispatch(
+            studentsApi.endpoints.getStudents.initiate(
+              `?search=${{ _id: { $in: stdId } }}`
+            )
+          ).unwrap();
+        
+          */
+
+          stdIds.forEach(async (id) => {
+            const res = await dispatch(
+              studentsApi.endpoints.getStudent.initiate(id)
+            ).unwrap();
+            console.log("res : ", res);
+            return {
+              _id: res._id,
+              studentId: res.studentId,
+              fullName: res.fullName,
+            };
+          });
+
+          console.log("stdIds : ", stdIds);
+
+          /*
           // update all batches
           const search = "";
           dispatch(
             apiSlice.util.updateQueryData("getBatches", search, (draft) => {
+              console.log(JSON.stringify(draft.batches));
               const batch = draft.batches.find(
                 (batch) => batch._id === args.id
               );
@@ -125,10 +164,10 @@ export const batchesApi = apiSlice.injectEndpoints({
               });
             })
           );
-
           // update single batch
           dispatch(
             apiSlice.util.updateQueryData("getBatch", args.id, (draft) => {
+              // console.log(JSON.stringify(draft));
               Object.assign(draft, {
                 _id,
                 batchNo,
@@ -144,6 +183,7 @@ export const batchesApi = apiSlice.injectEndpoints({
               });
             })
           );
+          */
         } catch (err) {
           console.log(err);
         }

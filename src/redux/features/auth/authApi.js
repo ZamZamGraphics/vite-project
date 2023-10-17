@@ -1,5 +1,6 @@
 import { apiSlice } from "../api/apiSlice";
 import { userLoggedIn } from "./authSlice";
+import { setCookie } from "../../../utils/cookie";
 import jwt_decode from "jwt-decode";
 
 export const authApi = apiSlice.injectEndpoints({
@@ -18,9 +19,13 @@ export const authApi = apiSlice.injectEndpoints({
           localStorage.setItem("loggedIn", "true");
           const user = jwt_decode(result.data.token);
 
+          // set cookies
+          setCookie("loggedIn", "true", user.expiresIn);
+          setCookie("accessToken", result.data.token, user.expiresIn);
+
           dispatch(
             userLoggedIn({
-              accessToken: result.data.token,
+              accessToken: `Bearer ${result.data.token}`,
               user,
             })
           );
