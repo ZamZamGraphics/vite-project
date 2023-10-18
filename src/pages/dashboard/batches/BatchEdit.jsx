@@ -98,7 +98,7 @@ function BatchEdit() {
     }
 
     const data = {
-      student: studentId,
+      student: studentId.toString(),
       startDate,
       classDays: days,
       classTime: time,
@@ -171,7 +171,7 @@ function BatchEdit() {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Approximate Start Date"
-                views={["day", "month", "year"]}
+                // views={["day", "month", "year"]}
                 format="DD-MM-YYYY"
                 name="startDate"
                 value={dayjs(startDate)}

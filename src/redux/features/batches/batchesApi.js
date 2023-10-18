@@ -7,9 +7,11 @@ export const batchesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getBatches: builder.query({
       query: (search) => `/batches?search=${search}`,
+      providesTags: ["Batches"],
     }),
     getBatch: builder.query({
       query: (id) => `/batches/${id}`,
+      providesTags: ["Batch"],
     }),
     addBatch: builder.mutation({
       query: (data) => ({
@@ -89,103 +91,38 @@ export const batchesApi = apiSlice.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
 
-          const {
-            student: stdIds,
-            _id,
-            batchNo,
-            course: courseId,
-            startDate,
-            endDate,
-            classDays,
-            classTime,
-          } = data.batch;
+          dispatch(
+            batchesApi.util.invalidateTags([{ type: "Batch", _id: args.id }])
+          );
+          dispatch(
+            admissionApi.util.invalidateTags(["Admissions"])
+          )
 
           const course = await dispatch(
-            coursesApi.endpoints.getCourse.initiate(courseId)
+            coursesApi.endpoints.getCourse.initiate(data.batch.course)
           ).unwrap();
 
-          /*    
-          stdIds.forEach((id) => {
-            dispatch(
-              admissionApi.endpoints.addAdmission.initiate({
-                student: stdId,
-                course: args.course,
-                batch: batchNo,
-                discount: 0,
-                payment: 0,
-                timeSchedule: classTime,
-                paymentType: "New",
-              })
-            );
-          });
-          await dispatch(
-            studentsApi.endpoints.getStudents.initiate(
-              `?search=${{ _id: { $in: stdId } }}`
-            )
-          ).unwrap();
-        
-          */
+          const updateBatch = {
+            ...data.batch,
+            course: {
+              _id: course._id,
+              name: course.name,
+              courseType: course.courseType,
+            },
+          };
 
-          stdIds.forEach(async (id) => {
-            const res = await dispatch(
-              studentsApi.endpoints.getStudent.initiate(id)
-            ).unwrap();
-            console.log("res : ", res);
-            return {
-              _id: res._id,
-              studentId: res.studentId,
-              fullName: res.fullName,
-            };
-          });
-
-          console.log("stdIds : ", stdIds);
-
-          /*
           // update all batches
           const search = "";
           dispatch(
             apiSlice.util.updateQueryData("getBatches", search, (draft) => {
-              console.log(JSON.stringify(draft.batches));
               const batch = draft.batches.find(
                 (batch) => batch._id === args.id
               );
-              Object.assign(batch, {
-                _id,
-                batchNo,
-                course: {
-                  name: course.name,
-                  courseType: course.courseType,
-                },
-                student,
-                startDate,
-                endDate,
-                classDays,
-                classTime,
-              });
+              Object.assign(batch, updateBatch);
             })
           );
-          // update single batch
-          dispatch(
-            apiSlice.util.updateQueryData("getBatch", args.id, (draft) => {
-              // console.log(JSON.stringify(draft));
-              Object.assign(draft, {
-                _id,
-                batchNo,
-                course: {
-                  name: course.name,
-                  courseType: course.courseType,
-                },
-                // student,
-                startDate,
-                endDate,
-                classDays,
-                classTime,
-              });
-            })
-          );
-          */
         } catch (err) {
-          console.log(err);
+          // console.log(err);
         }
       },
     }),
