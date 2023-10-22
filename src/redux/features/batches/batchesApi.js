@@ -55,6 +55,9 @@ export const batchesApi = apiSlice.injectEndpoints({
               );
             });
 
+            dispatch(admissionApi.util.invalidateTags(["Admissions"]));
+            dispatch(studentsApi.util.invalidateTags(["Students"]));
+
             // update all batches
             const search = "";
             dispatch(
@@ -94,9 +97,8 @@ export const batchesApi = apiSlice.injectEndpoints({
           dispatch(
             batchesApi.util.invalidateTags([{ type: "Batch", _id: args.id }])
           );
-          dispatch(
-            admissionApi.util.invalidateTags(["Admissions"])
-          )
+          dispatch(admissionApi.util.invalidateTags(["Admissions"]));
+          dispatch(studentsApi.util.invalidateTags(["Students"]));
 
           const course = await dispatch(
             coursesApi.endpoints.getCourse.initiate(data.batch.course)
@@ -134,6 +136,8 @@ export const batchesApi = apiSlice.injectEndpoints({
       async onQueryStarted(args, { queryFulfilled, dispatch }) {
         try {
           await queryFulfilled;
+          dispatch(admissionApi.util.invalidateTags(["Admissions"]));
+          dispatch(studentsApi.util.invalidateTags(["Students"]));
           // update all batches
           const search = "";
           dispatch(
