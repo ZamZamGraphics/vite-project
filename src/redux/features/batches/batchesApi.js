@@ -135,7 +135,8 @@ export const batchesApi = apiSlice.injectEndpoints({
       }),
       async onQueryStarted(args, { queryFulfilled, dispatch }) {
         try {
-          await queryFulfilled;
+          const data = await queryFulfilled;
+          console.log(data);
           dispatch(admissionApi.util.invalidateTags(["Admissions"]));
           dispatch(studentsApi.util.invalidateTags(["Students"]));
           // update all batches

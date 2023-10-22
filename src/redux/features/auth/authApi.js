@@ -20,8 +20,8 @@ export const authApi = apiSlice.injectEndpoints({
           const user = jwt_decode(result.data.token);
 
           // set cookies
-          setCookie("loggedIn", "true", user.expiresIn);
-          setCookie("accessToken", result.data.token, user.expiresIn);
+          setCookie("loggedIn", "true", 1);
+          setCookie("accessToken", result.data.token, 1);
 
           dispatch(
             userLoggedIn({
