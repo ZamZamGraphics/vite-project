@@ -9,6 +9,7 @@ import {
   FormControl,
   InputLabel,
   Select,
+  Autocomplete,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -18,6 +19,7 @@ import { styled } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useGetCoursesQuery } from "../../../redux/features/courses/coursesApi";
 import { useAddBatchMutation } from "../../../redux/features/batches/batchesApi";
+import { useGetStudentsQuery } from "../../../redux/features/students/studentsApi";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   "& .MuiInputBase-input": {
@@ -42,6 +44,7 @@ function NewBatch() {
   const [classDays, setClassDays] = useState("-1");
   const [classTime, setClassTime] = useState("-1");
 
+  const { data: std } = useGetStudentsQuery("?search=Pending");
   const { data } = useGetCoursesQuery(courseType, { skip: !request });
 
   const [addBatch, { data: batch, isLoading, error: responseError }] =
@@ -66,11 +69,18 @@ function NewBatch() {
     setBatchNo("");
     setCourseType("-1");
     setCourseName("-1");
-    setStudentId("");
+    setStudentId([]);
     setStartDate("");
     setClassDays("-1");
     setClassTime("");
   };
+
+  let students = [];
+  if (std?.students?.length > 0) {
+    students = std.students.map((std) => {
+      return { studentId: std.studentId };
+    });
+  }
 
   let courseList = [{ value: "-1", label: "Select Course Name" }];
   if (data) {
@@ -88,6 +98,10 @@ function NewBatch() {
     setCourseType(value);
     setRequest(true);
     setCourseName("-1");
+  };
+
+  const handleStudentId = (value) => {
+    setStudentId(value.map((std) => std.studentId));
   };
 
   const handleSubmit = (e) => {
@@ -111,7 +125,7 @@ function NewBatch() {
     const data = {
       batchNo,
       course,
-      student: studentId,
+      student: studentId.toString(),
       startDate,
       classDays: days,
       classTime: time,
@@ -183,18 +197,30 @@ function NewBatch() {
             </StyledTextField>
           </Grid>
           <Grid item xs={12}>
-            <StyledTextField
+            <Autocomplete
+              multiple
               size="small"
-              fullWidth
-              label="Student ID"
-              name="studentId"
-              value={studentId}
-              onChange={(e) => setStudentId(e.target.value)}
-              error={error.student && true}
-              helperText={error.student && error.student.msg}
+              id="studentID"
+              onChange={(e, data) => handleStudentId(data)}
+              options={students}
+              getOptionLabel={(option) => option.studentId}
+              isOptionEqualToValue={(option, value) =>
+                option.studentId === value.studentId
+              }
+              filterSelectedOptions
+              sx={{ backgroundColor: "input.background" }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Student ID"
+                  error={error.student && true}
+                />
+              )}
             />
-            <FormHelperText>
-              The Student IDs should be entered with &quot;, &quot; commas.
+            <FormHelperText error={error.student && true}>
+              {error.student
+                ? error.student.msg
+                : "The Student IDs should be entered with &quot;, &quot; commas."}
             </FormHelperText>
           </Grid>
           <Grid item xs={12}>

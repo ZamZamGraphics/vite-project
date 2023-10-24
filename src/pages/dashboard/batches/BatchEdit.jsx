@@ -78,11 +78,6 @@ function BatchEdit() {
     }
   }, [responseError, batch]);
 
-  const handleStudentId = (value) => {
-    setStudents(value);
-    setStudentId(value.map((std) => std.studentId));
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
@@ -145,7 +140,6 @@ function BatchEdit() {
               size="small"
               id="studentID"
               value={students}
-              onChange={(e, data) => handleStudentId(data)}
               options={students}
               getOptionLabel={(option) => option.studentId}
               isOptionEqualToValue={(option, value) =>

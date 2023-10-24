@@ -170,7 +170,6 @@ function EditForm({ std }) {
     form.append("bloodGroup", student.bloodGroup);
     form.append("education", student.education);
     form.append("reference", student.reference);
-    form.append("status", "Pending");
     editStudent({ id, data: form });
   };
 
