@@ -43,6 +43,9 @@ const TableRowsLoader = ({ rowsNum }) => {
       key={index}
       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
     >
+      <TableCell>
+        <Skeleton animation="wave" variant="text" />
+      </TableCell>
       <TableCell component="th" scope="row">
         <Stack direction="row" alignItems="center" spacing={2}>
           <Skeleton variant="circular">
@@ -50,9 +53,6 @@ const TableRowsLoader = ({ rowsNum }) => {
           </Skeleton>
           <Skeleton animation="wave" variant="text" width="100%" />
         </Stack>
-      </TableCell>
-      <TableCell>
-        <Skeleton animation="wave" variant="text" />
       </TableCell>
       <TableCell>
         <Skeleton animation="wave" variant="text" />
@@ -117,7 +117,7 @@ function Students() {
   // decide what to render
   let content = null;
   if (isLoading) {
-    content = <TableRowsLoader rowsNum={10} />;
+    content = <TableRowsLoader rowsNum={20} />;
   } else if (!isLoading && isError) {
     content = (
       <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
@@ -153,8 +153,24 @@ function Students() {
           </Link>
         </TableCell>
         <TableCell>{student.phone[0]}</TableCell>
-        <TableCell>Course Name</TableCell>
-        <TableCell>Batch No</TableCell>
+        <TableCell>
+          {student.admission.map((admission) => {
+            return (
+              <Typography key={admission._id}>
+                {admission?.course?.name}
+              </Typography>
+            );
+          })}
+        </TableCell>
+        <TableCell>
+          {student.admission.map((admission) => {
+            return (
+              <Typography key={admission._id}>
+                {admission?.batch?.batchNo}
+              </Typography>
+            );
+          })}
+        </TableCell>
         <TableCell>
           <Status status={student.status} />
         </TableCell>
@@ -164,7 +180,6 @@ function Students() {
         </TableCell>
       </TableRow>
     ));
-    // console.log(data.students[0]);
   }
   return (
     <Box>
@@ -195,7 +210,7 @@ function Students() {
         </Grid>
       </Grid>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="users table">
+        <Table sx={{ minWidth: 650 }} size="small" aria-label="students table">
           <TableHead>
             <TableRow>
               <StyledTableCell>Student ID</StyledTableCell>

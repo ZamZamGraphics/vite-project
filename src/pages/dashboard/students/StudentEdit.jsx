@@ -6,6 +6,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
+import Status from "../../../component/Status";
 import Button from "@mui/material/Button";
 import { useState, useEffect } from "react";
 import {
@@ -89,6 +90,7 @@ function EditForm({ std }) {
     bloodGroup: initialBloodGroup,
     education: initialEducation,
     reference: initialReference,
+    status: std.status,
   });
 
   const [error, setError] = useState("");
@@ -170,6 +172,7 @@ function EditForm({ std }) {
     form.append("bloodGroup", student.bloodGroup);
     form.append("education", student.education);
     form.append("reference", student.reference);
+    form.append("status", student.status);
     editStudent({ id, data: form });
   };
 
@@ -213,6 +216,11 @@ function EditForm({ std }) {
                   <Avatar src={avatarImage} sx={{ width: 100, height: 100 }} />
                 </IconButton>
               </label>
+            </Grid>
+            <Grid item xs={12} textAlign="center">
+              <Typography variant="body2" component="span">
+                <Status status={student.status} />
+              </Typography>
             </Grid>
             <Grid item xs={12}>
               <TextField

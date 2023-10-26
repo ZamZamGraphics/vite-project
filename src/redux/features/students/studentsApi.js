@@ -29,7 +29,6 @@ export const studentsApi = apiSlice.injectEndpoints({
       async onQueryStarted(args, { queryFulfilled, dispatch }) {
         try {
           const { data } = await queryFulfilled;
-          
           // update all students
           const queryString = "?limit=20";
           dispatch(
