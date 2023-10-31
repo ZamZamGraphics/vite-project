@@ -12,7 +12,9 @@ import {
   InputLabel,
   OutlinedInput,
   Grid,
+  Chip,
 } from "@mui/material";
+import dayjs from "dayjs";
 import SearchIcon from "@mui/icons-material/Search";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -140,7 +142,6 @@ function Admission() {
       </TableRow>
     );
   } else if (!isLoading && !isError && data?.admission?.length > 0) {
-    console.log(data.admission);
     content = data.admission.map((admission) => (
       <TableRow key={admission._id}>
         <TableCell>
@@ -165,8 +166,12 @@ function Admission() {
         <TableCell>{admission.payableAmount}</TableCell>
         <TableCell>{admission.payment}</TableCell>
         <TableCell>{admission.due}</TableCell>
-        <TableCell>{admission?.nextPay}</TableCell>
-        <TableCell>{admission.paymentType}</TableCell>
+        <TableCell>
+          {admission?.nextPay && dayjs(admission?.nextPay).format("DD-MM-YYYY")}
+        </TableCell>
+        <TableCell>
+          <Chip size="small" label={admission.paymentType} color="info" />
+        </TableCell>
         <TableCell width={50}>
           <Action admission={admission} />
         </TableCell>

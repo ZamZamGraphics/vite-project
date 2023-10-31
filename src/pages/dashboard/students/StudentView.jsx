@@ -56,7 +56,7 @@ function StudentView({ open, handleClose, student }) {
           </Typography>
         </Stack>
         <TableContainer>
-          <Table sx={{ width: "100%" }} size="small" aria-label="user table">
+          <Table sx={{ width: "100%" }} size="small" aria-label="student table">
             <TableHead>
               <TableRow>
                 <TableCell>
