@@ -61,7 +61,7 @@ function NewStudent() {
     }
 
     if (data?.student) {
-      navigate("/dashboard/admission/new", { state: data?.student });
+      navigate("/dashboard/admission/new", { state: data?.student.studentId });
     }
   }, [responseError, data, navigate]);
 

@@ -31,6 +31,7 @@ import {
 } from "../../../redux/features/courses/coursesApi";
 import { useGetStudentByIdQuery } from "../../../redux/features/students/studentsApi";
 import { useAddAdmissionMutation } from "../../../redux/features/admission/admissionApi";
+import { useLocation } from "react-router-dom";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   "& .MuiInputBase-input": {
@@ -71,13 +72,19 @@ function NewAdmission() {
   const [addAdmission, { data: admission, isLoading, error: responseError }] =
     useAddAdmissionMutation();
 
+  const location = useLocation();
+
   useEffect(() => {
+    if (location.state) {
+      setStudentId(location.state);
+      setStdRequest(true);
+    }
     if (std) {
       setStudent(std);
     } else {
       setStudent("");
     }
-  }, [std]);
+  }, [std, location.state]);
 
   useEffect(() => {
     if (course) {

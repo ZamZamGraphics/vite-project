@@ -66,7 +66,7 @@ function EditForm({ std }) {
   const initialPresent = address.present;
   const initialPermanent = address.permanent;
   const initialStdPhone = phone[0];
-  const initialGuardianPhone = phone[0];
+  const initialGuardianPhone = phone[1] || "";
 
   const [avatar, setAvatar] = useState(null);
   const [avatarImage, setAvatarImage] = useState(

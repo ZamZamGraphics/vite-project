@@ -29,34 +29,7 @@ export const studentsApi = apiSlice.injectEndpoints({
         body: data,
         formData: true,
       }),
-      async onQueryStarted(args, { queryFulfilled, dispatch }) {
-        try {
-          const { data } = await queryFulfilled;
-          // update all students
-          const queryString = "?limit=20";
-          dispatch(
-            apiSlice.util.updateQueryData(
-              "getStudents",
-              queryString,
-              (draft) => {
-                const student = draft?.students.find(
-                  (student) => student?._id === args?.id
-                );
-                Object.assign(student, data.student);
-              }
-            )
-          );
-
-          // update single student
-          dispatch(
-            apiSlice.util.updateQueryData("getStudent", args.id, (draft) => {
-              Object.assign(draft, data?.student);
-            })
-          );
-        } catch (err) {
-          // console.log(err);
-        }
-      },
+      invalidatesTags: ["Students", "Student"],
     }),
     deleteStudent: builder.mutation({
       query: (id) => ({
