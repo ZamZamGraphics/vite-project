@@ -36,7 +36,7 @@ export const studentsApi = apiSlice.injectEndpoints({
         url: `/students/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Students"],
+      invalidatesTags: ["Students", "Admissions", "Batches"],
     }),
   }),
 });

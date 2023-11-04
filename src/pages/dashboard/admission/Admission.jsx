@@ -162,12 +162,15 @@ function Admission() {
           </Link>
         </TableCell>
         <TableCell>{admission.course.name}</TableCell>
-        <TableCell>{admission.batch.batchNo}</TableCell>
+        <TableCell>{admission.batchNo}</TableCell>
         <TableCell>{admission.payableAmount}</TableCell>
         <TableCell>{admission.payment}</TableCell>
         <TableCell>{admission.due}</TableCell>
         <TableCell>
-          {admission?.nextPay && dayjs(admission?.nextPay).format("DD-MM-YYYY")}
+          {
+          admission?.nextPay ? dayjs(admission?.nextPay).format("DD-MM-YYYY") :
+          <Chip size="small" label="Full Paid" color="success" />
+          }
         </TableCell>
         <TableCell>
           <Chip size="small" label={admission.paymentType} color="info" />

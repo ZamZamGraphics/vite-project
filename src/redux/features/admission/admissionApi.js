@@ -24,14 +24,14 @@ export const admissionApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Admissions"],
+      invalidatesTags: ["Admissions", "Students"],
     }),
     deleteAdmission: builder.mutation({
       query: (id) => ({
         url: `/admission/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Admissions", "Students"],
+      invalidatesTags: ["Admissions", "Students", "Batches"],
     }),
   }),
 });
