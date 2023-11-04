@@ -1,5 +1,4 @@
 import { apiSlice } from "../api/apiSlice";
-import { coursesApi } from "../courses/coursesApi";
 import { studentsApi } from "../students/studentsApi";
 import { admissionApi } from "../admission/admissionApi";
 
@@ -23,19 +22,10 @@ export const batchesApi = apiSlice.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
 
-          const course = await dispatch(
-            coursesApi.endpoints.getCourse.initiate(args.course)
-          ).unwrap();
-
           // silent entry to admission
           if (data.batch) {
             const {
-              student,
-              _id,
               batchNo,
-              startDate,
-              endDate,
-              classDays,
               classTime,
             } = data.batch;
 
@@ -49,8 +39,8 @@ export const batchesApi = apiSlice.injectEndpoints({
                   batch: batchNo,
                   discount: 0,
                   payment: 0,
-                  timeSchedule: classTime,
                   paymentType: "New",
+                  timeSchedule: classTime,
                 })
               );
             });
@@ -62,25 +52,13 @@ export const batchesApi = apiSlice.injectEndpoints({
             const search = "";
             dispatch(
               apiSlice.util.updateQueryData("getBatches", search, (draft) => {
-                draft.batches.unshift({
-                  _id,
-                  batchNo,
-                  course: {
-                    name: course.name,
-                    courseType: course.courseType,
-                  },
-                  student,
-                  startDate,
-                  endDate,
-                  classDays,
-                  classTime,
-                });
+                draft.batches.unshift(data.batch);
                 draft.total++;
               })
             );
           }
         } catch (err) {
-          // console.log(err);
+          console.log(err);
         }
       },
     }),

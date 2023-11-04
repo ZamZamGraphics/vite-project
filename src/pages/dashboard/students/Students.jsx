@@ -166,7 +166,7 @@ function Students() {
           {student.admission.map((admission) => {
             return (
               <Typography key={admission._id}>
-                {admission?.batch?.batchNo}
+                {admission?.batchNo}
               </Typography>
             );
           })}

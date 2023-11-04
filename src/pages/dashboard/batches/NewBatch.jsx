@@ -72,7 +72,7 @@ function NewBatch() {
     setStudentId([]);
     setStartDate("");
     setClassDays("-1");
-    setClassTime("");
+    setClassTime("-1");
   };
 
   let students = [];
@@ -218,9 +218,7 @@ function NewBatch() {
               )}
             />
             <FormHelperText error={error.student && true}>
-              {error.student
-                ? error.student.msg
-                : "The Student IDs should be entered with &quot;, &quot; commas."}
+              {error.student && error.student.msg}
             </FormHelperText>
           </Grid>
           <Grid item xs={12}>
