@@ -35,26 +35,32 @@ const ITEM_PADDING_TOP = 8;
 const MENU_ITEMS = 6; // change this number to see the effect
 
 function BatchEdit() {
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-
   const useQuery = () => new URLSearchParams(useLocation().search);
   const query = useQuery();
   const id = query.get("id");
-  const { data: initialBatch } = useGetBatchQuery(id);
+  const { data: batch } = useGetBatchQuery(id);
 
-  const [studentId, setStudentId] = useState(
-    initialBatch.student.map((std) => std.studentId)
-  );
-  const [students, setStudents] = useState(initialBatch.student);
+  let editBatch;
+
+  if (batch) {
+    editBatch = <BatchEditForm initialBatch={batch} />;
+  }
+  return editBatch;
+}
+export default BatchEdit;
+
+function BatchEditForm({ initialBatch }) {
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const [studentId, setStudentId] = useState(initialBatch.student);
   const [startDate, setStartDate] = useState(initialBatch.startDate);
   const [classDays, setClassDays] = useState(initialBatch.classDays);
   const [classTime, setClassTime] = useState(initialBatch.classTime);
 
   useEffect(() => {
     if (initialBatch) {
-      setStudentId(initialBatch.student.map((std) => std.studentId));
-      setStudents(initialBatch.student);
+      setStudentId(initialBatch.student);
       setStartDate(initialBatch.startDate);
       setClassDays(initialBatch.classDays);
       setClassTime(initialBatch.classTime);
@@ -98,7 +104,7 @@ function BatchEdit() {
       classDays: days,
       classTime: time,
     };
-    editBatch({ id, data });
+    editBatch({ id: initialBatch._id, data });
   };
 
   return (
@@ -139,12 +145,10 @@ function BatchEdit() {
               multiple
               size="small"
               id="studentID"
-              value={students}
-              options={students}
-              getOptionLabel={(option) => option.studentId}
-              isOptionEqualToValue={(option, value) =>
-                option.studentId === value.studentId
-              }
+              value={studentId}
+              options={studentId}
+              getOptionLabel={(option) => option}
+              isOptionEqualToValue={(option, value) => option === value}
               filterSelectedOptions
               sx={{ backgroundColor: "input.background" }}
               renderInput={(params) => (
@@ -252,8 +256,6 @@ function BatchEdit() {
     </>
   );
 }
-
-export default BatchEdit;
 
 const days = [
   { value: "-1", label: "Select Days" },

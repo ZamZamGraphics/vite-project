@@ -26,8 +26,18 @@ function EditCourse() {
   const useQuery = () => new URLSearchParams(useLocation().search);
   const query = useQuery();
   const id = query.get("id");
-  const { data: initialCourse } = useGetCourseQuery(id);
+  const { data: course } = useGetCourseQuery(id);
 
+  let editCourse;
+
+  if (course) {
+    editCourse = <EditCourseForm initialCourse={course} />;
+  }
+  return editCourse;
+}
+export default EditCourse;
+
+function EditCourseForm({ initialCourse }) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [course, setCourse] = useState({
@@ -95,7 +105,7 @@ function EditCourse() {
     e.preventDefault();
     setError("");
     setSuccess("");
-    editCourse({ id, data: course });
+    editCourse({ id: initialCourse._id, data: course });
   };
 
   return (
@@ -223,8 +233,6 @@ function EditCourse() {
     </>
   );
 }
-
-export default EditCourse;
 
 const type = [
   {

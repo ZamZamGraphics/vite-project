@@ -24,10 +24,7 @@ export const batchesApi = apiSlice.injectEndpoints({
 
           // silent entry to admission
           if (data.batch) {
-            const {
-              batchNo,
-              classTime,
-            } = data.batch;
+            const { batchNo, classTime } = data.batch;
 
             const studentIds = args.student.split(",");
 
@@ -58,7 +55,7 @@ export const batchesApi = apiSlice.injectEndpoints({
             );
           }
         } catch (err) {
-          console.log(err);
+          // console.log(err);
         }
       },
     }),
