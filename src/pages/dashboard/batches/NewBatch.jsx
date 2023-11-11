@@ -78,7 +78,7 @@ function NewBatch() {
   let students = [];
   if (std?.students?.length > 0) {
     students = std.students.map((std) => {
-      return { studentId: std.studentId };
+      return std.studentId;
     });
   }
 
@@ -101,7 +101,7 @@ function NewBatch() {
   };
 
   const handleStudentId = (value) => {
-    setStudentId(value.map((std) => std.studentId));
+    setStudentId(value.map((std) => std));
   };
 
   const handleSubmit = (e) => {
@@ -203,10 +203,8 @@ function NewBatch() {
               id="studentID"
               onChange={(e, data) => handleStudentId(data)}
               options={students}
-              getOptionLabel={(option) => option.studentId}
-              isOptionEqualToValue={(option, value) =>
-                option.studentId === value.studentId
-              }
+              getOptionLabel={(option) => option}
+              isOptionEqualToValue={(option, value) => option === value}
               filterSelectedOptions
               sx={{ backgroundColor: "input.background" }}
               renderInput={(params) => (

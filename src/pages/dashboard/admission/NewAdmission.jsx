@@ -120,7 +120,7 @@ function NewAdmission() {
     setPayment("");
     setNextPay("");
     setBatchNo("");
-    setClassTime("");
+    setClassTime("-1");
   };
 
   let courseList = [{ value: "-1", label: "Select Course Name" }];
