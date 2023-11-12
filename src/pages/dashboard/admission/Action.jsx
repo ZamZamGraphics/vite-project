@@ -80,7 +80,7 @@ function Action({ admission }) {
       >
         <MenuItem
           component={Link}
-          to={`/dashboard/admission/${admission._id}`}
+          to={`/dashboard/admission/invoice/${admission._id}`}
           onClick={handlePrint}
         >
           <ListItemIcon>
@@ -90,7 +90,7 @@ function Action({ admission }) {
         </MenuItem>
         <MenuItem
           component={Link}
-          to={`/dashboard/admission/${admission._id}`}
+          to={`/dashboard/admission/download/${admission._id}`}
           onClick={handleDownload}
         >
           <ListItemIcon>

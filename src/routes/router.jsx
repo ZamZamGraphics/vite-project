@@ -27,6 +27,7 @@ import EditUser from "../pages/dashboard/users/EditUser";
 import Profile from "../pages/dashboard/users/Profile";
 import Settings from "../pages/dashboard/settings/Settings";
 import StudentEdit from "../pages/dashboard/students/StudentEdit";
+import Invoice from "../pages/dashboard/admission/Invoice";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -63,6 +64,14 @@ const router = createBrowserRouter(
           <PublicRoute>
             <ResetPassword />
           </PublicRoute>
+        }
+      />
+      <Route
+        path="dashboard/admission/invoice/:id"
+        element={
+          <PrivateRoute>
+            <Invoice />
+          </PrivateRoute>
         }
       />
       <Route

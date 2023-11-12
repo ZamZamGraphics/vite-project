@@ -148,7 +148,7 @@ function Admission() {
           <Typography variant="h6">{admission.student.studentId}</Typography>
         </TableCell>
         <TableCell component="th" scope="row">
-          <Link to={`/dashboard/admission/${admission._id}`}>
+          <Link to={`/dashboard/admission/invoice/${admission._id}`}>
             <Stack direction="row" alignItems="center" spacing={2}>
               <Avatar
                 alt={admission.student.fullName}
@@ -167,10 +167,11 @@ function Admission() {
         <TableCell>{admission.payment}</TableCell>
         <TableCell>{admission.due}</TableCell>
         <TableCell>
-          {
-          admission?.nextPay ? dayjs(admission?.nextPay).format("DD-MM-YYYY") :
-          <Chip size="small" label="Full Paid" color="success" />
-          }
+          {admission?.nextPay ? (
+            dayjs(admission?.nextPay).format("DD-MM-YYYY")
+          ) : (
+            <Chip size="small" label="Full Paid" color="success" />
+          )}
         </TableCell>
         <TableCell>
           <Chip size="small" label={admission.paymentType} color="info" />
