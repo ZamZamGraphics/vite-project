@@ -31,7 +31,7 @@ import {
 } from "../../../redux/features/courses/coursesApi";
 import { useGetStudentByIdQuery } from "../../../redux/features/students/studentsApi";
 import { useAddAdmissionMutation } from "../../../redux/features/admission/admissionApi";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   "& .MuiInputBase-input": {
@@ -73,6 +73,7 @@ function NewAdmission() {
     useAddAdmissionMutation();
 
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (location.state) {
@@ -106,11 +107,11 @@ function NewAdmission() {
     }
 
     if (admission) {
-      // success redirect to print page
-      console.log(admission);
       reset();
+      // success redirect to print page
+      navigate(`/dashboard/admission/invoice/${admission.admission._id}`);
     }
-  }, [responseError, admission]);
+  }, [responseError, admission, navigate]);
 
   const reset = () => {
     setStudentId("");
