@@ -1,27 +1,27 @@
 import {
+  Alert,
+  Autocomplete,
   Box,
-  MenuItem,
+  Button,
+  FormControl,
   FormHelperText,
   Grid,
-  TextField,
-  Button,
-  Alert,
-  FormControl,
   InputLabel,
+  MenuItem,
   Select,
-  Autocomplete,
+  TextField,
 } from "@mui/material";
+import { grey } from "@mui/material/colors";
+import { styled } from "@mui/system";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { grey } from "@mui/material/colors";
-import { styled } from "@mui/system";
 import { useEffect, useState } from "react";
-import {
-  useGetBatchQuery,
-  useEditBatchMutation,
-} from "../../../redux/features/batches/batchesApi";
 import { useLocation } from "react-router-dom";
+import {
+  useEditBatchMutation,
+  useGetBatchQuery,
+} from "../../../redux/features/batches/batchesApi";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   "& .MuiInputBase-input": {
@@ -248,7 +248,7 @@ function BatchEditForm({ initialBatch }) {
               variant="contained"
               disabled={isLoading}
             >
-              Add New Batch
+              Update Batch
             </Button>
           </Grid>
         </Grid>

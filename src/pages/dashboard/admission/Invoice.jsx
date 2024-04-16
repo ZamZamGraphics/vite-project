@@ -11,12 +11,12 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { grey, lightGreen } from "@mui/material/colors";
 import dayjs from "dayjs";
-import { lightGreen, grey } from "@mui/material/colors";
-import { useParams } from "react-router-dom";
-import { useGetAdmissionQuery } from "../../../redux/features/admission/admissionApi";
+import { Link, useParams } from "react-router-dom";
 import logo from "../../../assets/images/logo-dark.svg";
 import Status from "../../../component/Status";
+import { useGetAdmissionQuery } from "../../../redux/features/admission/admissionApi";
 
 function Invoice() {
   const { id } = useParams();
@@ -44,7 +44,9 @@ function Invoice() {
           >
             <Grid container spacing={3}>
               <Grid item xs={7}>
-                <img src={logo} alt="AL MADINA IT" width={250} />
+                <Link to={`/dashboard/admission`}>
+                  <img src={logo} alt="AL MADINA IT" width={250} />
+                </Link>
                 <Typography mb={2}>
                   #Fakhre Bangal Road, Kandipara, <br />
                   Brahmanbaria-3400 <br />

@@ -1,14 +1,3 @@
-import Box from "@mui/material/Box";
-import Alert from "@mui/material/Alert";
-import TextField from "@mui/material/TextField";
-import FormControl from "@mui/material/FormControl";
-import FormHelperText from "@mui/material/FormHelperText";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Status from "../../../component/Status";
-import Button from "@mui/material/Button";
-import { useState, useEffect } from "react";
 import {
   Avatar,
   FormControlLabel,
@@ -16,14 +5,25 @@ import {
   Radio,
   RadioGroup,
 } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import Status from "../../../component/Status";
 import {
   useEditStudentMutation,
   useGetStudentQuery,
 } from "../../../redux/features/students/studentsApi";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
 import Loading from "./Loading";
 
 function StudentEdit() {
@@ -489,7 +489,7 @@ function EditForm({ std }) {
                 disableElevation
                 disabled={isLoading}
               >
-                Add New Student
+                Update Student
               </Button>
             </Grid>
           </Grid>

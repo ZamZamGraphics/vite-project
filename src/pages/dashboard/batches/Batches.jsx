@@ -1,36 +1,37 @@
+import SearchIcon from "@mui/icons-material/Search";
 import {
-  Box,
-  Grid,
-  Typography,
   Alert,
-  Paper,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  TableFooter,
-  tableCellClasses,
-  TablePagination,
+  Box,
   FormControl,
+  Grid,
+  InputAdornment,
   InputLabel,
   OutlinedInput,
-  InputAdornment,
+  Paper,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TableHead,
+  TablePagination,
+  TableRow,
+  Typography,
+  tableCellClasses,
 } from "@mui/material";
-import dayjs from "dayjs";
 import { styled } from "@mui/material/styles";
-import SearchIcon from "@mui/icons-material/Search";
-import { useLocation } from "react-router-dom";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
-  useGetBatchesQuery,
   useGetBatchQuery,
+  useGetBatchesQuery,
 } from "../../../redux/features/batches/batchesApi";
+import Action from "./Action";
+import BatchEdit from "./BatchEdit";
 import Loading from "./Loading";
 import NewBatch from "./NewBatch";
-import BatchEdit from "./BatchEdit";
-import Action from "./Action";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -141,9 +142,14 @@ function Batches() {
     <Box>
       <Grid container spacing={2}>
         <Grid item xs={12} md={4}>
-          <Typography variant="h5" sx={{ mb: 2 }}>
-            Batches
-          </Typography>
+          <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 2 }}>
+            <Typography variant="h5">Batches</Typography>
+            {id && (
+              <div className="px-3 border border-gray-600 rounded-full">
+                <Link to="/dashboard/admission/batches">Add New</Link>
+              </div>
+            )}
+          </Stack>
           {id ? editBatch : <NewBatch />}
         </Grid>
         <Grid item xs={12} md={8} textAlign="end">

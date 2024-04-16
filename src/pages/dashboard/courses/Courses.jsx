@@ -1,35 +1,36 @@
+import SearchIcon from "@mui/icons-material/Search";
 import {
-  Box,
-  Grid,
-  Typography,
   Alert,
-  Paper,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  TableFooter,
-  tableCellClasses,
-  TablePagination,
+  Box,
   FormControl,
+  Grid,
+  InputAdornment,
   InputLabel,
   OutlinedInput,
-  InputAdornment,
+  Paper,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TableHead,
+  TablePagination,
+  TableRow,
+  Typography,
+  tableCellClasses,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import { styled } from "@mui/material/styles";
-import NewCourse from "./NewCourse";
-import EditCourse from "./EditCourse";
-import {
-  useGetCoursesQuery,
-  useGetCourseQuery,
-} from "../../../redux/features/courses/coursesApi";
 import { useEffect, useState } from "react";
-import CoursesLoader from "./CoursesLoader";
+import { Link, useLocation } from "react-router-dom";
+import {
+  useGetCourseQuery,
+  useGetCoursesQuery,
+} from "../../../redux/features/courses/coursesApi";
 import Action from "./Action";
-import { useLocation } from "react-router-dom";
+import CoursesLoader from "./CoursesLoader";
+import EditCourse from "./EditCourse";
+import NewCourse from "./NewCourse";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -125,9 +126,14 @@ function Courses() {
     <Box>
       <Grid container spacing={2}>
         <Grid item xs={12} md={4}>
-          <Typography variant="h5" sx={{ mb: 2 }}>
-            Courses
-          </Typography>
+          <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 2 }}>
+            <Typography variant="h5">Courses</Typography>
+            {id && (
+              <div className="px-3 border border-gray-600 rounded-full">
+                <Link to="/dashboard/admission/courses">Add New</Link>
+              </div>
+            )}
+          </Stack>
           {id ? editCourse : <NewCourse />}
         </Grid>
         <Grid item xs={12} md={8} textAlign="end">
