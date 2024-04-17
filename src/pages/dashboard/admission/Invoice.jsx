@@ -47,7 +47,7 @@ function Invoice() {
                 <Link to={`/dashboard/admission`}>
                   <img src={logo} alt="AL MADINA IT" width={250} />
                 </Link>
-                <Typography mb={2}>
+                <Typography variant="body2" mb={2}>
                   #Fakhre Bangal Road, Kandipara, <br />
                   Brahmanbaria-3400 <br />
                   Email: almadinait@gmail.com <br />
@@ -67,7 +67,9 @@ function Invoice() {
                           sx={{ color: "white", bgcolor: grey["500"] }}
                           colSpan={2}
                         >
-                          <Typography variant="h5">Invoice 4966</Typography>
+                          <Typography variant="body1">
+                            Invoice ID : {data._id}
+                          </Typography>
                         </TableCell>
                       </TableRow>
                     </TableHead>
@@ -77,7 +79,7 @@ function Invoice() {
                           <strong>Invoice Date</strong>
                         </TableCell>
                         <TableCell>
-                          {dayjs(data.createdAt).format("DD-MM-YYYY")}
+                          {dayjs(data.admitedAt).format("DD-MM-YYYY")}
                         </TableCell>
                       </TableRow>
                       <TableRow>
@@ -105,8 +107,14 @@ function Invoice() {
               </Grid>
               <Grid item xs={6}>
                 <Avatar
-                  src="/static/images/avatar/1.jpg"
-                  sx={{ margin: "0 auto 20px auto", width: 120, height: 120 }}
+                  src={`${import.meta.env.VITE_API_URL}/upload/${
+                    data.student?.avatar
+                  }`}
+                  sx={{
+                    width: 130,
+                    height: 150,
+                  }}
+                  className="mx-auto mb-5 p-1 ring-2 ring-gray-200"
                   variant="rounded"
                 />
                 <TableContainer>
@@ -121,7 +129,9 @@ function Invoice() {
                           sx={{ color: "white", bgcolor: lightGreen["500"] }}
                           colSpan={2}
                         >
-                          <Typography variant="h5">Student ID 4966</Typography>
+                          <Typography variant="h5">
+                            Student ID {data.student.studentId}
+                          </Typography>
                         </TableCell>
                       </TableRow>
                     </TableHead>
@@ -130,27 +140,39 @@ function Invoice() {
                         <TableCell>
                           <strong>Student Name</strong>
                         </TableCell>
-                        <TableCell>Lamia Akter</TableCell>
+                        <TableCell>{data.student.fullName}</TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell>
                           <strong>Address</strong>
                         </TableCell>
-                        <TableCell>Halder Para, Brahmanbaria</TableCell>
+                        <TableCell>{data.student.address.present}</TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell>
                           <strong>Mobile</strong>
                         </TableCell>
-                        <TableCell>01712142536</TableCell>
+                        <TableCell>{data.student.phone[0]}</TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell>
                           <strong>Status</strong>
                         </TableCell>
                         <TableCell>
-                          <Status status="Approved" />
+                          <Status status={data.student.status} />
                         </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <strong>Course Name</strong>
+                        </TableCell>
+                        <TableCell>{data.course.name}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <strong>Batch No</strong>
+                        </TableCell>
+                        <TableCell>{data.batchNo}</TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
