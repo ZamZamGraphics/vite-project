@@ -1,31 +1,31 @@
+import SearchIcon from "@mui/icons-material/Search";
 import {
-  Box,
-  Typography,
   Alert,
   Avatar,
-  Stack,
-  Skeleton,
-  TableFooter,
-  TablePagination,
-  InputAdornment,
+  Box,
   FormControl,
+  Grid,
+  InputAdornment,
   InputLabel,
   OutlinedInput,
-  Grid,
+  Skeleton,
+  Stack,
+  TableFooter,
+  TablePagination,
+  Typography,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
-import { useLocation, Link, useNavigate } from "react-router-dom";
-import { useGetStudentsQuery } from "../../../redux/features/students/studentsApi";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Status from "../../../component/Status";
+import { useGetStudentsQuery } from "../../../redux/features/students/studentsApi";
 import Action from "./Action";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -88,7 +88,7 @@ function Students() {
   const { data, isLoading, isError } = useGetStudentsQuery(
     location.search || `?limit=${perPage}`
   );
-  const total = data?.total || 0;
+  const total = data?.length || 0;
 
   const queryString = (pageNo, limit, search = null) => {
     let query = "?";
@@ -126,7 +126,7 @@ function Students() {
         </TableCell>
       </TableRow>
     );
-  } else if (!isLoading && !isError && data?.students?.length === 0) {
+  } else if (!isLoading && !isError && data?.length === 0) {
     content = (
       <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
         <TableCell component="th" scope="row" colSpan={8}>
@@ -134,8 +134,8 @@ function Students() {
         </TableCell>
       </TableRow>
     );
-  } else if (!isLoading && !isError && data?.students?.length > 0) {
-    content = data.students.map((student) => (
+  } else if (!isLoading && !isError && data?.length > 0) {
+    content = data.map((student) => (
       <TableRow key={student._id}>
         <TableCell>
           <Typography variant="h6">{student.studentId}</Typography>
@@ -165,9 +165,7 @@ function Students() {
         <TableCell>
           {student.admission.map((admission) => {
             return (
-              <Typography key={admission._id}>
-                {admission?.batchNo}
-              </Typography>
+              <Typography key={admission._id}>{admission?.batchNo}</Typography>
             );
           })}
         </TableCell>

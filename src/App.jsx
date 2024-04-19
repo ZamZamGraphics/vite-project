@@ -1,5 +1,3 @@
-import { RouterProvider } from "react-router-dom";
-import useAuthCheck from "./hooks/useAuthCheck";
 import {
   Backdrop,
   CssBaseline,
@@ -7,9 +5,11 @@ import {
   createTheme,
 } from "@mui/material";
 import { useMemo } from "react";
-import { themeSettings } from "./theme";
 import { useSelector } from "react-redux";
+import { RouterProvider } from "react-router-dom";
+import useAuthCheck from "./hooks/useAuthCheck";
 import router from "./routes/router";
+import { themeSettings } from "./theme";
 
 function App() {
   const authChecked = useAuthCheck();

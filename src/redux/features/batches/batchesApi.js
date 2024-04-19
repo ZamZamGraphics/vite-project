@@ -1,6 +1,6 @@
+import { admissionApi } from "../admission/admissionApi";
 import { apiSlice } from "../api/apiSlice";
 import { studentsApi } from "../students/studentsApi";
-import { admissionApi } from "../admission/admissionApi";
 
 export const batchesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -49,8 +49,8 @@ export const batchesApi = apiSlice.injectEndpoints({
             const search = "";
             dispatch(
               apiSlice.util.updateQueryData("getBatches", search, (draft) => {
-                draft.batches.unshift(data.batch);
-                draft.total++;
+                draft.unshift(data.batch);
+                // draft.total++;
               })
             );
           }
@@ -78,9 +78,7 @@ export const batchesApi = apiSlice.injectEndpoints({
           const search = "";
           dispatch(
             apiSlice.util.updateQueryData("getBatches", search, (draft) => {
-              const batch = draft.batches.find(
-                (batch) => batch._id === args.id
-              );
+              const batch = draft.find((batch) => batch._id === args.id);
               Object.assign(batch, {
                 startDate,
                 endDate,
@@ -109,11 +107,8 @@ export const batchesApi = apiSlice.injectEndpoints({
           const search = "";
           dispatch(
             apiSlice.util.updateQueryData("getBatches", search, (draft) => {
-              const data = draft?.batches.filter(
-                (batch) => batch?._id !== args
-              );
-              const total = draft.total - 1;
-              return { batches: data, total };
+              const data = draft?.filter((batch) => batch?._id !== args);
+              return data;
             })
           );
         } catch (err) {

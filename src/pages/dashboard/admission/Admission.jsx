@@ -1,33 +1,33 @@
+import SearchIcon from "@mui/icons-material/Search";
 import {
-  Box,
-  Typography,
   Alert,
   Avatar,
-  Stack,
-  Skeleton,
-  TableFooter,
-  TablePagination,
-  InputAdornment,
+  Box,
+  Chip,
   FormControl,
+  Grid,
+  InputAdornment,
   InputLabel,
   OutlinedInput,
-  Grid,
-  Chip,
+  Skeleton,
+  Stack,
+  TableFooter,
+  TablePagination,
+  Typography,
 } from "@mui/material";
-import dayjs from "dayjs";
-import SearchIcon from "@mui/icons-material/Search";
+import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import Action from "../admission/Action";
 import { styled } from "@mui/material/styles";
+import dayjs from "dayjs";
 import { useState } from "react";
-import { useLocation, Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useGetAdmissionsQuery } from "../../../redux/features/admission/admissionApi";
+import Action from "../admission/Action";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -95,7 +95,7 @@ function Admission() {
   const { data, isLoading, isError } = useGetAdmissionsQuery(
     location.search || `?limit=${perPage}`
   );
-  const total = data?.total || 0;
+  const total = data?.length || 0;
 
   const queryString = (pageNo, limit, search = null) => {
     let query = "?";
@@ -133,7 +133,7 @@ function Admission() {
         </TableCell>
       </TableRow>
     );
-  } else if (!isLoading && !isError && data?.admission?.length === 0) {
+  } else if (!isLoading && !isError && data?.length === 0) {
     content = (
       <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
         <TableCell component="th" scope="row" colSpan={10}>
@@ -141,8 +141,8 @@ function Admission() {
         </TableCell>
       </TableRow>
     );
-  } else if (!isLoading && !isError && data?.admission?.length > 0) {
-    content = data.admission.map((admission) => (
+  } else if (!isLoading && !isError && data?.length > 0) {
+    content = data.map((admission) => (
       <TableRow key={admission._id}>
         <TableCell>
           <Typography variant="h6">{admission.student.studentId}</Typography>

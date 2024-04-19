@@ -1,37 +1,37 @@
 import {
-  Box,
-  Grid,
-  Typography,
-  MenuItem,
-  FormHelperText,
-  TextField,
-  Button,
   Alert,
+  Avatar,
+  Box,
+  Button,
   FormControl,
+  FormHelperText,
+  Grid,
   InputLabel,
+  MenuItem,
   Select,
-  TableContainer,
+  Stack,
   Table,
+  TableCell,
+  TableContainer,
   TableHead,
   TableRow,
-  TableCell,
-  Avatar,
-  Stack,
+  TextField,
+  Typography,
 } from "@mui/material";
+import { grey } from "@mui/material/colors";
+import { styled } from "@mui/system";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import Status from "../../../component/Status";
-import { grey } from "@mui/material/colors";
-import { styled } from "@mui/system";
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import Status from "../../../component/Status";
+import { useAddAdmissionMutation } from "../../../redux/features/admission/admissionApi";
 import {
-  useGetCoursesQuery,
   useGetCourseQuery,
+  useGetCoursesQuery,
 } from "../../../redux/features/courses/coursesApi";
 import { useGetStudentByIdQuery } from "../../../redux/features/students/studentsApi";
-import { useAddAdmissionMutation } from "../../../redux/features/admission/admissionApi";
-import { useLocation, useNavigate } from "react-router-dom";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   "& .MuiInputBase-input": {
@@ -126,8 +126,7 @@ function NewAdmission() {
 
   let courseList = [{ value: "-1", label: "Select Course Name" }];
   if (data) {
-    const { courses } = data;
-    courseList = courses.map((course) => {
+    courseList = data.map((course) => {
       return {
         value: course._id,
         label: course.name,
@@ -150,26 +149,40 @@ function NewAdmission() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
-    let course = null;
-    if (courseName !== "-1") {
-      course = courseName;
-    }
+    if (discount > course.courseFee) {
+      setError({
+        discount: {
+          msg: "The discount cannot exceed the course fee.",
+        },
+      });
+    } else if (payment > total) {
+      setError({
+        payment: {
+          msg: "Payment cannot exceed the total.",
+        },
+      });
+    } else {
+      let course = null;
+      if (courseName !== "-1") {
+        course = courseName;
+      }
 
-    let time = null;
-    if (classTime !== "-1") {
-      time = classTime;
+      let time = null;
+      if (classTime !== "-1") {
+        time = classTime;
+      }
+      const data = {
+        student: studentId,
+        course,
+        discount,
+        payment,
+        paymentType: "New",
+        nextPay,
+        batch: batchNo,
+        timeSchedule: time,
+      };
+      addAdmission(data);
     }
-    const data = {
-      student: studentId,
-      course,
-      discount,
-      payment,
-      paymentType: "New",
-      nextPay,
-      batch: batchNo,
-      timeSchedule: time,
-    };
-    addAdmission(data);
   };
 
   return (

@@ -1,11 +1,11 @@
 import { Drawer, List, Stack, Toolbar } from "@mui/material";
-import SidebarItem from "./SidebarItem";
-import SidebarItemCollapse from "./SidebarItemCollapse";
-import sidebarRoutes from "../../routes";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import logoDark from "../../assets/images/logo-dark.svg";
 import logoLight from "../../assets/images/logo-light.svg";
-import { useSelector } from "react-redux";
+import sidebarRoutes from "../../routes";
+import SidebarItem from "./SidebarItem";
+import SidebarItemCollapse from "./SidebarItemCollapse";
 
 function Sidebar(props) {
   const darkMode = useSelector((state) => state.theme.darkMode);

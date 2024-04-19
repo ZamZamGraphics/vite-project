@@ -1,4 +1,4 @@
-import { grey, blueGrey, blue, lightGreen } from "@mui/material/colors";
+import { blue, blueGrey, grey, lightGreen } from "@mui/material/colors";
 
 export const themeSettings = (mode) => ({
   palette: {

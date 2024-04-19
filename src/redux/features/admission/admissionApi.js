@@ -10,6 +10,9 @@ export const admissionApi = apiSlice.injectEndpoints({
       query: (id) => `/admission/${id}`,
       providesTags: ["Admission"],
     }),
+    getStdAdmission: builder.query({
+      query: (searchString) => `/admission/${searchString}`,
+    }),
     addAdmission: builder.mutation({
       query: (data) => ({
         url: "/admission/new",
@@ -18,7 +21,7 @@ export const admissionApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Admissions", "Students", "Batches"],
     }),
-    payment: builder.mutation({
+    addPayment: builder.mutation({
       query: (data) => ({
         url: "/admission/payment",
         method: "POST",
@@ -39,7 +42,8 @@ export const admissionApi = apiSlice.injectEndpoints({
 export const {
   useGetAdmissionsQuery,
   useGetAdmissionQuery,
+  useGetStdAdmissionQuery,
   useAddAdmissionMutation,
-  usePaymentMutation,
+  useAddPaymentMutation,
   useDeleteAdmissionMutation,
 } = admissionApi;

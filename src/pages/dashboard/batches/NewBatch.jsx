@@ -1,24 +1,24 @@
 import {
+  Alert,
+  Autocomplete,
   Box,
-  MenuItem,
+  Button,
+  FormControl,
   FormHelperText,
   Grid,
-  TextField,
-  Button,
-  Alert,
-  FormControl,
   InputLabel,
+  MenuItem,
   Select,
-  Autocomplete,
+  TextField,
 } from "@mui/material";
+import { grey } from "@mui/material/colors";
+import { styled } from "@mui/system";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { grey } from "@mui/material/colors";
-import { styled } from "@mui/system";
 import { useEffect, useState } from "react";
-import { useGetCoursesQuery } from "../../../redux/features/courses/coursesApi";
 import { useAddBatchMutation } from "../../../redux/features/batches/batchesApi";
+import { useGetCoursesQuery } from "../../../redux/features/courses/coursesApi";
 import { useGetStudentsQuery } from "../../../redux/features/students/studentsApi";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
@@ -69,23 +69,22 @@ function NewBatch() {
     setBatchNo("");
     setCourseType("-1");
     setCourseName("-1");
-    setStudentId([]);
+    setStudentId("");
     setStartDate("");
     setClassDays("-1");
     setClassTime("-1");
   };
 
   let students = [];
-  if (std?.students?.length > 0) {
-    students = std.students.map((std) => {
+  if (std?.length > 0) {
+    students = std.map((std) => {
       return std.studentId;
     });
   }
 
   let courseList = [{ value: "-1", label: "Select Course Name" }];
   if (data) {
-    const { courses } = data;
-    courseList = courses.map((course) => {
+    courseList = data.map((course) => {
       return {
         value: course._id,
         label: course.name,

@@ -1,37 +1,37 @@
+import SearchIcon from "@mui/icons-material/Search";
 import {
-  Box,
-  Typography,
-  Snackbar,
   Alert,
   Avatar,
-  Stack,
-  Skeleton,
-  TableFooter,
-  TablePagination,
+  Box,
   Chip,
-  InputAdornment,
   FormControl,
+  Grid,
+  InputAdornment,
   InputLabel,
   OutlinedInput,
-  Grid,
+  Skeleton,
+  Snackbar,
+  Stack,
+  TableFooter,
+  TablePagination,
+  Typography,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
-import { useLocation, Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import Status from "../../../component/Status";
 import {
   useGetUsersQuery,
   useResendVerificationMutation,
 } from "../../../redux/features/users/usersApi";
 import UserAction from "./UserAction";
-import Status from "../../../component/Status";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -91,7 +91,7 @@ function Users() {
   const { data, isLoading, isError } = useGetUsersQuery(
     location.search || `?limit=${perPage}`
   );
-  const total = data?.total || 0;
+  const total = data?.length || 0;
 
   const queryString = (pageNo, limit, search = null) => {
     let query = "?";
@@ -147,7 +147,7 @@ function Users() {
         </TableCell>
       </TableRow>
     );
-  } else if (!isLoading && !isError && data?.users?.length === 0) {
+  } else if (!isLoading && !isError && data?.length === 0) {
     content = (
       <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
         <TableCell component="th" scope="row" colSpan={6}>
@@ -155,8 +155,8 @@ function Users() {
         </TableCell>
       </TableRow>
     );
-  } else if (!isLoading && !isError && data?.users?.length > 0) {
-    content = data.users.map((user) => (
+  } else if (!isLoading && !isError && data?.length > 0) {
+    content = data.map((user) => (
       <TableRow key={user._id}>
         <TableCell component="th" scope="row">
           <Link to={`/dashboard/users/${user._id}`}>

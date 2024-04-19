@@ -21,8 +21,7 @@ export const coursesApi = apiSlice.injectEndpoints({
           const search = "";
           dispatch(
             apiSlice.util.updateQueryData("getCourses", search, (draft) => {
-              draft.courses.unshift(data.course);
-              draft.total++;
+              draft.unshift(data.course);
             })
           );
         } catch (err) {
@@ -43,9 +42,7 @@ export const coursesApi = apiSlice.injectEndpoints({
           const search = "";
           dispatch(
             apiSlice.util.updateQueryData("getCourses", search, (draft) => {
-              const course = draft.courses.find(
-                (course) => course._id === args.id
-              );
+              const course = draft.find((course) => course._id === args.id);
               Object.assign(course, data?.course);
             })
           );
@@ -73,11 +70,8 @@ export const coursesApi = apiSlice.injectEndpoints({
           const search = "";
           dispatch(
             apiSlice.util.updateQueryData("getCourses", search, (draft) => {
-              const data = draft?.courses.filter(
-                (course) => course?._id !== args
-              );
-              const total = draft.total - 1;
-              return { courses: data, total };
+              const data = draft?.filter((course) => course?._id !== args);
+              return data;
             })
           );
         } catch (err) {

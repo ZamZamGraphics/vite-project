@@ -61,7 +61,7 @@ function Courses() {
   const [perPage, setPerPage] = useState(10);
 
   const { data, isLoading, isError } = useGetCoursesQuery(search);
-  const total = data?.total || 0;
+  const total = data?.length || 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -88,7 +88,7 @@ function Courses() {
         </TableCell>
       </TableRow>
     );
-  } else if (!isLoading && !isError && data?.courses?.length === 0) {
+  } else if (!isLoading && !isError && data?.length === 0) {
     content = (
       <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
         <TableCell component="th" scope="row" colSpan={5}>
@@ -96,12 +96,9 @@ function Courses() {
         </TableCell>
       </TableRow>
     );
-  } else if (!isLoading && !isError && data?.courses?.length > 0) {
-    const { courses } = data;
+  } else if (!isLoading && !isError && data?.length > 0) {
     content = (
-      perPage > 0
-        ? courses.slice(page * perPage, page * perPage + perPage)
-        : courses
+      perPage > 0 ? data.slice(page * perPage, page * perPage + perPage) : data
     ).map((course) => (
       <TableRow key={course._id}>
         <TableCell component="th" scope="row">
