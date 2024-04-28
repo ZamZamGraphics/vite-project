@@ -1,3 +1,7 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
   Divider,
   IconButton,
@@ -5,29 +9,20 @@ import {
   MenuItem,
   Popover,
 } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import ViewUser from "./ViewUser";
-import UserDelete from "./UserDelete";
-import { useGetUserQuery } from "../../../redux/features/users/usersApi";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import UserDelete from "./UserDelete";
+import ViewUser from "./ViewUser";
 
 function UserAction({ user }) {
-  const { _id: userId } = user;
-
   const auth = useSelector((state) => state.auth);
-  const { userid } = auth.user;
+  const { role, userid } = auth.user;
 
   const [open, setOpen] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-
-  const { data: loggedUser } = useGetUserQuery(userid);
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -87,7 +82,7 @@ function UserAction({ user }) {
       >
         <MenuItem
           component={Link}
-          to={`/dashboard/users/${userId}`}
+          to={`/dashboard/users/${user._id}`}
           onClick={handleEdit}
         >
           <ListItemIcon>
@@ -101,7 +96,7 @@ function UserAction({ user }) {
           </ListItemIcon>
           View
         </MenuItem>
-        {(loggedUser._id !== userId) & (loggedUser.role === "Admin") ? (
+        {(userid !== user._id) & (role === "Admin") ? (
           <>
             <Divider />
             <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
@@ -116,7 +111,7 @@ function UserAction({ user }) {
         )}
       </Popover>
       <ViewUser open={openModal} handleClose={handleCloseModal} user={user} />
-      {(loggedUser._id !== userId) & (loggedUser.role === "Admin") ? (
+      {(userid !== user._id) & (role === "Admin") ? (
         <UserDelete
           open={openDeleteModal}
           handleClose={handleCloseDeleteModal}

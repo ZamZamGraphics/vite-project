@@ -1,3 +1,7 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import DownloadIcon from "@mui/icons-material/Download";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import PrintIcon from "@mui/icons-material/Print";
 import {
   Divider,
   IconButton,
@@ -5,25 +9,18 @@ import {
   MenuItem,
   Popover,
 } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import PrintIcon from "@mui/icons-material/Print";
-import DownloadIcon from "@mui/icons-material/Download";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useGetUserQuery } from "../../../redux/features/users/usersApi";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import AdmissionDelete from "./AdmissionDelete";
 
 function Action({ admission }) {
   const auth = useSelector((state) => state.auth);
-  const { userid } = auth.user;
+  const { role } = auth.user;
 
   const [open, setOpen] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-
-  const { data: loggedUser } = useGetUserQuery(userid);
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -98,7 +95,7 @@ function Action({ admission }) {
           </ListItemIcon>
           Download
         </MenuItem>
-        {loggedUser.role === "Admin" ? (
+        {role === "Admin" ? (
           <>
             <Divider />
             <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
@@ -112,7 +109,7 @@ function Action({ admission }) {
           ""
         )}
       </Popover>
-      {loggedUser.role === "Admin" ? (
+      {role === "Admin" ? (
         <AdmissionDelete
           open={openDeleteModal}
           handleClose={handleCloseDeleteModal}

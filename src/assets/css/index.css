@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-print-color-adjust: exact !important; /* Chrome, Safari 6 â€“ 15.3, Edge */
+    color-adjust: exact !important; /* Firefox 48 â€“ 96 */
+    print-color-adjust: exact !important; /* Firefox 97+, Safari 15.4+ */
+  }
+}

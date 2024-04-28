@@ -154,7 +154,7 @@ function Students() {
         </TableCell>
         <TableCell>{student.phone[0]}</TableCell>
         <TableCell>
-          {student.admission.map((admission) => {
+          {student.admissionDetails.map((admission) => {
             return (
               <Typography key={admission._id}>
                 {admission?.course?.name}
@@ -163,7 +163,7 @@ function Students() {
           })}
         </TableCell>
         <TableCell>
-          {student.admission.map((admission) => {
+          {student.admissionDetails.map((admission) => {
             return (
               <Typography key={admission._id}>{admission?.batchNo}</Typography>
             );
