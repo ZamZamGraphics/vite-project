@@ -137,7 +137,7 @@ function Payment() {
         discount,
         payment,
         paymentType: "Payment",
-        nextPay,
+        nextPay:dayjs(nextPay).format(),
       };
       addPayment(data);
     }
@@ -220,7 +220,7 @@ function Payment() {
                     format="DD-MM-YYYY"
                     name="nextPay"
                     value={nextPay}
-                    onChange={(value) => setNextPay(dayjs(value.$d).format())}
+                    onChange={(value) => setNextPay(value)}
                     slotProps={{
                       textField: {
                         size: "small",

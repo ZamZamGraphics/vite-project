@@ -125,7 +125,7 @@ function NewBatch() {
       batchNo,
       course,
       student: studentId.toString(),
-      startDate,
+      startDate: dayjs(startDate).format(),
       classDays: days,
       classTime: time,
     };
@@ -226,7 +226,7 @@ function NewBatch() {
                 format="DD-MM-YYYY"
                 name="startDate"
                 value={startDate}
-                onChange={(value) => setStartDate(dayjs(value.$d).format())}
+                onChange={(value) => setStartDate(value)}
                 slotProps={{
                   textField: {
                     size: "small",

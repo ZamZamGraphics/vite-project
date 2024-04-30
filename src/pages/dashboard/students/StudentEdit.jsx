@@ -161,7 +161,7 @@ function EditForm({ std }) {
     form.append("mothersName", student.mothersName);
     form.append("address.present", student.presentAddress);
     form.append("address.permanent", student.permanentAddress);
-    form.append("birthDay", student.birthDay);
+    form.append("birthDay", dayjs(student.birthDay).format());
     form.append("gender", student.gender);
     form.append("stdPhone", student.stdPhone);
     form.append("guardianPhone", student.guardianPhone);
@@ -296,15 +296,43 @@ function EditForm({ std }) {
               />
             </Grid>
             <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="tel"
+                size="small"
+                label="Student mobile number"
+                name="stdPhone"
+                value={student.stdPhone}
+                onChange={(e) => handleChange("stdPhone", e.target.value)}
+                id={error?.stdPhone && "stdPhone-error"}
+                error={error?.stdPhone && true}
+                helperText={error?.stdPhone && error?.stdPhone?.msg}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="tel"
+                size="small"
+                label="Guardian number"
+                name="guardianPhone"
+                value={student.guardianPhone}
+                onChange={(e) => handleChange("guardianPhone", e.target.value)}
+                id={error?.guardianPhone && "guardianPhone-error"}
+                error={error?.guardianPhone && true}
+                helperText={error?.guardianPhone && error?.guardianPhone?.msg}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Date of Birth"
-                  views={["year", "month", "day"]}
-                  format="YYYY-MM-DD"
+                  views={["day", "month", "year"]}
+                  format="DD-MM-YYYY"
                   name="birthDay"
                   value={dayjs(student.birthDay)}
                   onChange={(value) =>
-                    handleChange("birthDay", dayjs(value.$d).format())
+                    handleChange("birthDay", value)
                   }
                   slotProps={{
                     textField: {
@@ -351,34 +379,6 @@ function EditForm({ std }) {
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
-                type="tel"
-                size="small"
-                label="Student mobile number"
-                name="stdPhone"
-                value={student.stdPhone}
-                onChange={(e) => handleChange("stdPhone", e.target.value)}
-                id={error?.stdPhone && "stdPhone-error"}
-                error={error?.stdPhone && true}
-                helperText={error?.stdPhone && error?.stdPhone?.msg}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                type="tel"
-                size="small"
-                label="Guardian number"
-                name="guardianPhone"
-                value={student.guardianPhone}
-                onChange={(e) => handleChange("guardianPhone", e.target.value)}
-                id={error?.guardianPhone && "guardianPhone-error"}
-                error={error?.guardianPhone && true}
-                helperText={error?.guardianPhone && error?.guardianPhone?.msg}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
                 size="small"
                 label="Student's Occupation"
                 name="occupation"
@@ -392,15 +392,47 @@ function EditForm({ std }) {
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
-                type="email"
                 size="small"
-                label="Email"
-                name="email"
-                value={student.email}
-                onChange={(e) => handleChange("email", e.target.value)}
-                id={error?.email && "email-error"}
-                error={error?.email && true}
-                helperText={error?.email && error?.email?.msg}
+                label="Educational Qualification"
+                name="education"
+                value={student.education}
+                onChange={(e) => handleChange("education", e.target.value)}
+                id={error?.education && "education-error"}
+                error={error?.education && true}
+                helperText={error?.education && error?.education?.msg}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                select
+                fullWidth
+                size="small"
+                label="Blood Group"
+                name="bloodGroup"
+                value={student.bloodGroup}
+                onChange={(e) => handleChange("bloodGroup", e.target.value)}
+                id={error?.bloodGroup && "bloodGroup-error"}
+                error={error?.bloodGroup && true}
+                helperText={error?.bloodGroup && error?.bloodGroup?.msg}
+              >
+                {bloodGroup.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Reference"
+                name="reference"
+                value={student.reference}
+                onChange={(e) => handleChange("reference", e.target.value)}
+                id={error?.reference && "reference-error"}
+                error={error?.reference && true}
+                helperText={error?.reference && error?.reference?.msg}
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -437,48 +469,16 @@ function EditForm({ std }) {
             </Grid>
             <Grid item xs={12} md={6}>
               <TextField
-                select
                 fullWidth
+                type="email"
                 size="small"
-                label="Blood Group"
-                name="bloodGroup"
-                value={student.bloodGroup}
-                onChange={(e) => handleChange("bloodGroup", e.target.value)}
-                id={error?.bloodGroup && "bloodGroup-error"}
-                error={error?.bloodGroup && true}
-                helperText={error?.bloodGroup && error?.bloodGroup?.msg}
-              >
-                {bloodGroup.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                size="small"
-                label="Educational Qualification"
-                name="education"
-                value={student.education}
-                onChange={(e) => handleChange("education", e.target.value)}
-                id={error?.education && "education-error"}
-                error={error?.education && true}
-                helperText={error?.education && error?.education?.msg}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                size="small"
-                label="Reference"
-                name="reference"
-                value={student.reference}
-                onChange={(e) => handleChange("reference", e.target.value)}
-                id={error?.reference && "reference-error"}
-                error={error?.reference && true}
-                helperText={error?.reference && error?.reference?.msg}
+                label="Email"
+                name="email"
+                value={student.email}
+                onChange={(e) => handleChange("email", e.target.value)}
+                id={error?.email && "email-error"}
+                error={error?.email && true}
+                helperText={error?.email && error?.email?.msg}
               />
             </Grid>
             <Grid item xs={12} align="center">

@@ -149,7 +149,7 @@ function NewAdmission() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
-    if (discount > course.courseFee) {
+    if (discount > course?.courseFee) {
       setError({
         discount: {
           msg: "The discount cannot exceed the course fee.",
@@ -177,7 +177,7 @@ function NewAdmission() {
         discount,
         payment,
         paymentType: "New",
-        nextPay,
+        nextPay:dayjs(nextPay).format(),
         batch: batchNo,
         timeSchedule: time,
       };
@@ -286,7 +286,7 @@ function NewAdmission() {
                     format="DD-MM-YYYY"
                     name="nextPay"
                     value={nextPay}
-                    onChange={(value) => setNextPay(dayjs(value.$d).format())}
+                    onChange={(value) => setNextPay(value)}
                     slotProps={{
                       textField: {
                         size: "small",
