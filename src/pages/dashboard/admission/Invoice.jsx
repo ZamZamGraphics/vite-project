@@ -15,7 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import { grey, lightBlue, lightGreen } from "@mui/material/colors";
+import { grey, lightGreen } from "@mui/material/colors";
 import dayjs from "dayjs";
 import { Link, useParams } from "react-router-dom";
 import logo from "../../../assets/images/logo-dark.svg";
@@ -60,32 +60,28 @@ function Invoice() {
 
     admission = (
       <Grid container alignItems="center" direction="column">
-        <Grid item xs={9}>
-          <Box
-            sx={{
-              padding: 3,
-              width: "990px",
+        <Grid item xs={9} sx={{
+              width: "980px",
               color: "#000",
               backgroundColor: "#fff",
-            }}
-          >
-            <Box sx={{ textAlign: "right" }} displayPrint="none">
-              <IconButton
-                onClick={handlePrint}
-                aria-label="delete"
-                size="large"
-              >
-                <PrintIcon />
-              </IconButton>
-            </Box>
-            <div className="h-3 bg-lime-600 mb-10"></div>
+            }}>
+          <Box sx={{ textAlign: "right" }} displayPrint="none">
+            <IconButton
+              onClick={handlePrint}
+              aria-label="delete"
+              size="large"
+            >
+              <PrintIcon />
+            </IconButton>
+          </Box>
+          <div className="h-2 bg-lime-600 mb-10"></div>
+          <Box sx={{padding: 5}} >
             <Grid container spacing={6}>
               <Grid
                 item
                 xs={7}
                 container
                 direction="row"
-                justifyContent="center"
                 alignItems="center"
               >
                 <Link to={`/dashboard/admission`}>
@@ -96,45 +92,38 @@ function Invoice() {
                 <Typography variant="body1" mb={2}>
                   #Fakhre Bangal Road, Kandipara, <br />
                   Brahmanbaria-3400 <br />
-                  Email: almadinait@gmail.com <br />
-                  Phone : 01736722622
+                  Phone : 01736722622 <br />
+                  Email : almadinait@gmail.com <br />
+                  Web : www.almadinait.com
                 </Typography>
               </Grid>
-              <Grid item xs={7} sx={{ textAlign: "center", marginBottom: 5 }}>
-                <Avatar
-                  src={`${import.meta.env.VITE_API_URL}/upload/${
-                    data.student?.avatar
-                  }`}
-                  sx={{
-                    width: 130,
-                    height: 150,
-                  }}
-                  className="mx-auto mb-5 p-1 ring-2 ring-gray-200"
-                  variant="rounded"
-                />
-                <Typography variant="h5">
-                  Student ID {data.student.studentId}
-                </Typography>
-              </Grid>
-              <Grid item xs={5}>
+              <Grid item xs={6}>
                 <TableContainer>
-                  <Table size="small" aria-label="invoice table">
+                  <Table 
+                    sx={{
+                      "& .MuiTableCell-sizeMedium": {
+                        padding: "10px 16px",
+                      },
+                    }} 
+                    aria-label="invoice table"
+                  >
                     <TableHead>
                       <TableRow>
                         <TableCell
                           sx={{
                             textAlign: "center",
-                            bgcolor: lightBlue["200"],
+                            color: "#fff",
+                            bgcolor: lightGreen["700"],
                           }}
                           colSpan={2}
                         >
                           <Typography variant="h6">
-                            {data.paymentType}
+                          {data.paymentType}
                           </Typography>
                         </TableCell>
                       </TableRow>
                     </TableHead>
-                    <TableBody sx={{ bgcolor: lightBlue["50"] }}>
+                    <TableBody sx={{ bgcolor: grey["100"] }}>
                       <TableRow>
                         <TableCell>
                           <strong>Invoice Date</strong>
@@ -155,7 +144,7 @@ function Invoice() {
                           </>
                         ) : (
                           <TableCell
-                            sx={{ bgcolor: lightGreen["100"] }}
+                            sx={{ textAlign: "center", color: lightGreen["900"], bgcolor: lightGreen["200"] }}
                             colSpan={2}
                           >
                             <strong>Payment Completed</strong>
@@ -166,6 +155,19 @@ function Invoice() {
                   </Table>
                 </TableContainer>
               </Grid>
+              <Grid item xs={6} sx={{ textAlign: "center", marginBottom: 5 }}>
+                <Avatar
+                  src={`${import.meta.env.VITE_API_URL}/upload/${
+                    data.student?.avatar
+                  }`}
+                  sx={{
+                    width: 130,
+                    height: 150,
+                  }}
+                  className="mx-auto mb-5 p-1 ring-2 ring-gray-200"
+                  variant="rounded"
+                />
+              </Grid>
               <Grid item xs={7}>
                 <TableContainer>
                   <Table
@@ -174,6 +176,18 @@ function Invoice() {
                     aria-label="invoice table"
                   >
                     <TableBody>
+                      <TableRow>
+                        <TableCell>
+                          <Typography variant="h5">
+                            Student ID
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                        <Typography variant="h5">
+                          {data.student.studentId}
+                        </Typography>
+                        </TableCell>
+                      </TableRow>
                       <TableRow>
                         <TableCell>
                           <strong>Student Name</strong>
@@ -216,7 +230,7 @@ function Invoice() {
                   </Table>
                 </TableContainer>
               </Grid>
-              <Grid item xs={5} sx={{ marginBottom: 10 }}>
+              <Grid item xs={5} sx={{ marginTop: 5, marginBottom: 10 }}>
                 <TableContainer>
                   <Table
                     sx={{
@@ -235,13 +249,13 @@ function Invoice() {
                         </TableCell>
                         <TableCell>{data?.discount || 0}</TableCell>
                       </TableRow>
-                      <TableRow sx={{ bgcolor: grey["300"] }}>
+                      <TableRow sx={{ bgcolor: grey["100"] }}>
                         <TableCell>
                           <strong>Total</strong>
                         </TableCell>
                         <TableCell>{data.payableAmount}</TableCell>
                       </TableRow>
-                      <TableRow sx={{ bgcolor: grey["100"] }}>
+                      <TableRow sx={{ bgcolor: grey["300"] }}>
                         <TableCell>
                           <strong>Payment</strong>
                         </TableCell>
@@ -258,6 +272,17 @@ function Invoice() {
                 </TableContainer>
               </Grid>
               <Grid item xs={7}>
+                <Box
+                  sx={{
+                    width:200,
+                    paddingY:10
+                  }}
+                >
+                  <Divider  />
+                  <Typography sx={{ paddingY: 3 }}>
+                    Authorized Signatory
+                  </Typography>
+                </Box>
                 <ul className="text-black">
                   <li>This invoice must be produced when demanded.</li>
                   <li>Fees once paid are not refundable.</li>
@@ -266,12 +291,6 @@ function Invoice() {
                     invoice.
                   </li>
                 </ul>
-              </Grid>
-              <Grid item xs={5}>
-                <Divider variant="middle" sx={{ marginY: 2 }} />
-                <Typography sx={{ padding: 2, textAlign: "center" }}>
-                  Authorized Signatory
-                </Typography>
               </Grid>
             </Grid>
           </Box>
