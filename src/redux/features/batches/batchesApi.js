@@ -46,7 +46,7 @@ export const batchesApi = apiSlice.injectEndpoints({
             dispatch(studentsApi.util.invalidateTags(["Students"]));
 
             // update all batches
-            const search = "";
+            const search = "?search=";
             dispatch(
               apiSlice.util.updateQueryData("getBatches", search, (draft) => {
                 draft.unshift(data.batch);
@@ -72,10 +72,9 @@ export const batchesApi = apiSlice.injectEndpoints({
           dispatch(
             batchesApi.util.invalidateTags([{ type: "Batch", _id: args.id }])
           );
-
           const { startDate, endDate, classDays, classTime } = data.batch;
           // update all batches
-          const search = "";
+          const search = "?search=";
           dispatch(
             apiSlice.util.updateQueryData("getBatches", search, (draft) => {
               const batch = draft.find((batch) => batch._id === args.id);
@@ -104,7 +103,7 @@ export const batchesApi = apiSlice.injectEndpoints({
           dispatch(admissionApi.util.invalidateTags(["Admissions"]));
           dispatch(studentsApi.util.invalidateTags(["Students"]));
           // update all batches
-          const search = "";
+          const search = "?search=";
           dispatch(
             apiSlice.util.updateQueryData("getBatches", search, (draft) => {
               const data = draft?.filter((batch) => batch?._id !== args);
