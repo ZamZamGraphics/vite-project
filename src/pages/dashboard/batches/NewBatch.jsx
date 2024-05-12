@@ -44,7 +44,7 @@ function NewBatch() {
   const [classDays, setClassDays] = useState("-1");
   const [classTime, setClassTime] = useState("-1");
 
-  const { data: std } = useGetStudentsQuery("?search=Pending");
+  const { data: std } = useGetStudentsQuery("?limit=50");
   const { data } = useGetCoursesQuery(courseType, { skip: !request });
 
   const [addBatch, { data: batch, isLoading, error: responseError }] =

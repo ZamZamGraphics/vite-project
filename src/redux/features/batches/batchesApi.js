@@ -5,7 +5,7 @@ import { studentsApi } from "../students/studentsApi";
 export const batchesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getBatches: builder.query({
-      query: (search) => `/batches?search=${search}`,
+      query: (queryString) => `/batches${queryString}`,
       providesTags: ["Batches"],
     }),
     getBatch: builder.query({

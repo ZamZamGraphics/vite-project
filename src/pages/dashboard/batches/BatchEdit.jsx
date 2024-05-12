@@ -22,6 +22,7 @@ import {
   useEditBatchMutation,
   useGetBatchQuery,
 } from "../../../redux/features/batches/batchesApi";
+import { useGetStudentsQuery } from "../../../redux/features/students/studentsApi";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   "& .MuiInputBase-input": {
@@ -67,6 +68,7 @@ function BatchEditForm({ initialBatch }) {
     }
   }, [initialBatch]);
 
+  const { data: std } = useGetStudentsQuery("?limit=50");
   const [editBatch, { data: batch, isLoading, error: responseError }] =
     useEditBatchMutation();
 
@@ -84,6 +86,17 @@ function BatchEditForm({ initialBatch }) {
     }
   }, [responseError, batch]);
 
+  let students = [];
+  if (std?.length > 0) {
+    students = std.map((std) => {
+      return std.studentId;
+    });
+  }
+
+  const handleStudentId = (value) => {
+    setStudentId(value.map((std) => std));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
@@ -97,7 +110,7 @@ function BatchEditForm({ initialBatch }) {
     if (classTime !== "-1") {
       time = classTime;
     }
-
+    
     const data = {
       student: studentId.toString(),
       startDate,
@@ -145,8 +158,9 @@ function BatchEditForm({ initialBatch }) {
               multiple
               size="small"
               id="studentID"
+              onChange={(e, data) => handleStudentId(data)}
               value={studentId}
-              options={studentId}
+              options={students}
               getOptionLabel={(option) => option}
               isOptionEqualToValue={(option, value) => option === value}
               filterSelectedOptions
