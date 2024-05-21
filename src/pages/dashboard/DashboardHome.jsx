@@ -1,6 +1,7 @@
-import { Box, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import { Box, Card, CardContent, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import AdmissionIcon from "../../assets/images/Admission.svg";
 import BatchIcon from "../../assets/images/BatchIcon.svg";
 import DueIcon from "../../assets/images/DueIcon.svg";
@@ -10,6 +11,8 @@ import { useGetAdmissionsQuery } from "../../redux/features/admission/admissionA
 import { useGetBatchesQuery } from "../../redux/features/batches/batchesApi";
 import { useGetStudentsQuery } from "../../redux/features/students/studentsApi";
 import CardItem from "./CardItem";
+import DashboardLineChart from "./DashboardLineChart";
+import UpcomingBatches from "./UpcomingBatches";
 
 function DashboardHome() {
   const [sortBy, SetSortBy] = useState("today");
@@ -22,6 +25,9 @@ function DashboardHome() {
   const [totalBatches, SetTotalBatches] = useState(0);
   const [totalPayment, SetTotalPayment] = useState(0);
   const [totalDues, SetTotalDues] = useState(0);
+
+  const auth = useSelector((state) => state.auth);
+  const {name} = auth.user;
   
   const to = dayjs(new Date()).format("YYYY-MM-DD");
   const { data: students } = useGetStudentsQuery( `?limit=999999&from=${from}&to=${to}` );
@@ -73,14 +79,14 @@ function DashboardHome() {
   },[sortBy, month, year])
 
   return (
-    <Box>
+    <Box sx={{padding: 2}}>
       <Grid container direction="row" justifyContent="space-between" alignItems="center">
         <Grid item xs={12} sm={6} md={4}>
           <Typography variant="h5" sx={{ marginBottom: 3 }}>
-            Welcome, Admin
+            Welcome, {name}
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={6} md={2} sx={{textAlign:"end", mb:3}}>
+        <Grid item xs={12} sm={6} md={2} sx={{textAlign:"end", mb:3, mr: 2}}>
           <FormControl 
             fullWidth
             sx={{ 
@@ -148,6 +154,28 @@ function DashboardHome() {
             value={totalDues + " Tk"}
             color="#F4492D"
           />
+        </Grid>
+      </Grid>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={12} md={7}>
+          <Card sx={{ borderRadius: "16px", marginTop:3 }}>
+            <CardContent>
+              <Typography variant="h5" sx={{ marginBottom: 3 }}>
+                Admission
+              </Typography>
+              <DashboardLineChart/>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={12} md={5}>
+          <Card sx={{ borderRadius: "16px", marginTop:3 }}>
+            <CardContent>
+              <Typography variant="h5" sx={{ marginBottom: 3 }}>
+                Upcoming Batches
+              </Typography>
+              <UpcomingBatches/>
+            </CardContent>
+          </Card>
         </Grid>
       </Grid>
     </Box>
