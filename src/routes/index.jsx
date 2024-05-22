@@ -1,7 +1,8 @@
 import GridViewIcon from "@mui/icons-material/GridView";
+import MessageIcon from '@mui/icons-material/Message';
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
-import SchoolIcon from "@mui/icons-material/School";
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
+import SchoolIcon from "@mui/icons-material/School";
 import SettingsIcon from "@mui/icons-material/Settings";
 
 const sidebarRoutes = [
@@ -51,6 +52,11 @@ const sidebarRoutes = [
         title: "Batches",
       },
     ],
+  },
+  {
+    path: "/dashboard/messages",
+    title: "Messages",
+    icon: <MessageIcon />
   },
   {
     path: "/dashboard/users",

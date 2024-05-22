@@ -4,30 +4,31 @@ import {
   Navigate,
   Route,
 } from "react-router-dom";
+import Layout from "../component/Layout";
+import NotFoundPage from "../component/NotFoundPage";
+import PrivateRoute from "../component/PrivateRoute";
+import PublicRoute from "../component/PublicRoute";
+import AdminEmailVerify from "../pages/AdminEmailVerify";
+import Admission from "../pages/dashboard/admission/Admission";
+import Invoice from "../pages/dashboard/admission/Invoice";
+import NewAdmission from "../pages/dashboard/admission/NewAdmission";
+import Payment from "../pages/dashboard/admission/Payment";
+import Batches from "../pages/dashboard/batches/Batches";
+import Courses from "../pages/dashboard/courses/Courses";
+import DashboardHome from "../pages/dashboard/DashboardHome";
+import Messages from "../pages/dashboard/messages/Messages";
+import Settings from "../pages/dashboard/settings/Settings";
+import NewStudent from "../pages/dashboard/students/NewStudent";
+import StudentEdit from "../pages/dashboard/students/StudentEdit";
+import Students from "../pages/dashboard/students/Students";
+import EditUser from "../pages/dashboard/users/EditUser";
+import NewUser from "../pages/dashboard/users/NewUser";
+import Profile from "../pages/dashboard/users/Profile";
+import Users from "../pages/dashboard/users/Users";
 import Login from "../pages/Login";
 import LostPassword from "../pages/LostPassword";
 import ResetPassword from "../pages/ResetPassword";
 import Verify from "../pages/Verify";
-import AdminEmailVerify from "../pages/AdminEmailVerify";
-import Layout from "../component/Layout";
-import PrivateRoute from "../component/PrivateRoute";
-import PublicRoute from "../component/PublicRoute";
-import NotFoundPage from "../component/NotFoundPage";
-import DashboardHome from "../pages/dashboard/DashboardHome";
-import Students from "../pages/dashboard/students/Students";
-import NewStudent from "../pages/dashboard/students/NewStudent";
-import Admission from "../pages/dashboard/admission/Admission";
-import NewAdmission from "../pages/dashboard/admission/NewAdmission";
-import Payment from "../pages/dashboard/admission/Payment";
-import Courses from "../pages/dashboard/courses/Courses";
-import Batches from "../pages/dashboard/batches/Batches";
-import Users from "../pages/dashboard/users/Users";
-import NewUser from "../pages/dashboard/users/NewUser";
-import EditUser from "../pages/dashboard/users/EditUser";
-import Profile from "../pages/dashboard/users/Profile";
-import Settings from "../pages/dashboard/settings/Settings";
-import StudentEdit from "../pages/dashboard/students/StudentEdit";
-import Invoice from "../pages/dashboard/admission/Invoice";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -91,6 +92,7 @@ const router = createBrowserRouter(
         <Route path="admission/payment" element={<Payment />} />
         <Route path="admission/courses" element={<Courses />} />
         <Route path="admission/batches" element={<Batches />} />
+        <Route path="messages" element={<Messages/>} />
         <Route path="users" element={<Users />} />
         <Route path="users/new" element={<NewUser />} />
         <Route path="users/:userId" element={<EditUser />} />

@@ -1,16 +1,17 @@
 import {
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Typography,
-    tableCellClasses
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  tableCellClasses
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import dayjs from "dayjs";
+import { Link } from "react-router-dom";
 import { useGetBatchesQuery } from "../../redux/features/batches/batchesApi";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -24,9 +25,9 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 function UpcomingBatches() {
 
-    const { data, isLoading, isError } = useGetBatchesQuery( `?limit=999999&from=${dayjs(new Date()).format("YYYY-MM-DD")}&to=2024-08-11` );
+  const { data, isLoading, isError } = useGetBatchesQuery( `?limit=8&from=${dayjs(new Date()).format("YYYY-MM-DD")}` );
 
-     // decide what to render
+  // decide what to render
   let content = null;
   if (isLoading) {
     content = "Loading...";
@@ -39,50 +40,49 @@ function UpcomingBatches() {
       </TableRow>
     );
   } else if (!isLoading && !isError && data?.length > 0) {
-    content = data.map((batch) => (
-      <TableRow key={batch._id}>
-        <TableCell component="th" scope="row">
-          <Typography variant="h6">{batch.batchNo}</Typography>
-        </TableCell>
-        <TableCell>
-          <Typography>
-            <strong>{batch.course?.name}</strong>
-          </Typography>
-          {batch.course?.courseType}
-        </TableCell>
-        <TableCell>
-          <Typography>
-            <strong>Status</strong>
-          </Typography>
-          {batch.classTime}
-        </TableCell>
-        <TableCell>
-          {dayjs(batch.startDate).format("DD-MM-YYYY")} <br />
-          {dayjs(batch.endDate).format("DD-MM-YYYY")}
-        </TableCell>
-        <TableCell>{batch.classDays}</TableCell>
-        <TableCell>{batch.student.length}</TableCell>
-      </TableRow>
-    ));
+    content = <BatchesTable batches={data} />;
   }
 
-  return (
-    <TableContainer component={Paper}>
-        <Table size="small" aria-label="courses table">
-            <TableHead>
-            <TableRow>
-                <StyledTableCell>Batch No</StyledTableCell>
-                <StyledTableCell>Course Name</StyledTableCell>
-                <StyledTableCell>Status</StyledTableCell>
-                <StyledTableCell>Start & End</StyledTableCell>
-                <StyledTableCell>Days</StyledTableCell>
-                <StyledTableCell>Count</StyledTableCell>
-            </TableRow>
-            </TableHead>
-            <TableBody>{content}</TableBody>
-        </Table>
-    </TableContainer>
-  )
+  return content;
 }
 
 export default UpcomingBatches;
+
+function BatchesTable({batches}) {
+  return (
+    <TableContainer component={Paper}>
+        <Table size="small">
+            <TableHead>
+              <TableRow>
+                  <StyledTableCell>Batch No</StyledTableCell>
+                  <StyledTableCell>Course Name</StyledTableCell>
+                  <StyledTableCell>Start & End</StyledTableCell>
+                  <StyledTableCell>Days</StyledTableCell>
+              </TableRow>
+            </TableHead>
+          <TableBody>
+            {batches.map((batch) => (
+              <TableRow key={batch._id}>
+                <TableCell>
+                  <Link to="/dashboard/admission/batches">
+                    <Typography variant="h6">{batch.batchNo}</Typography>
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  <Typography>
+                    <strong>{batch.course?.name}</strong>
+                  </Typography>
+                  {batch.course?.courseType}
+                </TableCell>
+                <TableCell>
+                  {dayjs(batch.startDate).format("DD-MM-YYYY")} <br />
+                  {dayjs(batch.endDate).format("DD-MM-YYYY")}
+                </TableCell>
+                <TableCell>{batch.classDays}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+      </Table>
+    </TableContainer>
+  )
+}

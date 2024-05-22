@@ -41,23 +41,23 @@ function DashboardHome() {
   useEffect(() => {
     if(students?.length > 0){
       SetTotalStudent(students.length);
-      const dues = students.reduce((total, std) => {
-        return total + std?.totalDues;
-      }, 0)
-      SetTotalDues(dues);
     } else {
       SetTotalStudent(0);
-      SetTotalDues(0);
     }
     if(admissions?.length > 0){
       SetTotalAdmission(admissions.length);
-      const payment = admissions.reduce((total, admission) => {
+      const payableAmount = admissions.reduce((total, admission) => {
         return total + admission?.payableAmount;
       }, 0)
-      SetTotalPayment(payment - totalDues);
+      const payment = admissions.reduce((total, admission) => {
+        return total + admission?.payment;
+      }, 0)
+      SetTotalDues(payableAmount - payment);
+      SetTotalPayment(payment);
     } else {
       SetTotalAdmission(0);
       SetTotalPayment(0);
+      SetTotalDues(0);
     }
     if(batches?.length > 0) {
       SetTotalBatches(batches.length);
@@ -173,7 +173,7 @@ function DashboardHome() {
               <Typography variant="h5" sx={{ marginBottom: 3 }}>
                 Upcoming Batches
               </Typography>
-              <UpcomingBatches/>
+                <UpcomingBatches/>
             </CardContent>
           </Card>
         </Grid>
