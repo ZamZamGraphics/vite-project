@@ -106,6 +106,7 @@ function NewStudent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    const dob = student.birthDay ? dayjs(student.birthDay).format() : "";
     const form = new FormData();
     form.append("avatar", avatar);
     form.append("fullName", student.fullName);
@@ -113,7 +114,7 @@ function NewStudent() {
     form.append("mothersName", student.mothersName);
     form.append("address.present", student.presentAddress);
     form.append("address.permanent", student.permanentAddress);
-    form.append("birthDay", dayjs(student.birthDay).format());
+    form.append("birthDay", dob);
     form.append("gender", student.gender);
     form.append("stdPhone", student.stdPhone);
     form.append("guardianPhone", student.guardianPhone);

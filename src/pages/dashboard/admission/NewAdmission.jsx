@@ -177,7 +177,7 @@ function NewAdmission() {
         discount,
         payment,
         paymentType: "New",
-        nextPay:dayjs(nextPay).format(),
+        nextPay: nextPay ? dayjs(nextPay).format() : "",
         batch: batchNo,
         timeSchedule: time,
       };

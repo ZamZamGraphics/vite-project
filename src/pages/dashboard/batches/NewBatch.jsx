@@ -125,7 +125,7 @@ function NewBatch() {
       batchNo,
       course,
       student: studentId.toString(),
-      startDate: dayjs(startDate).format(),
+      startDate: startDate ? dayjs(startDate).format() : "",
       classDays: days,
       classTime: time,
     };

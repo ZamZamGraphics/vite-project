@@ -137,7 +137,7 @@ function Payment() {
         discount,
         payment,
         paymentType: "Payment",
-        nextPay:dayjs(nextPay).format(),
+        nextPay: nextPay ? dayjs(nextPay).format() : "",
       };
       addPayment(data);
     }
