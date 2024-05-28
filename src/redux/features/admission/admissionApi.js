@@ -19,7 +19,7 @@ export const admissionApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Admissions", "Students", "Batches"],
+      invalidatesTags: ["Admissions", "Students", "Balance", "Batches"],
     }),
     addPayment: builder.mutation({
       query: (data) => ({

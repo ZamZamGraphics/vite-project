@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { deleteCookie, setCookie } from "../../../utils/cookie";
 import { userLoggedOut } from "../auth/authSlice";
-import { setCookie, deleteCookie } from "../../../utils/cookie";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${import.meta.env.VITE_API_URL}/v1`,
@@ -34,6 +34,7 @@ export const apiSlice = createApi({
     "Admission",
     "Batches",
     "Batch",
+    "Balance",
     "Users",
     "User",
   ],

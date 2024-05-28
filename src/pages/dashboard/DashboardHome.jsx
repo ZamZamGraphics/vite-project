@@ -173,7 +173,7 @@ function DashboardHome() {
               <Typography variant="h5" sx={{ marginBottom: 3 }}>
                 Upcoming Batches
               </Typography>
-                <UpcomingBatches/>
+              <UpcomingBatches/>
             </CardContent>
           </Card>
         </Grid>
