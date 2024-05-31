@@ -13,6 +13,8 @@ import {
   TableHead,
   TableRow,
   Typography,
+  styled,
+  tableCellClasses,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import { grey, lightGreen } from "@mui/material/colors";
@@ -21,6 +23,13 @@ import { Link, useParams } from "react-router-dom";
 import logo from "../../../assets/images/logo-dark.svg";
 import Status from "../../../component/Status";
 import { useGetAdmissionQuery } from "../../../redux/features/admission/admissionApi";
+
+const StyledTableCell = styled(TableCell)(() => ({
+  [`&.${tableCellClasses.body}`]: {
+    color:"#000",
+    borderColor:"#e0e0e0"
+  },
+}));
 
 function Invoice() {
   const { id } = useParams();
@@ -41,19 +50,19 @@ function Invoice() {
     if (data.paymentType === "New") {
       courseFee = (
         <>
-          <TableCell>
+          <StyledTableCell>
             <strong>Course Fee</strong>
-          </TableCell>
-          <TableCell>{data.course.courseFee}</TableCell>
+          </StyledTableCell>
+          <StyledTableCell>{data.course.courseFee}</StyledTableCell>
         </>
       );
     } else {
       courseFee = (
         <>
-          <TableCell>
+          <StyledTableCell>
             <strong>Preveus Due</strong>
-          </TableCell>
-          <TableCell>{data.payableAmount + data.discount}</TableCell>
+          </StyledTableCell>
+          <StyledTableCell>{data.payableAmount + data.discount}</StyledTableCell>
         </>
       );
     }
@@ -114,6 +123,7 @@ function Invoice() {
                             textAlign: "center",
                             color: "#fff",
                             bgcolor: lightGreen["700"],
+                            border: "none"
                           }}
                           colSpan={2}
                         >
@@ -125,22 +135,22 @@ function Invoice() {
                     </TableHead>
                     <TableBody sx={{ bgcolor: grey["100"] }}>
                       <TableRow>
-                        <TableCell>
+                        <StyledTableCell>
                           <strong>Invoice Date</strong>
-                        </TableCell>
-                        <TableCell>
+                        </StyledTableCell>
+                        <StyledTableCell>
                           {dayjs(data.admitedAt).format("DD-MM-YYYY")}
-                        </TableCell>
+                        </StyledTableCell>
                       </TableRow>
                       <TableRow>
                         {data?.nextPay ? (
                           <>
-                            <TableCell>
+                            <StyledTableCell>
                               <strong>Due Date</strong>
-                            </TableCell>
-                            <TableCell>
+                            </StyledTableCell>
+                            <StyledTableCell>
                               {dayjs(data.nextPay).format("DD-MM-YYYY")}
-                            </TableCell>
+                            </StyledTableCell>
                           </>
                         ) : (
                           <TableCell
@@ -177,54 +187,54 @@ function Invoice() {
                   >
                     <TableBody>
                       <TableRow>
-                        <TableCell>
+                        <StyledTableCell>
                           <Typography variant="h5">
                             Student ID
                           </Typography>
-                        </TableCell>
-                        <TableCell>
+                        </StyledTableCell>
+                        <StyledTableCell>
                         <Typography variant="h5">
                           {data.student.studentId}
                         </Typography>
-                        </TableCell>
+                        </StyledTableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>
+                        <StyledTableCell>
                           <strong>Student Name</strong>
-                        </TableCell>
-                        <TableCell>{data.student.fullName}</TableCell>
+                        </StyledTableCell>
+                        <StyledTableCell>{data.student.fullName}</StyledTableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>
+                        <StyledTableCell>
                           <strong>Address</strong>
-                        </TableCell>
-                        <TableCell>{data.student.address.present}</TableCell>
+                        </StyledTableCell>
+                        <StyledTableCell>{data.student.address.present}</StyledTableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>
+                        <StyledTableCell>
                           <strong>Mobile</strong>
-                        </TableCell>
-                        <TableCell>{data.student.phone[0]}</TableCell>
+                        </StyledTableCell>
+                        <StyledTableCell>{data.student.phone[0]}</StyledTableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>
+                        <StyledTableCell>
                           <strong>Status</strong>
-                        </TableCell>
-                        <TableCell>
+                        </StyledTableCell>
+                        <StyledTableCell>
                           <Status status={data.student.status} />
-                        </TableCell>
+                        </StyledTableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>
+                        <StyledTableCell>
                           <strong>Course Name</strong>
-                        </TableCell>
-                        <TableCell>{data.course.name}</TableCell>
+                        </StyledTableCell>
+                        <StyledTableCell>{data.course.name}</StyledTableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>
+                        <StyledTableCell>
                           <strong>Batch No</strong>
-                        </TableCell>
-                        <TableCell>{data.batchNo}</TableCell>
+                        </StyledTableCell>
+                        <StyledTableCell>{data.batchNo}</StyledTableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
@@ -244,28 +254,28 @@ function Invoice() {
                         {courseFee}
                       </TableRow>
                       <TableRow sx={{ bgcolor: grey["100"] }}>
-                        <TableCell>
+                        <StyledTableCell>
                           <strong>Discount</strong>
-                        </TableCell>
-                        <TableCell>{data?.discount || 0}</TableCell>
+                        </StyledTableCell>
+                        <StyledTableCell>{data?.discount || 0}</StyledTableCell>
                       </TableRow>
                       <TableRow sx={{ bgcolor: grey["100"] }}>
-                        <TableCell>
+                        <StyledTableCell>
                           <strong>Total</strong>
-                        </TableCell>
-                        <TableCell>{data.payableAmount}</TableCell>
+                        </StyledTableCell>
+                        <StyledTableCell>{data.payableAmount}</StyledTableCell>
                       </TableRow>
                       <TableRow sx={{ bgcolor: grey["300"] }}>
-                        <TableCell>
+                        <StyledTableCell>
                           <strong>Payment</strong>
-                        </TableCell>
-                        <TableCell>{data.payment}</TableCell>
+                        </StyledTableCell>
+                        <StyledTableCell>{data.payment}</StyledTableCell>
                       </TableRow>
                       <TableRow sx={{ bgcolor: grey["100"] }}>
-                        <TableCell>
+                        <StyledTableCell>
                           <strong>Due</strong>
-                        </TableCell>
-                        <TableCell>{data.due}</TableCell>
+                        </StyledTableCell>
+                        <StyledTableCell>{data.due}</StyledTableCell>
                       </TableRow>
                     </TableBody>
                   </Table>

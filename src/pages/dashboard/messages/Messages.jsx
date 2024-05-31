@@ -32,7 +32,8 @@ function Messages() {
     }
 
     if (data) {
-      console.log(data);
+      setBatchNo("");
+      setMessages("");
       setSuccess(data.message);
     }
   }, [responseError, data]);
