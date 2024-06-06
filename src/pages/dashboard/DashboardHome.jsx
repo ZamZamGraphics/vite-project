@@ -32,24 +32,24 @@ function DashboardHome() {
   const to = dayjs(new Date()).format("YYYY-MM-DD");
   const { data: students } = useGetStudentsQuery( `?limit=999999&from=${from}&to=${to}` );
   const { data: admissions } = useGetAdmissionsQuery( `?limit=999999&search=New&from=${from}&to=${to}` );
-  const { data: batches } = useGetBatchesQuery( `?limit=999999&from=${from}&to=${to}` );
+  const { data: batches } = useGetBatchesQuery( `?limit=999999&to=${to}` );
 
   const handleChangeSort = (e) => {
     SetSortBy(e.target.value)
   }
 
   useEffect(() => {
-    if(students?.length > 0){
-      SetTotalStudent(students.length);
+    if(students?.students?.length > 0){
+      SetTotalStudent(students.total);
     } else {
       SetTotalStudent(0);
     }
-    if(admissions?.length > 0){
-      SetTotalAdmission(admissions.length);
-      const payableAmount = admissions.reduce((total, admission) => {
+    if(admissions?.admission?.length > 0){
+      SetTotalAdmission(admissions.total);
+      const payableAmount = admissions?.admission.reduce((total, admission) => {
         return total + admission?.payableAmount;
       }, 0)
-      const payment = admissions.reduce((total, admission) => {
+      const payment = admissions?.admission.reduce((total, admission) => {
         return total + admission?.payment;
       }, 0)
       SetTotalDues(payableAmount - payment);
@@ -59,8 +59,8 @@ function DashboardHome() {
       SetTotalPayment(0);
       SetTotalDues(0);
     }
-    if(batches?.length > 0) {
-      SetTotalBatches(batches.length);
+    if(batches?.batches?.length > 0) {
+      SetTotalBatches(batches.total);
     } else {
       SetTotalBatches(0);
     }

@@ -1,3 +1,6 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   Divider,
   IconButton,
@@ -5,11 +8,8 @@ import {
   MenuItem,
   Popover,
 } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDeleteBatchMutation } from "../../../redux/features/batches/batchesApi";
 
 function Action({ batch }) {
@@ -17,6 +17,7 @@ function Action({ batch }) {
   const [open, setOpen] = useState(null);
 
   const [deleteBatch] = useDeleteBatchMutation();
+  const navigate = useNavigate();
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -33,6 +34,7 @@ function Action({ batch }) {
   const handleDelete = () => {
     handleCloseMenu();
     deleteBatch(id);
+    navigate("/dashboard/admission/batches");
   };
 
   return (

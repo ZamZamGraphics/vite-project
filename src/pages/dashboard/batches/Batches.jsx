@@ -62,8 +62,8 @@ function Batches() {
   const [perPage, setPerPage] = useState(10);
 
   const { data, isLoading, isError } = useGetBatchesQuery(`?search=${search}`);
-  const total = data?.length || 0;
-  // console.log(data);
+  const total = data?.total || 0;
+  
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -89,7 +89,7 @@ function Batches() {
         </TableCell>
       </TableRow>
     );
-  } else if (!isLoading && !isError && data?.length === 0) {
+  } else if (!isLoading && !isError && data?.batches?.length === 0) {
     content = (
       <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
         <TableCell component="th" scope="row" colSpan={7}>
@@ -97,9 +97,9 @@ function Batches() {
         </TableCell>
       </TableRow>
     );
-  } else if (!isLoading && !isError && data?.length > 0) {
+  } else if (!isLoading && !isError && data?.batches?.length > 0) {
     content = (
-      perPage > 0 ? data.slice(page * perPage, page * perPage + perPage) : data
+      perPage > 0 ? data.batches.slice(page * perPage, page * perPage + perPage) : data
     ).map((batch) => (
       <TableRow key={batch._id}>
         <TableCell component="th" scope="row">
@@ -195,7 +195,8 @@ function Batches() {
                       10,
                       15,
                       20,
-                      { label: "All", value: total },
+                      50,
+                      100,
                     ]}
                     colSpan={7}
                     count={total}

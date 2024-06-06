@@ -1,5 +1,6 @@
 import { admissionApi } from "../admission/admissionApi";
 import { apiSlice } from "../api/apiSlice";
+import { coursesApi } from "../courses/coursesApi";
 import { studentsApi } from "../students/studentsApi";
 
 export const batchesApi = apiSlice.injectEndpoints({
@@ -27,30 +28,33 @@ export const batchesApi = apiSlice.injectEndpoints({
             const { batchNo, classTime } = data.batch;
 
             const studentIds = args.student.split(",");
-
-            studentIds.forEach((stdId) => {
-              dispatch(
-                admissionApi.endpoints.addAdmission.initiate({
-                  student: stdId,
-                  course: args.course,
-                  batch: batchNo,
-                  discount: 0,
-                  payment: 0,
-                  paymentType: "New",
-                  timeSchedule: classTime,
-                })
-              );
-            });
-
-            dispatch(admissionApi.util.invalidateTags(["Admissions"]));
-            dispatch(studentsApi.util.invalidateTags(["Students"]));
-
+            const result = await dispatch(coursesApi.endpoints.getCourse.initiate(args.course))
+            
+            if(result.status === "fulfilled") {
+              studentIds.forEach((stdId) => {
+                dispatch(
+                  admissionApi.endpoints.addAdmission.initiate({
+                    student: stdId,
+                    course: args.course,
+                    batch: batchNo,
+                    discount: 0,
+                    payment: result.data?.courseFee,
+                    paymentType: "New",
+                    timeSchedule: classTime,
+                  })
+                );
+              });
+  
+              dispatch(admissionApi.util.invalidateTags(["Admissions"]));
+              dispatch(studentsApi.util.invalidateTags(["Students"]));
+            }
+            
             // update all batches
             const search = "?search=";
             dispatch(
               apiSlice.util.updateQueryData("getBatches", search, (draft) => {
-                draft.unshift(data.batch);
-                // draft.total++;
+                draft.batches.unshift(data.batch);
+                draft.total++;
               })
             );
           }
@@ -77,7 +81,7 @@ export const batchesApi = apiSlice.injectEndpoints({
           const search = "?search=";
           dispatch(
             apiSlice.util.updateQueryData("getBatches", search, (draft) => {
-              const batch = draft.find((batch) => batch._id === args.id);
+              const batch = draft?.batches.find((batch) => batch._id === args.id);
               Object.assign(batch, {
                 startDate,
                 endDate,
@@ -106,8 +110,8 @@ export const batchesApi = apiSlice.injectEndpoints({
           const search = "?search=";
           dispatch(
             apiSlice.util.updateQueryData("getBatches", search, (draft) => {
-              const data = draft?.filter((batch) => batch?._id !== args);
-              return data;
+              const data = draft?.batches.filter((batch) => batch?._id !== args);
+              return { batches:data, total:draft.total -1 };
             })
           );
         } catch (err) {

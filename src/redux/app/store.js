@@ -11,7 +11,7 @@ export const store = configureStore({
     theme: themeReducer,
     users: usersReducer,
   },
-  devTools: false,
+  devTools: true,
   middleware: (getDefaultMiddlewares) =>
     getDefaultMiddlewares().concat(apiSlice.middleware),
 });

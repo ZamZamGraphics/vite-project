@@ -1,3 +1,6 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   Divider,
   IconButton,
@@ -5,17 +8,15 @@ import {
   MenuItem,
   Popover,
 } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDeleteCourseMutation } from "../../../redux/features/courses/coursesApi";
 
 function Action({ course }) {
   const [open, setOpen] = useState(null);
 
   const [deleteCourse] = useDeleteCourseMutation();
+  const navigate = useNavigate();
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -32,6 +33,7 @@ function Action({ course }) {
   const handleDelete = () => {
     handleCloseMenu();
     deleteCourse(course._id);
+    navigate("/dashboard/admission/courses");
   };
 
   return (

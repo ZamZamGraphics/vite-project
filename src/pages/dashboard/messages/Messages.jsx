@@ -7,7 +7,7 @@ function Messages() {
   const [students, setStudents] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [studentId, setStudentId] = useState("");
+  const [studentId, setStudentId] = useState([]);
   const [batchNo, setBatchNo] = useState("");
   const [messages, setMessages] = useState("");
 
@@ -32,6 +32,7 @@ function Messages() {
     }
 
     if (data) {
+      setStudentId([]);
       setBatchNo("");
       setMessages("");
       setSuccess(data.message);
@@ -39,8 +40,8 @@ function Messages() {
   }, [responseError, data]);
   
   useEffect(() => {
-    if (studentData?.length > 0) {
-      setStudents(studentData.map(std => std.studentId))
+    if (studentData?.students.length > 0) {
+      setStudents(studentData.students.map(std => std.studentId))
     }
   },[studentData])
 
@@ -91,6 +92,7 @@ function Messages() {
                     multiple
                     size="small"
                     id="studentID"
+                    value={studentId}
                     onChange={(e, data) => handleStudentId(data)}
                     options={students}
                     getOptionLabel={(option) => option}

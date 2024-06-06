@@ -76,6 +76,7 @@ function Invoice() {
             }}>
           <Box sx={{ textAlign: "right" }} displayPrint="none">
             <IconButton
+              color="success"
               onClick={handlePrint}
               aria-label="delete"
               size="large"

@@ -34,17 +34,19 @@ const MENU_ITEMS = 6; // change this number to see the effect
 
 function NewBatch() {
   const [request, setRequest] = useState(false);
+  const [search, setSearch] = useState("");
+  const [students, setStudents] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [batchNo, setBatchNo] = useState("");
   const [courseType, setCourseType] = useState("-1");
   const [courseName, setCourseName] = useState("-1");
-  const [studentId, setStudentId] = useState("");
+  const [studentId, setStudentId] = useState([]);
   const [startDate, setStartDate] = useState("");
   const [classDays, setClassDays] = useState("-1");
   const [classTime, setClassTime] = useState("-1");
-
-  const { data: std } = useGetStudentsQuery("?limit=50");
+  
+  const { data: std } = useGetStudentsQuery(`?limit=20&search=${search}`);
   const { data } = useGetCoursesQuery(courseType, { skip: !request });
 
   const [addBatch, { data: batch, isLoading, error: responseError }] =
@@ -69,22 +71,22 @@ function NewBatch() {
     setBatchNo("");
     setCourseType("-1");
     setCourseName("-1");
-    setStudentId("");
+    setStudents([]);
+    setStudentId([]);
     setStartDate("");
     setClassDays("-1");
     setClassTime("-1");
   };
 
-  let students = [];
-  if (std?.length > 0) {
-    students = std.map((std) => {
-      return std.studentId;
-    });
-  }
+  useEffect(() => {
+    if (std?.students.length > 0) {
+      setStudents(std.students.map((std) => std.studentId ))
+    }
+  },[std])
 
   let courseList = [{ value: "-1", label: "Select Course Name" }];
   if (data) {
-    courseList = data.map((course) => {
+    courseList = data?.courses.map((course) => {
       return {
         value: course._id,
         label: course.name,
@@ -102,6 +104,8 @@ function NewBatch() {
   const handleStudentId = (value) => {
     setStudentId(value.map((std) => std));
   };
+
+  // console.log(studentId)
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -200,9 +204,11 @@ function NewBatch() {
               multiple
               size="small"
               id="studentID"
-              onChange={(e, data) => handleStudentId(data)}
-              options={students}
               getOptionLabel={(option) => option}
+              options={students}
+              value={studentId}
+              onChange={(e, data) => handleStudentId(data)}
+              onInputChange={(event, newInputValue) => setSearch(newInputValue)}
               isOptionEqualToValue={(option, value) => option === value}
               filterSelectedOptions
               sx={{ backgroundColor: "input.background" }}

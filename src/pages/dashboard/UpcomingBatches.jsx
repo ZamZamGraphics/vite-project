@@ -1,4 +1,6 @@
 import {
+  Alert,
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -30,17 +32,13 @@ function UpcomingBatches() {
   // decide what to render
   let content = null;
   if (isLoading) {
-    content = "Loading...";
-  } else if (!isLoading && !isError && data?.length === 0) {
+    content = <CircularProgress/>; 
+  } else if (!isLoading && !isError && data?.batches?.length === 0) {
     content = (
-      <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-        <TableCell component="th" scope="row" colSpan={6}>
-            Upcoming Batch Not Found
-        </TableCell>
-      </TableRow>
+      <Alert severity="warning">Upcoming Batch Not Found</Alert>
     );
-  } else if (!isLoading && !isError && data?.length > 0) {
-    content = <BatchesTable batches={data} />;
+  } else if (!isLoading && !isError && data?.batches?.length > 0) {
+    content = <BatchesTable batches={data.batches} />;
   }
 
   return content;

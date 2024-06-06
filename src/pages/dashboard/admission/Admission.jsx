@@ -95,7 +95,7 @@ function Admission() {
   const { data, isLoading, isError } = useGetAdmissionsQuery(
     location.search || `?limit=${perPage}`
   );
-  const total = data?.length || 0;
+  const total = data?.total || 0;
 
   const queryString = (pageNo, limit, search = null) => {
     let query = "?";
@@ -133,7 +133,7 @@ function Admission() {
         </TableCell>
       </TableRow>
     );
-  } else if (!isLoading && !isError && data?.length === 0) {
+  } else if (!isLoading && !isError && data?.admission?.length === 0) {
     content = (
       <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
         <TableCell component="th" scope="row" colSpan={10}>
@@ -141,8 +141,8 @@ function Admission() {
         </TableCell>
       </TableRow>
     );
-  } else if (!isLoading && !isError && data?.length > 0) {
-    content = data.map((admission) => (
+  } else if (!isLoading && !isError && data?.admission?.length > 0) {
+    content = data.admission.map((admission) => (
       <TableRow key={admission._id}>
         <TableCell>
           <Typography variant="h6">{admission.student.studentId}</Typography>
@@ -238,7 +238,7 @@ function Admission() {
                   25,
                   30,
                   40,
-                  { label: "All", value: total },
+                  100,
                 ]}
                 colSpan={10}
                 count={total}

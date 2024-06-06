@@ -88,7 +88,7 @@ function Students() {
   const { data, isLoading, isError } = useGetStudentsQuery(
     location.search || `?limit=${perPage}`
   );
-  const total = data?.length || 0;
+  const total = data?.total || 0;
 
   const queryString = (pageNo, limit, search = null) => {
     let query = "?";
@@ -126,7 +126,7 @@ function Students() {
         </TableCell>
       </TableRow>
     );
-  } else if (!isLoading && !isError && data?.length === 0) {
+  } else if (!isLoading && !isError && data?.students?.length === 0) {
     content = (
       <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
         <TableCell component="th" scope="row" colSpan={8}>
@@ -134,8 +134,8 @@ function Students() {
         </TableCell>
       </TableRow>
     );
-  } else if (!isLoading && !isError && data?.length > 0) {
-    content = data.map((student) => (
+  } else if (!isLoading && !isError && data?.students?.length > 0) {
+    content = data.students.map((student) => (
       <TableRow key={student._id}>
         <TableCell>
           <Typography variant="h6">{student.studentId}</Typography>
@@ -232,7 +232,7 @@ function Students() {
                   25,
                   30,
                   40,
-                  { label: "All", value: total },
+                  100,
                 ]}
                 colSpan={8}
                 count={total}

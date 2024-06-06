@@ -91,8 +91,8 @@ function Users() {
   const { data, isLoading, isError } = useGetUsersQuery(
     location.search || `?limit=${perPage}`
   );
-  const total = data?.length || 0;
-
+  const total = data?.total || 0;
+  
   const queryString = (pageNo, limit, search = null) => {
     let query = "?";
     query += pageNo > 0 ? `page=${pageNo}` : `page=0`;
@@ -147,7 +147,7 @@ function Users() {
         </TableCell>
       </TableRow>
     );
-  } else if (!isLoading && !isError && data?.length === 0) {
+  } else if (!isLoading && !isError && data?.users?.length === 0) {
     content = (
       <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
         <TableCell component="th" scope="row" colSpan={6}>
@@ -155,8 +155,8 @@ function Users() {
         </TableCell>
       </TableRow>
     );
-  } else if (!isLoading && !isError && data?.length > 0) {
-    content = data.map((user) => (
+  } else if (!isLoading && !isError && data?.users?.length > 0) {
+    content = data.users.map((user) => (
       <TableRow key={user._id}>
         <TableCell component="th" scope="row">
           <Link to={`/dashboard/users/${user._id}`}>
@@ -265,7 +265,7 @@ function Users() {
                   25,
                   30,
                   40,
-                  { label: "All", value: total },
+                  100,
                 ]}
                 colSpan={6}
                 count={total}
