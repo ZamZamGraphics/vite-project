@@ -160,9 +160,6 @@ function DashboardHome() {
         <Grid item xs={12} sm={12} md={7}>
           <Card sx={{ borderRadius: "16px", marginTop:3 }}>
             <CardContent>
-              <Typography variant="h5" sx={{ marginBottom: 3 }}>
-                Admission
-              </Typography>
               <DashboardLineChart/>
             </CardContent>
           </Card>

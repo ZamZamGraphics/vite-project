@@ -41,6 +41,7 @@ export const batchesApi = apiSlice.injectEndpoints({
                     payment: result.data?.courseFee,
                     paymentType: "New",
                     timeSchedule: classTime,
+                    admitedAt: args.startDate,
                   })
                 );
               });
