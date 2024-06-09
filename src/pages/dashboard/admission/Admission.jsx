@@ -36,6 +36,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontWeight: "bold",
     backgroundColor: theme.palette.action.selected,
   },
+  [`&.${tableCellClasses.body}`]: {
+    padding: "0.125rem 1rem",
+    fontSize: "1rem"
+  },
 }));
 
 const TableRowsLoader = ({ rowsNum }) => {
@@ -144,10 +148,10 @@ function Admission() {
   } else if (!isLoading && !isError && data?.admission?.length > 0) {
     content = data.admission.map((admission) => (
       <TableRow key={admission._id}>
-        <TableCell>
+        <StyledTableCell>
           <Typography variant="h6">{admission.student.studentId}</Typography>
-        </TableCell>
-        <TableCell component="th" scope="row">
+        </StyledTableCell>
+        <StyledTableCell component="th" scope="row">
           <Link to={`/dashboard/admission/invoice/${admission._id}`}>
             <Stack direction="row" alignItems="center" spacing={2}>
               <Avatar
@@ -160,25 +164,25 @@ function Admission() {
               <Typography>{admission.student.fullName}</Typography>
             </Stack>
           </Link>
-        </TableCell>
-        <TableCell>{admission.course.name}</TableCell>
-        <TableCell>{admission.batchNo}</TableCell>
-        <TableCell>{admission.payableAmount}</TableCell>
-        <TableCell>{admission.payment}</TableCell>
-        <TableCell>{admission.due}</TableCell>
-        <TableCell>
+        </StyledTableCell>
+        <StyledTableCell>{admission.course.name}</StyledTableCell>
+        <StyledTableCell>{admission.batchNo}</StyledTableCell>
+        <StyledTableCell>{admission.payableAmount}</StyledTableCell>
+        <StyledTableCell>{admission.payment}</StyledTableCell>
+        <StyledTableCell>{admission.due}</StyledTableCell>
+        <StyledTableCell>
           {admission?.nextPay ? (
             dayjs(admission?.nextPay).format("DD-MM-YYYY")
           ) : (
             <Chip size="small" label="Full Paid" color="success" />
           )}
-        </TableCell>
-        <TableCell>
+        </StyledTableCell>
+        <StyledTableCell>
           <Chip size="small" label={admission.paymentType} color="info" />
-        </TableCell>
-        <TableCell width={50}>
+        </StyledTableCell>
+        <StyledTableCell width={50}>
           <Action admission={admission} />
-        </TableCell>
+        </StyledTableCell>
       </TableRow>
     ));
   }

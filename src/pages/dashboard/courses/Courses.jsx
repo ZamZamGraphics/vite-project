@@ -39,6 +39,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontWeight: "bold",
     backgroundColor: theme.palette.action.selected,
   },
+  [`&.${tableCellClasses.body}`]: {
+    padding: "0 1rem",
+    fontSize: "1rem"
+  },
 }));
 
 function Courses() {
@@ -101,15 +105,15 @@ function Courses() {
       perPage > 0 ? data.courses.slice(page * perPage, page * perPage + perPage) : data
     ).map((course) => (
       <TableRow key={course._id}>
-        <TableCell component="th" scope="row">
+        <StyledTableCell component="th" scope="row">
           {course.name}
-        </TableCell>
-        <TableCell>{course.courseType}</TableCell>
-        <TableCell>{course.duration}</TableCell>
-        <TableCell>{course.courseFee}</TableCell>
-        <TableCell width={50}>
+        </StyledTableCell>
+        <StyledTableCell>{course.courseType}</StyledTableCell>
+        <StyledTableCell>{course.duration}</StyledTableCell>
+        <StyledTableCell>{course.courseFee}</StyledTableCell>
+        <StyledTableCell width={50}>
           <Action course={course} />
-        </TableCell>
+        </StyledTableCell>
       </TableRow>
     ));
   }

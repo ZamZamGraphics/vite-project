@@ -29,21 +29,20 @@ export const batchesApi = apiSlice.injectEndpoints({
 
             const studentIds = args.student.split(",");
             const result = await dispatch(coursesApi.endpoints.getCourse.initiate(args.course))
-            
+          
             if(result.status === "fulfilled") {
-              studentIds.forEach((stdId) => {
-                dispatch(
-                  admissionApi.endpoints.addAdmission.initiate({
-                    student: stdId,
-                    course: args.course,
-                    batch: batchNo,
-                    discount: 0,
-                    payment: result.data?.courseFee,
-                    paymentType: "New",
-                    timeSchedule: classTime,
-                    admitedAt: args.startDate,
-                  })
-                );
+              studentIds.forEach( async (stdId) => {
+              await  dispatch(
+                    admissionApi.endpoints.addAdmission.initiate({
+                      student: stdId,
+                      course: args.course,
+                      batch: batchNo,
+                      discount: 0,
+                      payment: result.data?.courseFee,
+                      paymentType: "New",
+                      timeSchedule: classTime,
+                      admitedAt: args.startDate,
+                    }));
               });
   
               dispatch(admissionApi.util.invalidateTags(["Admissions"]));

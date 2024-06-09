@@ -132,7 +132,7 @@ function DashboardHome() {
           <CardItem
             icon={BatchIcon}
             iconBgColor="#FAEEE6"
-            title="Total Completed Batches"
+            title="Completed Batches"
             value={totalBatches}
             color="#CC711E"
           />

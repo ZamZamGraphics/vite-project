@@ -1,5 +1,5 @@
 import { defaults } from "chart.js/auto";
-import { Bar, Doughnut, Line } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 
 defaults.maintainAspectRatio = false;
 defaults.responsive = true;
@@ -11,46 +11,16 @@ defaults.plugins.title.color = "black";
 
 function DashboardLineChart() {
     return (
-        <>
-        <div className="w-[500px] h-[500px] mx-auto">
-        <Doughnut
-          data={{
-            labels: sourceData.map((data) => data.label),
-            datasets: [
-              {
-                label: "Count",
-                data: sourceData.map((data) => data.value),
-                backgroundColor: [
-                  "rgba(43, 63, 229, 0.8)",
-                  "rgba(250, 192, 19, 0.8)",
-                  "rgba(253, 135, 135, 0.8)",
-                ],
-                borderColor: [
-                  "rgba(43, 63, 229, 0.8)",
-                  "rgba(250, 192, 19, 0.8)",
-                  "rgba(253, 135, 135, 0.8)",
-                ],
-              },
-            ],
-          }}
-        />
-        </div>
-        <div className="w-full h-[500px]">
+        <div className="w-full h-[250px] md:h-[400px]">
         <Line
           data={{
             labels: revenueData.map((data) => data.label),
             datasets: [
               {
-                label: "Revenue",
+                label: "Admission",
                 data: revenueData.map((data) => data.revenue),
-                backgroundColor: "#064FF0",
-                borderColor: "#064FF0",
-              },
-              {
-                label: "Cost",
-                data: revenueData.map((data) => data.cost),
-                backgroundColor: "#FF3030",
-                borderColor: "#FF3030",
+                backgroundColor: "#47B259",
+                borderColor: "#47B259",
               },
             ],
           }}
@@ -62,58 +32,16 @@ function DashboardLineChart() {
             },
             plugins: {
               title: {
-                text: "Monthly Revenue & Cost",
+                text: "Admission",
               },
             },
           }}
         />
         </div>
-        <div className="w-full h-[500px]">
-        <Bar
-          data={{
-            labels: sourceData.map((data) => data.label),
-            datasets: [
-              {
-                label: "Count",
-                data: sourceData.map((data) => data.value),
-                backgroundColor: [
-                  "rgba(43, 63, 229, 0.8)",
-                  "rgba(250, 192, 19, 0.8)",
-                  "rgba(253, 135, 135, 0.8)",
-                ],
-                borderRadius: 5,
-              },
-            ],
-          }}
-          options={{
-            plugins: {
-              title: {
-                text: "Revenue Source",
-              },
-            },
-          }}
-        />
-        </div>
-        </>
     );
 }
 
 export default DashboardLineChart
-
-const sourceData = [
-    {
-      "label": "Ads",
-      "value": 32
-    },
-    {
-      "label": "Subscriptions",
-      "value": 45
-    },
-    {
-      "label": "Sponsorships",
-      "value": 23
-    }
-  ]
 
 const revenueData = [
     {

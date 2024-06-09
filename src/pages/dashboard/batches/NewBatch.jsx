@@ -1,6 +1,6 @@
 import {
   Alert,
-  Autocomplete,
+  // Autocomplete,
   Box,
   Button,
   FormControl,
@@ -63,7 +63,7 @@ function NewBatch() {
 
     if (batch) {
       setSuccess(batch.message);
-      reset();
+      // reset();
     }
   }, [responseError, batch]);
 
@@ -101,9 +101,9 @@ function NewBatch() {
     setCourseName("-1");
   };
 
-  const handleStudentId = (value) => {
-    setStudentId(value.map((std) => std));
-  };
+  // const handleStudentId = (value) => {
+  //   setStudentId(value.map((std) => std));
+  // };
 
   // console.log(studentId)
 
@@ -128,11 +128,12 @@ function NewBatch() {
     const data = {
       batchNo,
       course,
-      student: studentId.toString(),
+      student: studentId.split(", ").toString(),
       startDate: startDate ? dayjs(startDate).format() : "",
       classDays: days,
       classTime: time,
     };
+    // console.log(data)
     addBatch(data);
   };
 
@@ -200,7 +201,7 @@ function NewBatch() {
             </StyledTextField>
           </Grid>
           <Grid item xs={12}>
-            <Autocomplete
+            {/* <Autocomplete
               multiple
               size="small"
               id="studentID"
@@ -222,7 +223,17 @@ function NewBatch() {
             />
             <FormHelperText error={error.student && true}>
               {error.student && error.student.msg}
-            </FormHelperText>
+            </FormHelperText> */}
+            <StyledTextField
+              size="small"
+              fullWidth
+              label="Student ID"
+              name="studentId"
+              value={studentId}
+              onChange={(e) => setStudentId(e.target.value)}
+              error={error.student && true}
+              helperText={error.student && error.student.msg}
+            />
           </Grid>
           <Grid item xs={12}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>

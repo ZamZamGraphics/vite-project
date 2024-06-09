@@ -40,6 +40,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontWeight: "bold",
     backgroundColor: theme.palette.action.selected,
   },
+  [`&.${tableCellClasses.body}`]: {
+    padding: "0.125rem 1rem",
+    fontSize: "1rem"
+  },
 }));
 
 const TableRowsLoader = ({ rowsNum }) => {
@@ -158,7 +162,7 @@ function Users() {
   } else if (!isLoading && !isError && data?.users?.length > 0) {
     content = data.users.map((user) => (
       <TableRow key={user._id}>
-        <TableCell component="th" scope="row">
+        <StyledTableCell component="th" scope="row">
           <Link to={`/dashboard/users/${user._id}`}>
             <Stack direction="row" alignItems="center" spacing={2}>
               <Avatar
@@ -169,11 +173,11 @@ function Users() {
               <Typography>{user.fullname}</Typography>
             </Stack>
           </Link>
-        </TableCell>
-        <TableCell>{user.username}</TableCell>
-        <TableCell>{user.email}</TableCell>
-        <TableCell>{user.role}</TableCell>
-        <TableCell>
+        </StyledTableCell>
+        <StyledTableCell>{user.username}</StyledTableCell>
+        <StyledTableCell>{user.email}</StyledTableCell>
+        <StyledTableCell>{user.role}</StyledTableCell>
+        <StyledTableCell>
           <Stack direction="row" spacing={1}>
             <Status status={user.status} />
             {user.status === "Unverified" && (
@@ -185,10 +189,10 @@ function Users() {
               />
             )}
           </Stack>
-        </TableCell>
-        <TableCell width={50}>
+        </StyledTableCell>
+        <StyledTableCell width={50}>
           <UserAction user={user} />
-        </TableCell>
+        </StyledTableCell>
       </TableRow>
     ));
   }

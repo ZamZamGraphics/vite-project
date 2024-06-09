@@ -43,6 +43,7 @@ function StudentView({ open, handleClose, student }) {
       aria-labelledby="scroll-dialog-title"
       aria-describedby="scroll-dialog-description"
       fullWidth={true}
+      maxWidth="md"
     >
       <DialogContent>
         <Stack direction="column" alignItems="center" spacing={2} mb={2}>

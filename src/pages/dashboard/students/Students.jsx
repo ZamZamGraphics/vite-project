@@ -35,6 +35,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontWeight: "bold",
     backgroundColor: theme.palette.action.selected,
   },
+  [`&.${tableCellClasses.body}`]: {
+    padding: "0.125rem 1rem",
+    fontSize: "1rem"
+  },
 }));
 
 const TableRowsLoader = ({ rowsNum }) => {
@@ -137,10 +141,10 @@ function Students() {
   } else if (!isLoading && !isError && data?.students?.length > 0) {
     content = data.students.map((student) => (
       <TableRow key={student._id}>
-        <TableCell>
+        <StyledTableCell>
           <Typography variant="h6">{student.studentId}</Typography>
-        </TableCell>
-        <TableCell component="th" scope="row">
+        </StyledTableCell>
+        <StyledTableCell component="th" scope="row">
           <Link to={`/dashboard/students/${student._id}`}>
             <Stack direction="row" alignItems="center" spacing={2}>
               <Avatar
@@ -151,9 +155,9 @@ function Students() {
               <Typography>{student.fullName}</Typography>
             </Stack>
           </Link>
-        </TableCell>
-        <TableCell>{student.phone[0]}</TableCell>
-        <TableCell>
+        </StyledTableCell>
+        <StyledTableCell>{student.phone[0]}</StyledTableCell>
+        <StyledTableCell>
           {student.admissionDetails.map((admission) => {
             return (
               <Typography key={admission._id}>
@@ -161,21 +165,21 @@ function Students() {
               </Typography>
             );
           })}
-        </TableCell>
-        <TableCell>
+        </StyledTableCell>
+        <StyledTableCell>
           {student.admissionDetails.map((admission) => {
             return (
               <Typography key={admission._id}>{admission?.batchNo}</Typography>
             );
           })}
-        </TableCell>
-        <TableCell>
+        </StyledTableCell>
+        <StyledTableCell>
           <Status status={student.status} />
-        </TableCell>
-        <TableCell>{student.totalDues}</TableCell>
-        <TableCell width={50}>
+        </StyledTableCell>
+        <StyledTableCell>{student.totalDues}</StyledTableCell>
+        <StyledTableCell width={50}>
           <Action student={student} />
-        </TableCell>
+        </StyledTableCell>
       </TableRow>
     ));
   }
