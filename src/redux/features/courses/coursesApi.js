@@ -4,9 +4,11 @@ export const coursesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getCourses: builder.query({
       query: (search) => `/courses?search=${search}`,
+      providesTags: ["Courses"],
     }),
     getCourse: builder.query({
       query: (id) => `/courses/${id}`,
+      providesTags: ["Course"],
     }),
     addCourse: builder.mutation({
       query: (data) => ({
@@ -14,21 +16,7 @@ export const coursesApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      async onQueryStarted(args, { queryFulfilled, dispatch }) {
-        try {
-          const { data } = await queryFulfilled;
-          // update all courses
-          const search = "";
-          dispatch(
-            apiSlice.util.updateQueryData("getCourses", search, (draft) => {
-              draft.courses.unshift(data.course);
-              draft.total++;
-            })
-          );
-        } catch (err) {
-          // console.log(err);
-        }
-      },
+      invalidatesTags: ["Courses"],
     }),
     editCourse: builder.mutation({
       query: ({ id, data }) => ({
@@ -36,49 +24,14 @@ export const coursesApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
-      async onQueryStarted(args, { queryFulfilled, dispatch }) {
-        try {
-          const { data } = await queryFulfilled;
-          // update all courses
-          const search = "";
-          dispatch(
-            apiSlice.util.updateQueryData("getCourses", search, (draft) => {
-              const course = draft?.courses.find((course) => course._id === args.id);
-              Object.assign(course, data?.course);
-            })
-          );
-
-          // update single course
-          dispatch(
-            apiSlice.util.updateQueryData("getCourse", search, (draft) => {
-              Object.assign(draft, data?.course);
-            })
-          );
-        } catch (err) {
-          // console.log(err);
-        }
-      },
+      invalidatesTags: ["Courses", "Course"],
     }),
     deleteCourse: builder.mutation({
       query: (id) => ({
         url: `/courses/${id}`,
         method: "DELETE",
       }),
-      async onQueryStarted(args, { queryFulfilled, dispatch }) {
-        try {
-          await queryFulfilled;
-          // update all courses
-          const search = "";
-          dispatch(
-            apiSlice.util.updateQueryData("getCourses", search, (draft) => {
-              const data = draft?.courses.filter((course) => course?._id !== args);
-              return { courses: data, total: draft.total -1 };
-            })
-          );
-        } catch (err) {
-          // console.log(err);
-        }
-      },
+      invalidatesTags: ["Courses"],
     }),
   }),
 });

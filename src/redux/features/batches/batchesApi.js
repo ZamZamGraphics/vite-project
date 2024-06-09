@@ -48,15 +48,8 @@ export const batchesApi = apiSlice.injectEndpoints({
               dispatch(admissionApi.util.invalidateTags(["Admissions"]));
               dispatch(studentsApi.util.invalidateTags(["Students"]));
             }
-            
             // update all batches
-            const search = "?search=";
-            dispatch(
-              apiSlice.util.updateQueryData("getBatches", search, (draft) => {
-                draft.batches.unshift(data.batch);
-                draft.total++;
-              })
-            );
+            dispatch(apiSlice.util.invalidateTags(["Batches"]));
           }
         } catch (err) {
           // console.log(err);
@@ -69,55 +62,14 @@ export const batchesApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
-      async onQueryStarted(args, { queryFulfilled, dispatch }) {
-        try {
-          const { data } = await queryFulfilled;
-
-          dispatch(
-            batchesApi.util.invalidateTags([{ type: "Batch", _id: args.id }])
-          );
-          const { startDate, endDate, classDays, classTime } = data.batch;
-          // update all batches
-          const search = "?search=";
-          dispatch(
-            apiSlice.util.updateQueryData("getBatches", search, (draft) => {
-              const batch = draft?.batches.find((batch) => batch._id === args.id);
-              Object.assign(batch, {
-                startDate,
-                endDate,
-                classDays,
-                classTime,
-              });
-            })
-          );
-        } catch (err) {
-          // console.log(err);
-        }
-      },
+      invalidatesTags: ["Batches", "Batch"],
     }),
     deleteBatch: builder.mutation({
       query: (id) => ({
         url: `/batches/${id}`,
         method: "DELETE",
       }),
-      async onQueryStarted(args, { queryFulfilled, dispatch }) {
-        try {
-          await queryFulfilled;
-
-          dispatch(admissionApi.util.invalidateTags(["Admissions"]));
-          dispatch(studentsApi.util.invalidateTags(["Students"]));
-          // update all batches
-          const search = "?search=";
-          dispatch(
-            apiSlice.util.updateQueryData("getBatches", search, (draft) => {
-              const data = draft?.batches.filter((batch) => batch?._id !== args);
-              return { batches:data, total:draft.total -1 };
-            })
-          );
-        } catch (err) {
-          // console.log(err);
-        }
-      },
+      invalidatesTags: ["Batches", "Admissions", "Students"],
     }),
   }),
 });

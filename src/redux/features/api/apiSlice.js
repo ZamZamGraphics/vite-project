@@ -32,6 +32,8 @@ export const apiSlice = createApi({
     "Student",
     "Admissions",
     "Admission",
+    "Courses",
+    "Course",
     "Batches",
     "Batch",
     "Balance",
