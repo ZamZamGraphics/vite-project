@@ -77,10 +77,12 @@ function NewBatch() {
     setClassDays("-1");
     setClassTime("-1");
   };
-
+  
   useEffect(() => {
-    if (std?.students.length > 0) {
-      setStudents(std.students.map((std) => std.studentId ))
+    if (std?.length > 0) {
+      if (std[0].students.length > 0) {
+        setStudents(std[0].students.map((std) => std.studentId ))
+      }
     }
   },[std])
 

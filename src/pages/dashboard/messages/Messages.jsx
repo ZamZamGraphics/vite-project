@@ -40,8 +40,10 @@ function Messages() {
   }, [responseError, data]);
   
   useEffect(() => {
-    if (studentData?.students.length > 0) {
-      setStudents(studentData.students.map(std => std.studentId))
+    if(studentData?.length > 0) {
+      if (studentData[0]?.students.length > 0) {
+        setStudents(studentData[0].students.map(std => std.studentId))
+      }
     }
   },[studentData])
 

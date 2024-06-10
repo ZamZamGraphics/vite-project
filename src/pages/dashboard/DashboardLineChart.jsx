@@ -29,12 +29,7 @@ function DashboardLineChart() {
               line: {
                 tension: 0.5,
               },
-            },
-            plugins: {
-              title: {
-                text: "Admission",
-              },
-            },
+            }
           }}
         />
         </div>

@@ -33,6 +33,10 @@ function UpcomingBatches() {
   let content = null;
   if (isLoading) {
     content = <CircularProgress/>; 
+  } else if (!isLoading && isError) {
+    content = (
+      <Alert severity="warning">Internal Server Error</Alert>
+    );
   } else if (!isLoading && !isError && data?.batches?.length === 0) {
     content = (
       <Alert severity="warning">Upcoming Batch Not Found</Alert>

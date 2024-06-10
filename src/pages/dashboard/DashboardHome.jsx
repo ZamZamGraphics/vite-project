@@ -39,25 +39,29 @@ function DashboardHome() {
   }
 
   useEffect(() => {
-    if(students?.students?.length > 0){
-      SetTotalStudent(students.total);
-    } else {
-      SetTotalStudent(0);
+    if(students?.length > 0) {
+      if(students[0]?.students?.length > 0){
+        SetTotalStudent(students[0].total[0]?.totalRecords);
+      } else {
+        SetTotalStudent(0);
+      }
     }
-    if(admissions?.admission?.length > 0){
-      SetTotalAdmission(admissions.total);
-      const payableAmount = admissions?.admission.reduce((total, admission) => {
-        return total + admission?.payableAmount;
-      }, 0)
-      const payment = admissions?.admission.reduce((total, admission) => {
-        return total + admission?.payment;
-      }, 0)
-      SetTotalDues(payableAmount - payment);
-      SetTotalPayment(payment);
-    } else {
-      SetTotalAdmission(0);
-      SetTotalPayment(0);
-      SetTotalDues(0);
+    if(admissions?.length > 0) {
+      if(admissions[0]?.admission?.length > 0){
+        SetTotalAdmission(admissions[0].total[0]?.totalRecords);
+        const payableAmount = admissions[0]?.admission.reduce((total, admission) => {
+          return total + admission?.payableAmount;
+        }, 0)
+        const payment = admissions[0]?.admission.reduce((total, admission) => {
+          return total + admission?.payment;
+        }, 0)
+        SetTotalDues(payableAmount - payment);
+        SetTotalPayment(payment);
+      } else {
+        SetTotalAdmission(0);
+        SetTotalPayment(0);
+        SetTotalDues(0);
+      }
     }
     if(batches?.batches?.length > 0) {
       SetTotalBatches(batches.total);
@@ -160,6 +164,9 @@ function DashboardHome() {
         <Grid item xs={12} sm={12} md={7}>
           <Card sx={{ borderRadius: "16px", marginTop:3 }}>
             <CardContent>
+              <Typography variant="h5">
+                Admission
+              </Typography>
               <DashboardLineChart/>
             </CardContent>
           </Card>
