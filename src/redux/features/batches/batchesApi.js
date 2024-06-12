@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { admissionApi } from "../admission/admissionApi";
 import { apiSlice } from "../api/apiSlice";
 import { coursesApi } from "../courses/coursesApi";
@@ -41,7 +42,7 @@ export const batchesApi = apiSlice.injectEndpoints({
                       payment: result.data?.courseFee,
                       paymentType: "New",
                       timeSchedule: classTime,
-                      admitedAt: args.startDate,
+                      admitedAt: dayjs(new Date()).format("YYYY-MM-DD"),
                     }));
               });
   
