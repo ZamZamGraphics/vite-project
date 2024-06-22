@@ -125,8 +125,8 @@ function NewAdmission() {
   };
 
   let courseList = [{ value: "-1", label: "Select Course Name" }];
-  if (data) {
-    courseList = data.map((course) => {
+  if (data?.courses) {
+    courseList = data.courses.map((course) => {
       return {
         value: course._id,
         label: course.name,
