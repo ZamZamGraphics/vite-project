@@ -9,11 +9,12 @@ import {
   MenuItem,
   Popover,
 } from "@mui/material";
-
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import AdmissionDelete from "./AdmissionDelete";
+import InvoicePDF from "./InvoicePDF";
 
 function Action({ admission }) {
   const auth = useSelector((state) => state.auth);
@@ -35,12 +36,10 @@ function Action({ admission }) {
   };
 
   const handlePrint = () => {
-    console.log("handle print ....");
     handleCloseMenu();
   };
 
   const handleDownload = () => {
-    console.log("handle download ....");
     handleCloseMenu();
   };
 
@@ -85,15 +84,15 @@ function Action({ admission }) {
           </ListItemIcon>
           Print
         </MenuItem>
-        <MenuItem
-          component={Link}
-          to={`/dashboard/admission/download/${admission._id}`}
-          onClick={handleDownload}
-        >
+        <MenuItem onClick={handleDownload}>
           <ListItemIcon>
             <DownloadIcon />
           </ListItemIcon>
-          Download
+          <PDFDownloadLink document={<InvoicePDF data={admission} />} fileName={`${admission._id}.pdf`}>
+            {({ loading }) =>
+              loading ? 'Loading...' : 'Download'
+            }
+          </PDFDownloadLink>
         </MenuItem>
         {role === "Admin" ? (
           <>

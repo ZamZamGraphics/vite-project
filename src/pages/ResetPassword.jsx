@@ -1,3 +1,4 @@
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Alert,
   Box,
@@ -12,14 +13,13 @@ import {
   InputLabel,
   Typography,
 } from "@mui/material";
+import { useFormik } from "formik";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import * as Yup from "yup";
 import logoDark from "../assets/images/logo-dark.svg";
 import logoLight from "../assets/images/logo-light.svg";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { useEffect, useState } from "react";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useSelector } from "react-redux";
 import { useResetPasswordMutation } from "../redux/features/forgotPassword/forgotPasswordApi";
 
 const PasswordSchema = Yup.object().shape({
@@ -200,7 +200,7 @@ function ResetPassword() {
               sx={{ borderRadius: "9999px", mt: 3, mb: 2 }}
               disabled={isLoading}
             >
-              Send link
+              Reset Password
             </Button>
           </Box>
           <Link to="/login" className="text-center no-underline text-blue-500">
