@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
@@ -32,6 +33,7 @@ import Action from "./Action";
 import BatchEdit from "./BatchEdit";
 import Loading from "./Loading";
 import NewBatch from "./NewBatch";
+dayjs.extend(isBetween);
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -113,7 +115,12 @@ function Batches() {
         </TableCell>
         <TableCell>
           <Typography>
-            <strong>Status</strong>
+            <strong>
+            { 
+              dayjs().isBetween(dayjs(batch.startDate), dayjs(dayjs(batch.endDate))) ? "Running" :
+              dayjs().isBefore(dayjs(batch.startDate)) ? "Upcoming" : "Completed"
+            }
+            </strong>
           </Typography>
           {batch.classTime}
         </TableCell>
