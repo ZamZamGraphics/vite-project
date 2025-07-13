@@ -22,11 +22,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
-import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Status from "../../../component/Status";
 import { useGetStudentsQuery } from "../../../redux/features/students/studentsApi";
 import Action from "./Action";
+import useDebounce from "../../../hooks/useDebounce";
+import StudentAvatar from "./StudentAvatar";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -84,8 +86,9 @@ function Students() {
   const [search, setSearch] = useState("");
   // for pagination
   const [page, setPage] = useState(0);
-  const [perPage, setPerPage] = useState(20);
+  const [perPage, setPerPage] = useState(30);
 
+  const debounce = useDebounce(search, 500);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -93,13 +96,13 @@ function Students() {
     location.search || `?limit=${perPage}`
   );
 
-  const queryString = (pageNo, limit, search = null) => {
+  const queryString = useCallback((pageNo, limit, search = null) => {
     let query = "?";
     query += pageNo > 0 ? `page=${pageNo}` : `page=0`;
     query += limit ? `&limit=${limit}` : `&limit=${perPage}`;
     query += search ? `&search=${search}` : "";
     return query;
-  };
+  }, [perPage]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -108,8 +111,19 @@ function Students() {
 
   const handleSearch = (value) => {
     setSearch(value);
-    navigate(location.pathname + queryString(page, perPage, value));
   };
+
+  useEffect(() => {
+    if (debounce) {
+      navigate(location.pathname + queryString(page, perPage, debounce));
+    } else {
+      if (page) {
+        navigate(location.pathname + queryString(page, perPage));
+      } else {
+        navigate(location.pathname);
+      }
+    }
+  }, [debounce, navigate, location.pathname, queryString, page, perPage, search])
 
   const handleChangePerPage = (event) => {
     setPerPage(parseInt(event.target.value, 10));
@@ -139,23 +153,14 @@ function Students() {
       </TableRow>
     );
   } else if (!isLoading && !isError && data[0]?.students?.length > 0) {
-    total   = data[0].total[0]?.totalRecords || 0;
+    total = data[0].total[0]?.totalRecords || 0;
     content = data[0].students.map((student) => (
       <TableRow key={student._id}>
         <StyledTableCell>
           <Typography variant="h6">{student.studentId}</Typography>
         </StyledTableCell>
         <StyledTableCell component="th" scope="row">
-          <Link to={`/dashboard/students/${student._id}`}>
-            <Stack direction="row" alignItems="center" spacing={2}>
-              <Avatar
-                alt={student.fullName}
-                src={`${import.meta.env.VITE_API_URL}/upload/${student.avatar}`}
-                sx={{ width: 40, height: 40 }}
-              />
-              <Typography>{student.fullName}</Typography>
-            </Stack>
-          </Link>
+          <StudentAvatar student={student} />
         </StyledTableCell>
         <StyledTableCell>{student.phone[0]}</StyledTableCell>
         <StyledTableCell>
@@ -233,10 +238,9 @@ function Students() {
             >
               <TablePagination
                 rowsPerPageOptions={[
-                  20,
-                  25,
                   30,
                   40,
+                  50,
                   100,
                 ]}
                 colSpan={8}

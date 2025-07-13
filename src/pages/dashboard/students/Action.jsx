@@ -1,7 +1,6 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
   Divider,
   IconButton,
@@ -9,19 +8,16 @@ import {
   MenuItem,
   Popover,
 } from "@mui/material";
-
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import StudentDelete from "./StudentDelete";
-import StudentView from "./StudentView";
 
 function Action({ student }) {
   const auth = useSelector((state) => state.auth);
   const { role } = auth.user;
 
   const [open, setOpen] = useState(null);
-  const [openModal, setOpenModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const handleOpenMenu = (event) => {
@@ -32,17 +28,8 @@ function Action({ student }) {
     setOpen(null);
   };
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
-
   const handleCloseDeleteModal = () => {
     setOpenDeleteModal(false);
-  };
-
-  const handleView = () => {
-    handleCloseMenu();
-    setOpenModal(true);
   };
 
   const handleEdit = () => {
@@ -90,12 +77,6 @@ function Action({ student }) {
           </ListItemIcon>
           Edit
         </MenuItem>
-        <MenuItem onClick={handleView}>
-          <ListItemIcon>
-            <VisibilityIcon />
-          </ListItemIcon>
-          View
-        </MenuItem>
         {role === "Admin" ? (
           <>
             <Divider />
@@ -110,11 +91,6 @@ function Action({ student }) {
           ""
         )}
       </Popover>
-      <StudentView
-        open={openModal}
-        handleClose={handleCloseModal}
-        student={student}
-      />
       {role === "Admin" ? (
         <StudentDelete
           open={openDeleteModal}

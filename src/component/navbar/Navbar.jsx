@@ -1,9 +1,8 @@
 import AddIcon from '@mui/icons-material/Add';
 import Logout from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
 import Settings from "@mui/icons-material/Settings";
-import { Button, FormControl, Grid, InputAdornment, InputLabel, OutlinedInput, useMediaQuery, useTheme } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -14,9 +13,9 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ThemeSwitch from "../../component/ThemeSwitch";
 import { userLoggedOut } from "../../redux/features/auth/authSlice";
 import { useGetUserQuery } from "../../redux/features/users/usersApi";
@@ -24,11 +23,7 @@ import { deleteCookie, setCookie } from "../../utils/cookie";
 
 function Navbar({ sidebarWidth, handleDrawerToggle }) {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [search, setSearch] = useState("");
   const open = Boolean(anchorEl);
-
-  const theme = useTheme();
-  const small = useMediaQuery(theme.breakpoints.down("sm"));
 
   const auth = useSelector((state) => state.auth);
   const { userid } = auth.user;
@@ -36,22 +31,9 @@ function Navbar({ sidebarWidth, handleDrawerToggle }) {
   const { data: user } = useGetUserQuery(userid);
 
   const dispatch = useDispatch();
-
-  const {pathname} = useLocation();
   const navigate = useNavigate();
 
-  const handleSearch = (value) => {
-    setSearch(value);
-    navigate(`./students?limit=20&search=${value}`);
-  };
-
   const handleNewStudentURL = () => navigate('./students/new');
-
-  useEffect(() => {
-    if(pathname !== "/dashboard/students") {
-      setSearch("");
-    }
-  },[pathname])
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -80,7 +62,7 @@ function Navbar({ sidebarWidth, handleDrawerToggle }) {
       bgcolor="background"
     >
       <Container maxWidth="false">
-        <Toolbar disableGutters sx={{ padding:1, minHeight: ["45px", "45px", "45px"] }}>
+        <Toolbar disableGutters sx={{ padding: 1, minHeight: ["45px", "45px", "45px"] }}>
           <Grid container direction="row" justifyContent="space-between" alignItems="center">
             <Grid item xs={6} md={9} container direction="row" justifyContent="start" alignItems="center">
               <Box sx={{ display: { xs: 'flex', sm: 'none' }, mr: 1 }}>
@@ -92,34 +74,19 @@ function Navbar({ sidebarWidth, handleDrawerToggle }) {
                   <MenuIcon />
                 </IconButton>
               </Box>
-              <Box sx={{ display: { xs: 'none', sm: 'flex' }, mr: 2 }}>
-                <FormControl 
-                  fullWidth
-                  sx={{ bgcolor:"background.paper" }}
+              <Box sx={{ display: { xs: 'none', sm: 'flex' }, gap: 2 }}>
+                <Button
+                  variant="contained"
+                  href='/dashboard/students'
+                  disableElevation
                 >
-                  <InputLabel htmlFor="search" size="small">
-                    Search
-                  </InputLabel>
-                  <OutlinedInput
-                    size="small"
-                    id="search"
-                    type="search"
-                    label="Search"
-                    name="search"
-                    value={search}
-                    onChange={(e) => handleSearch(e.target.value)}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <SearchIcon />
-                      </InputAdornment>
-                    }
-                  />
-                </FormControl>
-              </Box>
-              <Box>
-                <Button variant="contained" color="success" disableElevation onClick={handleNewStudentURL}>
-                  {small ? <AddIcon/> : "Add New Student"}
+                  All Students
                 </Button>
+                <IconButton
+                  onClick={handleNewStudentURL}
+                >
+                  <AddIcon />
+                </IconButton>
               </Box>
             </Grid>
             <Grid item xs={6} md={3} container direction="row" justifyContent="end" alignItems="center">

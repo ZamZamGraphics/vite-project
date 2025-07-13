@@ -24,10 +24,11 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useGetAdmissionsQuery } from "../../../redux/features/admission/admissionApi";
 import Action from "../admission/Action";
+import useDebounce from "../../../hooks/useDebounce";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -91,22 +92,23 @@ function Admission() {
   const [search, setSearch] = useState("");
   // for pagination
   const [page, setPage] = useState(0);
-  const [perPage, setPerPage] = useState(20);
+  const [perPage, setPerPage] = useState(30);
 
+  const debounce = useDebounce(search, 500);
   const location = useLocation();
   const navigate = useNavigate();
 
   const { data, isLoading, isError } = useGetAdmissionsQuery(
     location.search || `?limit=${perPage}`
   );
-  
-  const queryString = (pageNo, limit, search = null) => {
+
+  const queryString = useCallback((pageNo, limit, search = null) => {
     let query = "?";
     query += pageNo > 0 ? `page=${pageNo}` : `page=0`;
     query += limit ? `&limit=${limit}` : `&limit=${perPage}`;
     query += search ? `&search=${search}` : "";
     return query;
-  };
+  }, [perPage]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -115,8 +117,19 @@ function Admission() {
 
   const handleSearch = (value) => {
     setSearch(value);
-    navigate(location.pathname + queryString(page, perPage, value));
   };
+
+  useEffect(() => {
+    if (debounce) {
+      navigate(location.pathname + queryString(page, perPage, debounce));
+    } else {
+      if (page) {
+        navigate(location.pathname + queryString(page, perPage));
+      } else {
+        navigate(location.pathname);
+      }
+    }
+  }, [debounce, navigate, location.pathname, queryString, page, perPage]);
 
   const handleChangePerPage = (event) => {
     setPerPage(parseInt(event.target.value, 10));
@@ -146,7 +159,7 @@ function Admission() {
       </TableRow>
     );
   } else if (!isLoading && !isError && data[0]?.admission?.length > 0) {
-    total   = data[0].total[0]?.totalRecords || 0;
+    total = data[0].total[0]?.totalRecords || 0;
     content = data[0].admission.map((admission) => (
       <TableRow key={admission._id}>
         <StyledTableCell>
@@ -157,9 +170,8 @@ function Admission() {
             <Stack direction="row" alignItems="center" spacing={2}>
               <Avatar
                 alt={admission.student.fullName}
-                src={`${import.meta.env.VITE_API_URL}/upload/${
-                  admission.student.avatar
-                }`}
+                src={`${import.meta.env.VITE_API_URL}/upload/${admission.student.avatar
+                  }`}
                 sx={{ width: 40, height: 40 }}
               />
               <Typography>{admission.student.fullName}</Typography>
@@ -239,10 +251,9 @@ function Admission() {
             >
               <TablePagination
                 rowsPerPageOptions={[
-                  20,
-                  25,
                   30,
                   40,
+                  50,
                   100,
                 ]}
                 colSpan={10}
